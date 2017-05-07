@@ -12,6 +12,10 @@
 
 #pragma once
 
+
+
+
+
 class TMemory
 {
 

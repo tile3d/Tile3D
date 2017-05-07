@@ -37,3 +37,12 @@ Tile3D/Debug/tplane.nativecodeanalysis.xml
 Tile3D/Debug/tray.nativecodeanalysis.xml
 Tile3D/Debug/taabbbox.nativecodeanalysis.xml
 Test/TestContainer/Debug/vc140.idb
+Tile3D/Debug/tmemory.nativecodeanalysis.xml
+Tile3D/x64/Debug/Tile3D.log
+Debug/TestContainer.lib
+Debug/Tile3D.lib
+Debug/TestMath.lib
+Test/TestContainer/Debug/TestContainer.log
+Tile3D/Debug/tobject.nativecodeanalysis.xml
+Tile3D/Debug/tstring.nativecodeanalysis.xml
+Tile3D/x64/Debug/vc140.idb

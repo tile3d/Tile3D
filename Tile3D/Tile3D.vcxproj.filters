@@ -13,6 +13,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{ff6a9afb-0b4b-4836-99e9-75da7dff8825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{b9cf2439-f15c-46e7-b53e-959d362f06df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -72,6 +75,27 @@
     <ClInclude Include="Container\TString.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Memory\TMemCommon.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemLarge.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemSmall.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemVec.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemPool.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemMan.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TMemDump.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -101,9 +125,6 @@
     <ClCompile Include="Math\TRay.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Core\TMemory.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\TObject.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -112,6 +133,15 @@
     </ClCompile>
     <ClCompile Include="Container\TString.cpp">
       <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemSmall.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemLarge.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemDump.cpp">
+      <Filter>Core\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

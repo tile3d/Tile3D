@@ -126,6 +126,13 @@
     <ClInclude Include="Container\THashMap.h" />
     <ClInclude Include="Container\TList.h" />
     <ClInclude Include="Container\TString.h" />
+    <ClInclude Include="Core\Memory\TMemCommon.h" />
+    <ClInclude Include="Core\Memory\TMemDump.h" />
+    <ClInclude Include="Core\Memory\TMemLarge.h" />
+    <ClInclude Include="Core\Memory\TMemMan.h" />
+    <ClInclude Include="Core\Memory\TMemPool.h" />
+    <ClInclude Include="Core\Memory\TMemSmall.h" />
+    <ClInclude Include="Core\Memory\TMemVec.h" />
     <ClInclude Include="Core\TMemory.h" />
     <ClInclude Include="Core\TObject.h" />
     <ClInclude Include="Math\TAABBBox.h" />
@@ -144,7 +151,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Container\TString.cpp" />
-    <ClCompile Include="Core\TMemory.cpp" />
+    <ClCompile Include="Core\Memory\TMemDump.cpp" />
+    <ClCompile Include="Core\Memory\TMemLarge.cpp" />
+    <ClCompile Include="Core\Memory\TMemSmall.cpp" />
     <ClCompile Include="Core\TObject.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
