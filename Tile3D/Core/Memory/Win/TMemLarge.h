@@ -3,12 +3,32 @@
 #include <stdio.h>
 #include "TMemCommon.h"
 
+
+struct TMemLargeBlock
+{
+#ifdef DEBUG_MEMORY
+	TMemLargeBlock * m_pPrev;
+	TMemLargeBlock * m_pNext;
+	int	m_rawSize;
+	unsigned short m_callers[MAX_CALLSTACK_LV];
+#endif
+	short m_flags;		//memory flag
+	short m_reserved;	//reserved
+	int	m_blockSize;	//memory block size
+
+#ifdef DEBUG_MEMORY
+	unsigned long m_soFlags[2];	//slop over flags
+#endif
+};
+
+
 class TMemLarge
 {
-public:		//	Constructors and Destructors
-
+//	Constructors and Destructors
+public:		
 	TMemLarge()
 	{
+		m_lock = 0;
 		m_blockList = nullptr;
 		m_pMemMan = nullptr;
 		m_blockCnt = 0;
@@ -22,12 +42,16 @@ public:		//	Constructors and Destructors
 #endif
 	}
 
-	//	Attributes
+//	Attributes
 public:
 	friend class TMemMan;
 
-	//	Operations
+//	Operations
 public:
+	void SetMemManager(TMemMan * man) {
+		m_pMemMan = man;
+	}
+
 	//	Allocate memory
 	void* Allocate(size_t size);
 	//	Free memory
@@ -42,18 +66,18 @@ public:
 	void DumpMemoryBlocks(FILE* pFile);
 #endif
 
-protected:	//	Attributes
-
-	static long		m_lThreadAtom;	//	Atom used to ensure thread safe
+//	Attributes
+protected:	
+	int				m_lock;	//	Atom used to ensure thread safe
 	TMemMan*		m_pMemMan;		//	Manager manager
 	TMemLargeBlock*	m_blockList;	//	Block list
 	int				m_blockCnt;	//	Block counter
 	int				m_allocSize;	//	Total size allocated by AMemLarge
 
-protected:	//	Operations
-
+//	Operations
+protected:	
 #ifdef _DEBUG
-			//	Dump memory leak
+	//	Dump memory leak
 	void Dump();
 #endif
 };

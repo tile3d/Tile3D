@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdSDK", "3rdSDK", "{BA130370-20A5-4157-8DEA-E336E98CDD87}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{0CCDEAA1-FCE4-4FE4-B68A-C063FCEBF3C2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{B689AD77-2AF4-414D-B6C9-B5BBC4E922BC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{01AC3889-C038-440B-BBC9-AFE6E6637E86}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tile3D", "Tile3D\Tile3D.vcxproj", "{7C92654C-CB90-4009-823F-5BF65AD2DCAC}"
 EndProject

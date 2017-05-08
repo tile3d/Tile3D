@@ -2,6 +2,21 @@
 
 #include "TMemCommon.h"
 #include "TMemPool.h"
+#include <stdio.h>
+
+struct TMemSmallBlock
+{
+#ifdef DEBUG_MEMORY
+	int m_rawSize;								//raw memory size
+	unsigned long	m_callers[MAX_CALLSTACK_LV];	//	max 4 level call stack
+#endif
+	short m_flag;				//memmory flag
+	short m_poolSlot;			//pool slot index
+	TMemSmallBlock * m_pNext;	//next free block
+#ifdef DEBUG_MEMORY
+	unsigned long m_soFlags[2];	//slop over flags
+#endif
+};
 
 
 class TMemMan;
@@ -47,8 +62,9 @@ public:
 #endif
 	}
 
-public:		//	Operations
-			//	Allocate memory
+//	Operations
+public:		
+	//	Allocate memory
 	void* Allocate(size_t size);
 	//	Free memory
 	void Free(void *p);
@@ -68,12 +84,18 @@ public:		//	Operations
 	//	Garbage collect
 	void GarbageCollect();
 
-private:
+	static TMemSmallBlock* GetMemSmallBlockInfo(void* pMem);
+
+	void SetMemManager(TMemMan * man) {
+		m_pMemMan = man;
+	}
+
+public:
 #ifdef DEBUG_MEMORY
+	void DumpMemoryBlocks(FILE* pFile);
 	void Dump();
 
-	//	Dump memory leak of one pool slot
-	template < class T >
+	template<typename T>
 	void Dump(int iSlot, TMemSmallBlock *p, int blockCount, int blkSize, T dumpFunction);
 #endif
 

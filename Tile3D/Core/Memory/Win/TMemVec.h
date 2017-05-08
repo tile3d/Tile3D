@@ -1,18 +1,16 @@
 #pragma once
 
+#include <Util/TAssert.h>
+#include <string.h>
 
-//TBD
-//1) Test fixed size(ex. 255) vs dynamic size
-//
-//
 template<class T>
-class TMemoryVec
+class TMemVec
 {
 public:
-	TMemoryVec() : m_pData(NULL), m_size(0), m_maxSize(0) {}
-	~TMemoryVec() {
+	TMemVec() : m_pData(NULL), m_size(0), m_maxSize(0) {}
+	~TMemVec() {
 		if (m_pData) {
-			RawMemFree(m_pData);
+			TMemCommon::RawMemFree(m_pData);
 		}
 	}
 
@@ -20,11 +18,11 @@ public:
 	void Push(const T & t) {
 		if (m_size >= m_maxSize) {
 			int newSize = (m_maxSize + 16) * 3 / 2;
-			T * pNewData = (T*)RawMemAlloc(newSize * sizeof(T));
+			T * pNewData = (T*)TMemCommon::RawMemAlloc(newSize * sizeof(T));
 
 			if (m_pData) {
 				memcpy(pNewData, m_pData, m_size*sizeof(T));
-				RawMemFree(m_pData);
+				TMemCommon::RawMemFree(m_pData);
 			}
 			m_pData = pNewData;
 			m_maxSize = newSize;

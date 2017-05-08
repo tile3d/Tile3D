@@ -1,7 +1,10 @@
+#include <Core/Lock/TInterlocked.h>
+#include <Util/TAssert.h>
 #include <string.h>
 #include "TMemLarge.h"
 #include "TMemMan.h"
-#include <Util/TAssert.h>
+#include "TMemDump.h"
+
 
 //	Allocate memory
 void* TMemLarge::Allocate(size_t size)
@@ -13,7 +16,7 @@ void* TMemLarge::Allocate(size_t size)
 	int iBlkSize = size + sizeof(s_MEMLARGEBLK);
 #endif
 
-	TMemLargeBlock* p = (TMemLargeBlock*)RawMemAlloc(iBlkSize);
+	TMemLargeBlock* p = (TMemLargeBlock*)TMemCommon::RawMemAlloc(iBlkSize);
 	if (!p)
 		return NULL;
 
@@ -30,31 +33,26 @@ void* TMemLarge::Allocate(size_t size)
 	memset(pData, MEM_ALLOC_FILL, size);
 
 	//	Fill slop-over checking flags
-	FillSlopOverFlags(p->m_soFlags);
-	FillSlopOverFlags(pData + size);
+	TMemCommon::FillSlopOverFlags(p->m_soFlags);
+	TMemCommon::FillSlopOverFlags(pData + size);
 
 	//	Record allocated size
 	m_pMemMan->AddAllocSize(iBlkSize);
 	m_pMemMan->AddAllocRawSize((int)size);
 
 	//	Get free block from manager
-	if (MEM_THREADSAFE)
-		_MemThreadLock(&m_lThreadAtom);
-
-	m_iAllocSize += iBlkSize;
-	m_iBlockCnt++;
+	TInterlocked::Lock(&m_lock);
+	m_allocSize += iBlkSize;
+	m_blockCnt++;
 
 	p->m_pPrev = NULL;
-	p->m_pNext = m_BlockList;
+	p->m_pNext = m_blockList;
 
-	if (m_BlockList)
-		m_BlockList->pPrev = p;
+	if (m_blockList)
+		m_blockList->m_pPrev = p;
 
-	m_BlockList = p;
-
-	if (MEM_THREADSAFE)
-		_MemThreadUnlock(&m_lThreadAtom);
-
+	m_blockList = p;
+	TInterlocked::Unlock(&m_lock);
 #endif
 	return ++p;
 }
@@ -68,18 +66,17 @@ void TMemLarge::Free(void* p)
 	TMemLargeBlock* pBlock = (TMemLargeBlock*)((char*)(p)-sizeof(TMemLargeBlock));
 
 #ifdef DEBUG_MEMORY
-
 	if (pBlock->m_flags != MEM_ALLOC_FLAG_L)
 	{
 		TAssert(pBlock->m_flags == MEM_ALLOC_FLAG_L);
 		return;
 	}
 
-	DumpDeleteHistory(GetMemoryHistoryLog(), pBlock);
+	TMemDump::DumpDeleteHistory(TMemDump::GetMemoryHistoryLog(), pBlock);
 
 	//	Slop-over checking
-	if (!CheckSlopOver(pBlock->m_soFlags) ||
-		!CheckSlopOver((char*)p + pBlock->m_rawSize))
+	if (!TMemCommon::CheckSlopOver(pBlock->m_soFlags) ||
+		!TMemCommon::CheckSlopOver((char*)p + pBlock->m_rawSize))
 	{
 		TAssert(0 && "Memory slop over !");
 	}
@@ -92,8 +89,7 @@ void TMemLarge::Free(void* p)
 	m_pMemMan->AddAllocRawSize(-pBlock->m_rawSize);
 
 	//	------- Unlink free block from manager -------
-	if (MEM_THREADSAFE)
-		_MemThreadLock(&m_lThreadAtom);
+	TInterlocked::Lock(&m_lock);
 
 	m_allocSize -= pBlock->m_blockSize;
 	m_blockCnt--;
@@ -109,12 +105,10 @@ void TMemLarge::Free(void* p)
 	if (pn)
 		pn->m_pPrev = pp;
 
-	if (MEM_THREADSAFE)
-		_MemThreadUnlock(&m_lThreadAtom);
-
+	TInterlocked::Unlock(&m_lock);
 #endif
 
-	RawMemFree(pBlock);
+	TMemCommon::RawMemFree(pBlock);
 }
 
 #ifdef DEBUG_MEMORY
@@ -126,8 +120,8 @@ void TMemLarge::DumpMemoryBlocks(FILE* pFile)
 	{
 		for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
 		{
-			fprintf(pFile, "0x%p ", pBlock->callers[i]);
-				TouchToLogAddressSymbol(reinterpret_cast<void*>(pBlock->callers[i]));
+			fprintf(pFile, "0x%d ", pBlock->m_callers[i]);
+			TMemDump::TouchToLogAddressSymbol(reinterpret_cast<void*>(pBlock->m_callers[i]));
 		}
 		fprintf(pFile, "%d\n", pBlock->m_rawSize);
 		pBlock = pBlock->m_pNext;
@@ -139,37 +133,10 @@ void TMemLarge::Dump()
 {
 	while (m_blockList)
 	{
-		DumpMemLargeBlkToALogOutput(m_BlockList);
-
-		m_BlockList = m_BlockList->pNext;
+		TMemDump::DumpMemLargeBlkToLogOutput(m_blockList);
+		m_blockList = m_blockList->m_pNext;
 	}
 }
-
-
-void DumpMemLargeBlkToLogOutput(const TMemLargeBlock* pBlock)
-{
-	char szMsg[1024] = { 0 };
-	sprintf(szMsg, "Memory [%d bytes@%p] leak at (", pBlock->m_rawSize, (char*)pBlock + sizeof(TMemLargeBlock));
-	for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
-	{
-		char szPart[64] = { 0 };
-		if (i == MAX_CALLSTACK_LV - 1 || (!pBlock->m_callers[i] && i >= 7))
-		{
-			sprintf(szPart, "0x%p)", pBlock->m_callers[i]);
-			strcat(szMsg, szPart);
-			break;
-		}
-		else
-		{
-			sprintf(szPart, "0x%p <- ", pBlock->m_callers[i]);
-			strcat(szMsg, szPart);
-		}
-	}
-
-	a_LogOutput(1, szMsg);
-	DumpBlockInfo(pBlock);
-}
-
 
 
 #endif	//	DEBUG_MEMORY
