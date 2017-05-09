@@ -4,7 +4,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-
 namespace TestMath
 {		
 	TEST_CLASS(TestTMatrix3)

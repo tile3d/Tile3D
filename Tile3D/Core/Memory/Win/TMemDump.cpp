@@ -5,6 +5,7 @@
 #include <DbgHelp.h>
 #include <Shlwapi.h>
 #include <string.h>
+#include <time.h>
 #include <stdio.h>
 #include <map>
 #include <Util/TLog.h>
@@ -139,7 +140,7 @@ void TMemDump::DumpAllocHistory(FILE* pf, const TMemSmallBlock* pBlock)
 		return;
 
 	char szMsg[1024] = { 0 };
-	sprintf(szMsg, "A %d %d ", timeGetTime(), pBlock->m_rawSize);
+	sprintf(szMsg, "A %lld %d ", time(NULL), pBlock->m_rawSize);
 	for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
 	{
 		char szPart[64] = { 0 };
@@ -156,7 +157,7 @@ void TMemDump::DumpDeleteHistory(FILE* pf, const TMemSmallBlock* pBlock)
 		return;
 
 	char szMsg[1024] = { 0 };
-	sprintf(szMsg, "D %d %d ", timeGetTime(), pBlock->m_rawSize);
+	sprintf(szMsg, "D %lld %d ", time(NULL), pBlock->m_rawSize);
 	for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
 	{
 		char szPart[64] = { 0 };
@@ -173,7 +174,7 @@ void TMemDump::DumpDeleteHistory(FILE* pf, const TMemLargeBlock* pBlock)
 		return;
 
 	char szMsg[1024] = { 0 };
-	sprintf(szMsg, "D %d %d ", timeGetTime(), pBlock->m_rawSize);
+	sprintf(szMsg, "D %lld %d ", time(NULL), pBlock->m_rawSize);
 	for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
 	{
 		char szPart[64] = { 0 };
@@ -197,15 +198,16 @@ static HANDLE LoadSymForCurrentProcess(const char* UserSearchPath)
 		{
 			strncpy(szLastPath, UserSearchPath, bufsz - 1);
 		}
-		else
+		else {
 			szLastPath[0] = 0;
+		}
+
 		szLastPath[bufsz - 1] = 0;
 
 		hProcess = GetCurrentProcess();
 		DWORD oldFlag = SymGetOptions();
 		DWORD flags = SymSetOptions(oldFlag | SYMOPT_LOAD_LINES);
 		bool bSuccess = SymInitialize(hProcess, (char*)UserSearchPath, TRUE) ? true : false;
-		//        assert(bSuccess);
 	}
 
 	return hProcess;

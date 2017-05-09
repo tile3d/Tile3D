@@ -1,8 +1,8 @@
 #pragma once
 
-class TMemSmall;
-class TMemLarge;
-class TMemDump;
+#include "TMemSmall.h"
+#include "TMemLarge.h"
+
 
 class TMemMan
 {
@@ -20,8 +20,8 @@ public:
 
 //Methods
 public:
-	TMemSmall* GetMemSmall() { return m_pMemSmall; }
-	TMemLarge* GetMemLarge() { return m_pMemLarge; }
+	TMemSmall* GetMemSmall() { return &m_memSmall; }
+	TMemLarge* GetMemLarge() { return &m_memLarge; }
 
 	//	Get next memory block's ID
 	int GetNextID();
@@ -67,8 +67,8 @@ private:
 
 
 protected:	//	Attribute
-	TMemSmall*		m_pMemSmall;
-	TMemLarge*		m_pMemLarge;
+	TMemSmall		m_memSmall;
+	TMemLarge		m_memLarge;
 
 	int	m_lock;			//	Atom used to ensure thread safe
 	int	m_idCnt;		//	Allocate ID counter

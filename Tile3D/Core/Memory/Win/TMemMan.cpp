@@ -20,13 +20,10 @@ init_seg (lib) will cause a VC compiling warning 4073, disable it.
 #pragma init_seg (lib)
 
 
-static TMemMan	gMemMan;
+TMemMan TMemMan::gMemMan;
 
 
 TMemMan::TMemMan() {
-	m_pMemSmall = new TMemSmall();
-	m_pMemLarge = new TMemLarge();
-
 	m_idCnt = 0;
 	m_peakSize = 0;
 	m_sizeCnt = 0;
@@ -35,8 +32,6 @@ TMemMan::TMemMan() {
 }
 
 TMemMan::~TMemMan() {
-	delete m_pMemSmall;
-	delete m_pMemLarge;
 
 #ifdef DEBUG_MEMORY
 		TLog::Log(LOG_INFO, "MEMORY", "Maximum memory used: %d (K)", (m_peakSize + 1023) / 1024);
@@ -66,20 +61,20 @@ void TMemMan::AddAllocRawSize(int size)
 
 void TMemMan::GetSmallMemInfo(int iSlot, int* piBlkSize, int* piBlkCnt, int* piFreeCnt)
 {
-	*piBlkSize = m_pMemSmall->GetBlockSize(iSlot);
-	*piBlkCnt = m_pMemSmall->GetTotalBlockCnt(iSlot);
-	*piFreeCnt = m_pMemSmall->GetFreeBlockCnt(iSlot);
+	*piBlkSize = m_memSmall.GetBlockSize(iSlot);
+	*piBlkCnt = m_memSmall.GetTotalBlockCnt(iSlot);
+	*piFreeCnt = m_memSmall.GetFreeBlockCnt(iSlot);
 }
 
 void TMemMan::GetLargeMemInfo(int* piBlkCnt, int* piAllocSize)
 {
-	*piBlkCnt = m_pMemLarge->GetBlockCnt();
-	*piAllocSize = m_pMemLarge->GetAllocSize();
+	*piBlkCnt = m_memLarge.GetBlockCnt();
+	*piAllocSize = m_memLarge.GetAllocSize();
 }
 
 void TMemMan::GarbageCollect()
 {
-	m_pMemSmall->GarbageCollect();
+	m_memSmall.GarbageCollect();
 }
 
 

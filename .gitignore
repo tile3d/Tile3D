@@ -46,3 +46,12 @@ Test/TestContainer/Debug/TestContainer.log
 Tile3D/Debug/tobject.nativecodeanalysis.xml
 Tile3D/Debug/tstring.nativecodeanalysis.xml
 Tile3D/x64/Debug/vc140.idb
+Tile3D/Debug/tlog.nativecodeanalysis.xml
+Tile3D/Debug/tmemdump.nativecodeanalysis.xml
+*.xml
+ipch/TESTCORE-918927d1/TESTCORE-8cce1f5.ipch
+Test/TestContainer/Debug/TestContainer.Build.CppClean.log
+*.exp
+Debug/TestCore.lib
+Test/TestCore/Debug/TestCore.Build.CppClean.log
+Test/TestCore/Debug/vc140.idb

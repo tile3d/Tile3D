@@ -164,5 +164,8 @@
     <ClCompile Include="Core\Memory\Win\TMemMan.cpp">
       <Filter>Core\Memory\Win</Filter>
     </ClCompile>
+    <ClCompile Include="Core\TMemory.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

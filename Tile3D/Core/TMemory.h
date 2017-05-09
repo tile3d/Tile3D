@@ -13,13 +13,15 @@
 #pragma once
 
 
-
-
-
 class TMemory
 {
-
-
-
-
+public:
+	static void * Alloc(size_t size);
+	static void Free(void * p);
 };
+
+void * operator new (size_t size);
+void operator delete(void * p);
+void * operator new[](size_t size);
+void operator delete[](void * p);
+
