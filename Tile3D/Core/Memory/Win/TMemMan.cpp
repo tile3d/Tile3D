@@ -28,7 +28,11 @@ TMemMan::TMemMan() {
 	m_peakSize = 0;
 	m_sizeCnt = 0;
 	m_lock = 0;
+
 	m_rawSizeCnt = 0;
+
+	m_memSmall.SetMemManager(this);
+	m_memLarge.SetMemManager(this);
 }
 
 TMemMan::~TMemMan() {

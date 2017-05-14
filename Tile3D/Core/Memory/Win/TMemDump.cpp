@@ -16,18 +16,7 @@
 #include "TMemMan.h"
 
 FILE * TMemDump::m_pLogFile = nullptr;
-
-struct SymbloInfo
-{
-	const void*		pAddr;
-	char			name[128];
-	char			fileName[128];
-	unsigned long   lineNumber;
-};
-
-typedef std::map<void*, SymbloInfo> SymbloInfoMap;
-static SymbloInfoMap addr_info_map;
-
+SymbloInfoMap TMemDump::addr_info_map;
 
 
 void TMemDump::DumpAdditionalInfoMap(FILE* pAddiInfoFile)

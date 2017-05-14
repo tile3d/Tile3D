@@ -18,7 +18,7 @@ void * operator new (size_t size)
 
 void operator delete(void * p)
 {
-	return TMemory::Free(p);
+	TMemory::Free(p);
 }
 
 void * operator new[] (size_t size)
@@ -28,6 +28,6 @@ void * operator new[] (size_t size)
 
 void operator delete[](void * p)
 {
-	return TMemory::Free(p);
+	TMemory::Free(p);
 }
 

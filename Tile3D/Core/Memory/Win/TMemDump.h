@@ -1,7 +1,20 @@
 #pragma once
 
+#include <map>
+
 struct TMemSmallBlock;
 struct TMemLargeBlock;
+
+struct SymbloInfo
+{
+	const void*		pAddr;
+	char			name[128];
+	char			fileName[128];
+	unsigned long   lineNumber;
+};
+
+typedef std::map<void*, SymbloInfo> SymbloInfoMap;
+
 
 class TMemDump
 {
@@ -30,6 +43,7 @@ public:
 
 private:
 	static FILE * m_pLogFile;
+	static SymbloInfoMap addr_info_map;
 };
 
 

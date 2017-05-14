@@ -9,9 +9,14 @@ namespace TestMemory
 	public:
 		TEST_METHOD(Memory_Alloc)
 		{
-			int a = 5;
-			int c = 6;
-			Assert::AreEqual(11, a + c);
+			int * p = (int*)(TMemory::Alloc(12));
+			int * q = p;
+
+			*p = 4;
+			*(p + 1) = 5;
+			*(p + 2) = 6;
+
+			printf("value=%d\n", *q);
 		}
 	};
 }
