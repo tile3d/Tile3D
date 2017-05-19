@@ -12,7 +12,7 @@
 //	Get block address from a allocated memory address
 TMemSmallBlock* TMemSmall::GetMemSmallBlockInfo(void* pMem)
 {
-	//	In both debug and release modes, sizeof (s_MEMSMALLBLK) <= sizeof (s_MEMLARGEBLK).
+	//	In both debug and release modes, sizeof (TMemSmallBlock) <= sizeof (TMemLargeBlock).
 	return (TMemSmallBlock*)((char*)pMem - sizeof(TMemSmallBlock));
 }
 
@@ -21,32 +21,32 @@ void* TMemSmall::Allocate(size_t size)
 {
 #ifdef DEBUG_MEMORY
 	//	Add 2 DWORDs to do slop-over checking
-	int iDataSize = TMemCommon::RoundUp(size + SLOPOVER_SIZE);
+	int dataSize = TMemCommon::RoundUp(size + SLOPOVER_SIZE);
 #else
 	int iDataSize = AMemoryMan::RoundUp(size);
 #endif
 
 	//	Block size
-	if (iDataSize > MEM_SMALLSIZE)
+	if (dataSize > MEM_SMALLSIZE)
 		return m_pMemMan->GetMemLarge()->Allocate(size);
 
-	int iPoolSlot = (iDataSize - 1) / MEM_ALIGN;
+	int poolSlot = (dataSize - 1) / MEM_ALIGN;
 
 	//	Record allocated size
 #ifdef DEBUG_MEMORY
-	m_pMemMan->AddAllocSize(GetBlockSize(iPoolSlot));
+	m_pMemMan->AddAllocSize(GetBlockSize(poolSlot));
 	m_pMemMan->AddAllocRawSize((int)size);
 #endif
 
 	//	------ Get free block from manager ------ 
-	TInterlocked::Lock(&m_locks[iPoolSlot]);
+	TInterlocked::Lock(&m_locks[poolSlot]);
 
 	//	Get proper memory pool slot
-	TMemSmallSlot& slot = m_pools[iPoolSlot];
+	TMemSmallSlot& slot = m_pools[poolSlot];
 	if (!slot.m_pFreeBlks)
 	{
-		slot.m_pFreeBlks = m_poolMans[iPoolSlot].Allocate();
-		int iBlkCount = m_poolMans[iPoolSlot].GetBlockCount();
+		slot.m_pFreeBlks = m_poolMans[poolSlot].Allocate();
+		int iBlkCount = m_poolMans[poolSlot].GetBlockCount();
 		slot.m_blockCnt += iBlkCount;
 		slot.m_freeCnt += iBlkCount;
 	}
@@ -55,7 +55,7 @@ void* TMemSmall::Allocate(size_t size)
 	slot.m_pFreeBlks = pFreeBlk->m_pNext;
 	slot.m_freeCnt--;
 
-	TInterlocked::Unlock(&m_locks[iPoolSlot]);
+	TInterlocked::Unlock(&m_locks[poolSlot]);
 
 	//	------ Initialize block ------ 
 	char* pData = (char*)pFreeBlk + sizeof(TMemSmallBlock);
@@ -69,7 +69,7 @@ void* TMemSmall::Allocate(size_t size)
 	TMemCommon::FillSlopOverFlags(pData + size);
 #endif
 
-	pFreeBlk->m_poolSlot = (short)iPoolSlot;
+	pFreeBlk->m_poolSlot = (short)poolSlot;
 	pFreeBlk->m_pNext = NULL;
 	pFreeBlk->m_flag = MEM_ALLOC_FLAG_S;
 	return pData;

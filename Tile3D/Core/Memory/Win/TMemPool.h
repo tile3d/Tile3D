@@ -14,9 +14,9 @@ public:
 	};
 public:
 	TMemPool() {
-		m_blockCount = 256;
-		m_dataSize = 16;
-		m_blockSize = CalcBlockSize();
+		m_blockCount = 0;
+		m_dataSize = 0;
+		m_blockSize = 0;
 		m_gcCount = 0;
 	}
 

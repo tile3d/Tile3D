@@ -11,16 +11,16 @@ void* TMemLarge::Allocate(size_t size)
 {
 #ifdef DEBUG_MEMORY
 	//	Add 2 DWORDs to do slop-over checking
-	int iBlkSize = size + sizeof(TMemLargeBlock) + SLOPOVER_SIZE;
+	int blkSize = size + sizeof(TMemLargeBlock) + SLOPOVER_SIZE;
 #else
-	int iBlkSize = size + sizeof(s_MEMLARGEBLK);
+	int blkSize = size + sizeof(TMemLargeBlock);
 #endif
 
-	TMemLargeBlock* p = (TMemLargeBlock*)TMemCommon::RawMemAlloc(iBlkSize);
+	TMemLargeBlock* p = (TMemLargeBlock*)TMemCommon::RawMemAlloc(blkSize);
 	if (!p)
 		return NULL;
 
-	p->m_blockSize = iBlkSize;
+	p->m_blockSize = blkSize;
 	p->m_reserved = 0;
 	p->m_flags = MEM_ALLOC_FLAG_L;
 
@@ -37,12 +37,12 @@ void* TMemLarge::Allocate(size_t size)
 	TMemCommon::FillSlopOverFlags(pData + size);
 
 	//	Record allocated size
-	m_pMemMan->AddAllocSize(iBlkSize);
+	m_pMemMan->AddAllocSize(blkSize);
 	m_pMemMan->AddAllocRawSize((int)size);
 
 	//	Get free block from manager
 	TInterlocked::Lock(&m_lock);
-	m_allocSize += iBlkSize;
+	m_allocSize += blkSize;
 	m_blockCnt++;
 
 	p->m_pPrev = NULL;
