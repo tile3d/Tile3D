@@ -37,7 +37,7 @@ public:
 
 	virtual ~TMemLarge()
 	{
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 		Dump();
 #endif
 	}
@@ -62,7 +62,7 @@ public:
 	//	Get current block counter
 	int GetBlockCnt() { return m_blockCnt; }
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	void DumpMemoryBlocks(FILE* pFile);
 #endif
 
@@ -76,7 +76,7 @@ protected:
 
 //	Operations
 protected:	
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	//	Dump memory leak
 	void Dump();
 #endif

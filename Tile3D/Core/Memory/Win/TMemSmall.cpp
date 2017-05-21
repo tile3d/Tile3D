@@ -85,7 +85,7 @@ void TMemSmall::Free(void *p)
 
 	TMemSmallBlock* pBlock = GetMemSmallBlockInfo(p);
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 
 	/*
 	BYTE* pCallers = (BYTE*)pBlock->callers;
@@ -147,7 +147,7 @@ void TMemSmall::Free(void *p)
 	//	Get proper memory pool
 	TMemSmallSlot& slot = m_pools[iSlot];
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	TMemDump::DumpDeleteHistory(TMemDump::GetMemoryHistoryLog(), pBlock);
 
 	//	Slop-over checking

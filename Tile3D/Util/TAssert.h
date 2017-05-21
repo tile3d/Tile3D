@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#ifdef _DEBUG
+#ifdef DEBUG_VERSION
 #define TAssert assert
 #else
 #define TAssert 
