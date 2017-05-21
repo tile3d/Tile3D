@@ -30,7 +30,7 @@ struct TMemSmallBlock
 	short m_poolSlot;			//pool slot index
 #ifdef DEBUG_MEMORY
 	int m_rawSize;								//raw memory size
-	unsigned long	m_callers[MAX_CALLSTACK_LV];	//	max 4 level call stack
+	unsigned long	m_callers[MAX_CALLSTACK_LV];	//	max 8 level call stack
 	unsigned long m_soFlags[2];	//slop over flags
 #endif
 };
