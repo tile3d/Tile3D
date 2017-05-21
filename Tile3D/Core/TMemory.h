@@ -13,6 +13,18 @@
 #pragma once
 
 
+
+//
+// Design Goal
+// 1) Manager all the memory alloc and release, include STL and third-party library
+// 2) Use TLS to reduce the lock race condition (TBD)
+// 3) Allocate the memory by the Page to reduce the Page swap 
+// 4) Memmory Leak Checker
+// 5) Memory Alloc/Release/.. staticts
+// 6) Illegae memory access check (double free/access the not alloacted memory) (TBD)
+// 7) Support both 32 and 64 bit version (TBD)
+// 8) Reduce the memory footprint(TBD)
+//
 class TMemory
 {
 public:
