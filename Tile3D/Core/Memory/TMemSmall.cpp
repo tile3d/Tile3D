@@ -84,42 +84,6 @@ void TMemSmall::Free(void *p)
 		return;
 
 	TMemSmallBlock* pBlock = GetMemSmallBlockInfo(p);
-
-#ifdef _DEBUG
-
-	/*
-	BYTE* pCallers = (BYTE*)pBlock->callers;
-	DWORD hash_val = 0;
-
-	for (int i = 0; i < sizeof(pBlock->callers); i++)
-	{
-	hash_val = hash_val * 31 + pCallers[i];
-	}
-
-	LockMemCallersInfoModule();
-
-	MemCallersInfoMap::iterator it = l_MemCallersInfo.GetMap().find(hash_val);
-
-	if (it != l_MemCallersInfo.GetMap().end())
-	{
-	if (it->second->call_count)
-	{
-	it->second->call_count--;
-	it->second->total_size -= (DWORD)pBlock->iRawSize;
-	}
-	else
-	assert(false);
-	}
-	else
-	{
-	assert(false);
-	}
-
-	UnlockMemCallersInfoModule();
-	*/
-
-#endif
-
 	if (pBlock->m_flag == MEM_FREE_FLAG_S)
 	{
 		//	Memory has been freed
@@ -147,7 +111,7 @@ void TMemSmall::Free(void *p)
 	//	Get proper memory pool
 	TMemSmallSlot& slot = m_pools[iSlot];
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	TMemDump::DumpDeleteHistory(TMemDump::GetMemoryHistoryLog(), pBlock);
 
 	//	Slop-over checking

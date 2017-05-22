@@ -24,7 +24,7 @@ void* TMemLarge::Allocate(size_t size)
 	p->m_reserved = 0;
 	p->m_flags = MEM_ALLOC_FLAG_L;
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 
 	p->m_rawSize = size;
 

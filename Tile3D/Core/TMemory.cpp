@@ -1,5 +1,5 @@
 #include "TMemory.h"
-#include "Memory/Win/TMemMan.h"
+#include "Memory/TMemMan.h"
 
 void * TMemory::Alloc(size_t size)
 {

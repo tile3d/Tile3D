@@ -12,7 +12,7 @@
 
 #pragma once
 
-
+//Design Goal
 //1) Support Reference Count?
 //2) Support GC?
 //3) RTTI (ClassID/ClassName)
@@ -24,18 +24,15 @@
 class TObject
 {
 public:
+	TObject() {}
+	virtual ~TObject() {}
+	
 	//Create and return a copy of this object
 	virtual TObject * Clone();
 
-
-
 public:
-	//TBD: alloc the Object memory by TMemory(Memory Pool Impmlemetation, Support Memory Leak Check)
 	void * operator new(size_t nSize);
 	void operator delete(void * pData);
-
-	void * operator new(size_t nSize, void * ptr);
-	void operator delete(void * pData, void * ptr);
 
 	void * operator new[](size_t nSize);
 	void operator delete[](void * pData);
@@ -44,6 +41,7 @@ public:
 private:
 	//Disable assigment ctor, use clone
 	TObject & operator=(TObject& obj) const {}
+
 	//Disable copy ctor(need rethink)
 	TObject(TObject & obj) {}
 
@@ -51,3 +49,4 @@ private:
 private:
 
 };
+

@@ -22,6 +22,38 @@
 #define SLOPOVER_SIZE				(sizeof (unsigned long) * 2)       //	Size used for slop-over checking
 #define MEM_SLOP_OVER				0x98989898
 
+
+struct TMemSmallBlock
+{
+	TMemSmallBlock * m_pNext;	//next free block
+	short m_flag;				//memory flag
+	short m_poolSlot;			//pool slot index
+#ifdef DEBUG_MEMORY
+	int m_rawSize;								//raw memory size
+	unsigned long	m_callers[MAX_CALLSTACK_LV];	//	max 8 level call stack
+	unsigned long m_soFlags[2];	//slop over flags
+#endif
+};
+
+
+
+struct TMemLargeBlock
+{
+#ifdef DEBUG_MEMORY
+	TMemLargeBlock * m_pPrev;
+	TMemLargeBlock * m_pNext;
+#endif
+	int	m_blockSize;	//memory block size
+	short m_flags;		//memory flag
+	short m_reserved;	//reserved
+#ifdef DEBUG_MEMORY
+	int	m_rawSize;
+	unsigned long m_callers[MAX_CALLSTACK_LV];
+	unsigned long m_soFlags[2];	//slop over flags
+#endif
+};
+
+
 class TMemCommon
 {
 public:

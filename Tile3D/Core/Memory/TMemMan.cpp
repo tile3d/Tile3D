@@ -104,7 +104,7 @@ int TMemMan::CalMemUseableSize(void* pMem)
 	else if (pBlock->m_flag <= MEM_ALLOC_FLAG_L)
 	{
 		TMemLargeBlock* pLargeBlock = (TMemLargeBlock*)((char*)pMem - sizeof(TMemLargeBlock));
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 		maxSize = pLargeBlock->m_blockSize - sizeof(TMemLargeBlock) - SLOPOVER_SIZE;	//	Slop-over checking flags
 #else
 		iMaxSize = pLargeBlock->iBlkSize - sizeof(s_MEMLARGEBLK);

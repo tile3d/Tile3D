@@ -4,19 +4,6 @@
 #include "TMemPool.h"
 #include <stdio.h>
 
-struct TMemSmallBlock
-{
-#ifdef DEBUG_MEMORY
-	int m_rawSize;								//raw memory size
-	unsigned long	m_callers[MAX_CALLSTACK_LV];	//	max 4 level call stack
-#endif
-	short m_flag;				//memmory flag
-	short m_poolSlot;			//pool slot index
-	TMemSmallBlock * m_pNext;	//next free block
-#ifdef DEBUG_MEMORY
-	unsigned long m_soFlags[2];	//slop over flags
-#endif
-};
 
 
 class TMemMan;

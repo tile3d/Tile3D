@@ -4,23 +4,6 @@
 #include "TMemCommon.h"
 
 
-struct TMemLargeBlock
-{
-#ifdef DEBUG_MEMORY
-	TMemLargeBlock * m_pPrev;
-	TMemLargeBlock * m_pNext;
-	int	m_rawSize;
-	unsigned short m_callers[MAX_CALLSTACK_LV];
-#endif
-	short m_flags;		//memory flag
-	short m_reserved;	//reserved
-	int	m_blockSize;	//memory block size
-
-#ifdef DEBUG_MEMORY
-	unsigned long m_soFlags[2];	//slop over flags
-#endif
-};
-
 
 class TMemLarge
 {
@@ -37,7 +20,7 @@ public:
 
 	virtual ~TMemLarge()
 	{
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 		Dump();
 #endif
 	}
@@ -62,7 +45,7 @@ public:
 	//	Get current block counter
 	int GetBlockCnt() { return m_blockCnt; }
 
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	void DumpMemoryBlocks(FILE* pFile);
 #endif
 
@@ -76,7 +59,7 @@ protected:
 
 //	Operations
 protected:	
-#ifdef _DEBUG
+#ifdef DEBUG_MEMORY
 	//	Dump memory leak
 	void Dump();
 #endif

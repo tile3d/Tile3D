@@ -19,9 +19,6 @@
     <Filter Include="Core\Lock">
       <UniqueIdentifier>{171acbe3-233c-40f4-8e39-40f61925fbfd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Memory\Win">
-      <UniqueIdentifier>{849d8fe7-6b18-4509-bc8a-cf64af8d08eb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -87,26 +84,26 @@
     <ClInclude Include="Util\TLog.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemCommon.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemCommon.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemDump.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemDump.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemLarge.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemLarge.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemMan.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemMan.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemPool.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemPool.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemSmall.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemSmall.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Win\TMemVec.h">
-      <Filter>Core\Memory\Win</Filter>
+    <ClInclude Include="Core\Memory\TMemVec.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,23 +146,23 @@
     <ClCompile Include="Util\TLog.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\Win\TMemDump.cpp">
-      <Filter>Core\Memory\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\Win\TMemLarge.cpp">
-      <Filter>Core\Memory\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\Win\TMemPool.cpp">
-      <Filter>Core\Memory\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\Win\TMemSmall.cpp">
-      <Filter>Core\Memory\Win</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\Win\TMemMan.cpp">
-      <Filter>Core\Memory\Win</Filter>
-    </ClCompile>
     <ClCompile Include="Core\TMemory.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemDumpWin.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemLarge.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemMan.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemPool.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\TMemSmall.cpp">
+      <Filter>Core\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

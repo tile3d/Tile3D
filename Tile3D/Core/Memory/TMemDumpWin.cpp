@@ -65,7 +65,7 @@ void TMemDump::DumpBlockInfo(const TBlk* pBlock)
 	buffer[1023] = '\0';
 	OutputDebugStringA(buffer);
 
-	for (int i = 0; i < MAX_SYM_CALLSTACK_LV; ++i)
+	for (int i = 0; i < MAX_CALLSTACK_LV; ++i)
 	{
 		if (pBlock->m_callers[i] < 0xffff)
 			break;
