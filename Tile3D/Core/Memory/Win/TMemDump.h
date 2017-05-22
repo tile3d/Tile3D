@@ -13,6 +13,8 @@ struct SymbloInfo
 	unsigned long   lineNumber;
 };
 
+
+//TBD: replace std::map to TMap or THashMap
 typedef std::map<void*, SymbloInfo> SymbloInfoMap;
 
 
