@@ -37,16 +37,16 @@ int main()
 	Foo * pFoo = new Foo();
 	pFoo->x = 3;
 	pFoo->y = 4;
-	delete pFoo;
+//	delete pFoo;
 
 	Foo ** pFoo2 = new Foo*[1024];
-	delete[] pFoo2;
+//	delete[] pFoo2;
 
 	TBar * pBar = test_bar();
-	delete pBar;
+//	delete pBar;
 
 	TBar * pBar2 = new TBar[36]();
-	delete[] pBar2;
+//	delete[] pBar2;
 	return 0;
 }
 

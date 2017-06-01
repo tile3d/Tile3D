@@ -30,6 +30,13 @@ public:
 	//Create and return a copy of this object
 	virtual TObject * Clone();
 
+	//Disable assigment ctor, use clone
+	TObject & operator=(TObject& obj) const = delete;
+
+	//Disable copy ctor(need rethink)
+	TObject(TObject & obj) = delete;
+
+
 public:
 	void * operator new(size_t nSize);
 	void operator delete(void * pData);
@@ -38,12 +45,6 @@ public:
 	void operator delete[](void * pData);
 
 
-private:
-	//Disable assigment ctor, use clone
-	TObject & operator=(TObject& obj) const {}
-
-	//Disable copy ctor(need rethink)
-	TObject(TObject & obj) {}
 
 
 private:
