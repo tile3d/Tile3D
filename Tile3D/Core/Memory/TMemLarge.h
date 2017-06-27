@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "TMemCommon.h"
-
+#include "Core/Lock/TMutexLock.h"
 
 
 class TMemLarge
@@ -11,7 +11,6 @@ class TMemLarge
 public:		
 	TMemLarge()
 	{
-		m_lock = 0;
 		m_blockList = nullptr;
 		m_pMemMan = nullptr;
 		m_blockCnt = 0;
@@ -51,7 +50,7 @@ public:
 
 //	Attributes
 protected:	
-	int				m_lock;	//	Atom used to ensure thread safe
+	TMutexLock				m_lock;	//	Atom used to ensure thread safe
 	TMemMan*		m_pMemMan;		//	Manager manager
 	TMemLargeBlock*	m_blockList;	//	Block list
 	int				m_blockCnt;	//	Block counter

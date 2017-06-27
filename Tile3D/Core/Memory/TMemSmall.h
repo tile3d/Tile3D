@@ -3,7 +3,7 @@
 #include "TMemCommon.h"
 #include "TMemPool.h"
 #include <stdio.h>
-
+#include "Core/Lock/TMutexLock.h"
 
 
 class TMemMan;
@@ -38,7 +38,6 @@ public:
 			m_pools[i].m_blockCnt = 0;
 			m_pools[i].m_freeCnt = 0;
 
-			m_locks[i] = 0;
 			m_gcCounter = 0;
 		}
 	}
@@ -88,7 +87,7 @@ public:
 
 private:
 	TMemMan * m_pMemMan;
-	int		m_locks[MEM_SLOTNUM];	//	Atom used to ensure thread safe
+	TMutexLock		m_locks[MEM_SLOTNUM];	//	Atom used to ensure thread safe
 	int		m_gcCounter;
 	TMemPool m_poolMans[MEM_SLOTNUM];
 	TMemSmallSlot m_pools[MEM_SLOTNUM];

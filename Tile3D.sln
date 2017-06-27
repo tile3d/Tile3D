@@ -12,12 +12,21 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMath", "Test\TestMath\TestMath.vcxproj", "{57E497CB-FC26-448E-8550-95BCFB41BBF5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestContainer", "Test\TestContainer\TestContainer.vcxproj", "{59D16D05-D149-4979-92A7-CC263D04813E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C92654C-CB90-4009-823F-5BF65AD2DCAC} = {7C92654C-CB90-4009-823F-5BF65AD2DCAC}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCore", "Test\TestCore\TestCore.vcxproj", "{35A7DC55-9641-4E21-9F61-35639C706466}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C92654C-CB90-4009-823F-5BF65AD2DCAC} = {7C92654C-CB90-4009-823F-5BF65AD2DCAC}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestMsic", "TestMsic", "{BBC14485-A5B3-42E4-8128-A7551E3FE0C9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMisc", "TestMisc\TestMisc\TestMisc.vcxproj", "{4CC19F95-EF0A-4B6B-A859-B2F44022D5EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7C92654C-CB90-4009-823F-5BF65AD2DCAC} = {7C92654C-CB90-4009-823F-5BF65AD2DCAC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

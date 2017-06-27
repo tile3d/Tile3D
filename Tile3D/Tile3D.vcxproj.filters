@@ -78,9 +78,6 @@
     <ClInclude Include="Container\TString.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Lock\TInterlocked.h">
-      <Filter>Core\Lock</Filter>
-    </ClInclude>
     <ClInclude Include="Util\TLog.h">
       <Filter>Util</Filter>
     </ClInclude>

@@ -1,4 +1,3 @@
-#include <Core/Lock/TInterlocked.h>
 #include <Util/TAssert.h>
 #include <string.h>
 #include "TMemLarge.h"
@@ -41,7 +40,7 @@ void* TMemLarge::Allocate(size_t size)
 	m_pMemMan->AddAllocRawSize((int)size);
 
 	//	Get free block from manager
-	TInterlocked::Lock(&m_lock);
+	m_lock.Lock();
 	m_allocSize += blkSize;
 	m_blockCnt++;
 
@@ -52,7 +51,7 @@ void* TMemLarge::Allocate(size_t size)
 		m_blockList->m_pPrev = p;
 
 	m_blockList = p;
-	TInterlocked::Unlock(&m_lock);
+	m_lock.Unlock();
 #endif
 	return ++p;
 }
@@ -89,8 +88,7 @@ void TMemLarge::Free(void* p)
 	m_pMemMan->AddAllocRawSize(-pBlock->m_rawSize);
 
 	//	------- Unlink free block from manager -------
-	TInterlocked::Lock(&m_lock);
-
+	m_lock.Lock();
 	m_allocSize -= pBlock->m_blockSize;
 	m_blockCnt--;
 
@@ -105,7 +103,7 @@ void TMemLarge::Free(void* p)
 	if (pn)
 		pn->m_pPrev = pp;
 
-	TInterlocked::Unlock(&m_lock);
+	m_lock.Unlock();
 #endif
 
 	TMemCommon::RawMemFree(pBlock);

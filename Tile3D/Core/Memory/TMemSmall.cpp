@@ -1,4 +1,3 @@
-#include <Core/Lock/TInterlocked.h>
 #include "TMemSmall.h"
 #include "TMemLarge.h"
 #include "TMemMan.h"
@@ -39,7 +38,7 @@ void* TMemSmall::Allocate(size_t size)
 #endif
 
 	//	------ Get free block from manager ------ 
-	TInterlocked::Lock(&m_locks[poolSlot]);
+	m_locks[poolSlot].Lock();
 
 	//	Get proper memory pool slot
 	TMemSmallSlot& slot = m_pools[poolSlot];
@@ -55,7 +54,7 @@ void* TMemSmall::Allocate(size_t size)
 	slot.m_pFreeBlks = pFreeBlk->m_pNext;
 	slot.m_freeCnt--;
 
-	TInterlocked::Unlock(&m_locks[poolSlot]);
+	m_locks[poolSlot].Unlock();
 
 	//	------ Initialize block ------ 
 	char* pData = (char*)pFreeBlk + sizeof(TMemSmallBlock);
@@ -132,7 +131,7 @@ void TMemSmall::Free(void *p)
 	pBlock->m_flag = MEM_FREE_FLAG_S;
 
 	//	------- Return free block to manager --------
-	TInterlocked::Lock(&m_locks[iSlot]);
+	m_locks[iSlot].Lock();
 
 	TMemSmallBlock** ppFreeList = &slot.m_pFreeBlks;
 	pBlock->m_pNext = *ppFreeList;
@@ -141,7 +140,7 @@ void TMemSmall::Free(void *p)
 
 	m_poolMans[iSlot].IncGCCounter();
 
-	TInterlocked::Unlock(&m_locks[iSlot]);
+	m_locks[iSlot].Unlock();
 }
 
 //	Garbage collect
