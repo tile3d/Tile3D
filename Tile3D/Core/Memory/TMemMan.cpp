@@ -2,7 +2,7 @@
 #include "TMemSmall.h"
 #include "TMemLarge.h"
 #include "TMemDump.h"
-#include <Core/Lock/TInterlocked.h>
+#include <Core/Lock/TMutexLock.h>
 #include <Util/TLog.h>
 
 #pragma warning (disable: 4996)
@@ -24,13 +24,6 @@ TMemMan TMemMan::gMemMan;
 
 
 TMemMan::TMemMan() {
-	m_idCnt = 0;
-	m_peakSize = 0;
-	m_sizeCnt = 0;
-	m_lock = 0;
-
-	m_rawSizeCnt = 0;
-
 	m_memSmall.SetMemManager(this);
 	m_memLarge.SetMemManager(this);
 }
@@ -38,28 +31,28 @@ TMemMan::TMemMan() {
 TMemMan::~TMemMan() {
 
 #ifdef DEBUG_MEMORY
-		TLog::Log(LOG_INFO, "MEMORY", "Maximum memory used: %d (K)", (m_peakSize + 1023) / 1024);
+		TLog::Log(LOG_INFO, "MEMORY", "Maximum memory used: %d (K)", (m_peakSize.Get() + 1023) / 1024);
 #endif
 }
 
 int TMemMan::GetNextID() 
 { 
-	return TInterlocked::InterlockedIncrement(&m_idCnt); 
+	return m_idCnt.Increment();
 }
 
 void TMemMan::AddAllocSize(int size)
 {
-	TInterlocked::Lock(&m_lock);
-	if ((m_sizeCnt += size) > m_peakSize) {
-		m_peakSize = m_sizeCnt;
+	m_lock.Lock();
+	if (m_sizeCnt.Add(size) > m_peakSize.Get()) {
+		m_peakSize.Set(m_sizeCnt.Get());
 	}
-	TInterlocked::Unlock(&m_lock);
+	m_lock.Unlock();
 }
 
 //	Add total allocated raw size
 void TMemMan::AddAllocRawSize(int size)
 {
-	TInterlocked::InterlockedAdd(&m_rawSizeCnt, size);
+	m_rawSizeCnt.Add(size);
 }
 
 
@@ -170,7 +163,7 @@ void* TMemMan::MallocDebug(size_t size)
 	TMemSmallBlock* pBlock = TMemSmall::GetMemSmallBlockInfo(pData);
 
 	// now do a call stack backtrace
-	DWORD frame_cur = 0;
+	int frame_cur = 0;
 	int c = 0;
 	const int skip = 1;
 
@@ -180,9 +173,9 @@ void* TMemMan::MallocDebug(size_t size)
 	}
 
 	memset(pBlock->m_callers, 0, sizeof(pBlock->m_callers));
-	while (!IsBadReadPtr((LPVOID)(4 + frame_cur), 4))
+	while (true)
 	{
-		DWORD thisCall = *(DWORD*)(frame_cur + 4);
+		int thisCall = *(int*)(frame_cur + 4);
 		if (c >= skip)
 			pBlock->m_callers[c - skip] = thisCall;
 
@@ -191,7 +184,7 @@ void* TMemMan::MallocDebug(size_t size)
 		if (c >= MAX_CALLSTACK_LV + skip || thisCall == 0)
 			break;
 
-		DWORD frame_up = *(DWORD *)frame_cur;
+		int frame_up = *(int *)frame_cur;
 		if (frame_up <= frame_cur)
 			break;
 
@@ -246,10 +239,10 @@ void* TMemMan::ReallocDebug(void* pMem, size_t size)
 		return MallocDebug(size);
 
 	//	Get old memory block
-	DWORD dwMaxSize = (DWORD)CalMemUseableSize(pMem);
+	int dwMaxSize = CalMemUseableSize(pMem);
 
 	//	If old memory block is big enough, return memory block unchanged.
-	if (size <= dwMaxSize)
+	if (size <= (size_t)dwMaxSize)
 	{
 		TMemSmallBlock* pBlock = TMemSmall::GetMemSmallBlockInfo(pMem);
 

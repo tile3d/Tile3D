@@ -130,7 +130,10 @@
     <ClInclude Include="Container\THashMap.h" />
     <ClInclude Include="Container\TList.h" />
     <ClInclude Include="Container\TString.h" />
+    <ClInclude Include="Core\Lock\TAtomicInt.h" />
     <ClInclude Include="Core\Lock\TInterlocked.h" />
+    <ClInclude Include="Core\Lock\TMutexLock.h" />
+    <ClInclude Include="Core\Lock\TReentrantLock.h" />
     <ClInclude Include="Core\Memory\TMemCommon.h" />
     <ClInclude Include="Core\Memory\TMemDump.h" />
     <ClInclude Include="Core\Memory\TMemLarge.h" />

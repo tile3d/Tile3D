@@ -2,6 +2,8 @@
 
 #include "TMemSmall.h"
 #include "TMemLarge.h"
+#include <Core/Lock/TAtomicInt.h>
+#include <Core/Lock/TMutexLock.h>
 
 class TMemMan
 {
@@ -25,13 +27,13 @@ public:
 	//	Get next memory block's ID
 	int GetNextID();
 	//	Get current memory block ID
-	int GetID() { return m_idCnt; }
+	int GetID() { return m_idCnt.Get(); }
 	//	Get peak size of memory
-	int	GetPeakSize() { return m_peakSize; }
+	int	GetPeakSize() { return m_peakSize.Get(); }
 	//	Get allocation counter
-	int GetAllocSize() { return m_sizeCnt; }
+	int GetAllocSize() { return m_sizeCnt.Get(); }
 	//	Get allocated raw size
-	int GetAllocRawSize() { return m_rawSizeCnt; }
+	int GetAllocRawSize() { return m_rawSizeCnt.Get(); }
 	//	Add total allocated size
 	void AddAllocSize(int size);
 	//	Add total allocated raw size
@@ -69,11 +71,11 @@ protected:	//	Attribute
 	TMemSmall		m_memSmall;
 	TMemLarge		m_memLarge;
 
-	int	m_lock;			//	Atom used to ensure thread safe
-	int	m_idCnt;		//	Allocate ID counter
-	int	m_peakSize;		//	Peak size (maximum size of memory)
-	int	m_sizeCnt;		//	Allocate size counter
-	int	m_rawSizeCnt;	//	Raw size counter
+	TAtomicInt	m_idCnt;		//	Allocate ID counter
+	TAtomicInt	m_peakSize;		//	Peak size (maximum size of memory)
+	TAtomicInt	m_sizeCnt;		//	Allocate size counter
+	TAtomicInt	m_rawSizeCnt;	//	Raw size counter
+	TMutexLock	m_lock;	//	Lock to ensure thread safe
 
 	static TMemMan	gMemMan;
 };

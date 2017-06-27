@@ -105,6 +105,15 @@
     <ClInclude Include="Core\Memory\TMemVec.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Lock\TReentrantLock.h">
+      <Filter>Core\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Lock\TMutexLock.h">
+      <Filter>Core\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Lock\TAtomicInt.h">
+      <Filter>Core\Lock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
