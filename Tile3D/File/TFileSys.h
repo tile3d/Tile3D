@@ -22,16 +22,21 @@ public:
 
 	void GetFullPath(char * fullPath, const char * folderName, const char * fileName);
 	void GetFullPath(char * fullPath, const char* fileName);
-	void GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename);
-	void GetFullPathNoBase(TString& fullpath, const char* baseDir, const char* filename);
+	void GetFullPath(TString& fullPath, const char* folderName, const char* fileName);
+	void GetFullPath(TString& fullPath, const char* fileName);
 
+	void GetFullPathWithUpdate(TString& fullPath, const char* fileName, bool noCheckFileExist);
+	void GetFullPathWithDocument(TString& fullPath, const char* fileName, bool noCheckFileExist);
+
+	void GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename);
+	void GetFullPathNoBase(TString& fullPath, const char* baseDir, const char* filename);
 
 	void GetRelativePath(const char* fullPath, const char* folderName, char* relativePath);
 	void GetRelativePath(const char* fullPath, char* relativePath);
 	void GetRelativePath(const char* fullPath, const char* folderName, TString& relativePath);
 	void GetRelativePath(const char* fullPath, TString& relativePath);
-	void GetRelativePathNoBase(const char* fullpath, const char* parentPath, TString& strRelativePath);
-	void GetRelativePathNoBase(const char* fullpath, const char* parentPath, char* relativepath);
+	void GetRelativePathNoBase(const char* fullPath, const char* parentPath, TString& strRelativePath);
+	void GetRelativePathNoBase(const char* fullPath, const char* parentPath, char* relativepath);
 
 	bool GetFileTitle(const char* pFile, char* pTitle);
 	bool GetFileTitle(const char* pFile, TString& title);
@@ -39,6 +44,16 @@ public:
 	bool GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf);
 	bool GetFilePath(const char* pFile, TString& path);
 
+	bool CheckFileExt(const char* fileName, const char* extName, int extLen, int fileNameLen);
+	bool ChangeFileExt(char* fileNameBuf, int bufLen, const char* newExt);
+	bool ChangeFileExt(TString& fileName, const char* newExt);
+	void RemoveExtName(TString& fileName);
+
+	bool ContainFilePath(const char* szFileName);
+	void NormalizeFileName(char* fileName);
+	void NormalizeFileName(const char* srcFileName, char* dstFileName);
+
+	bool IsFileExist(const char* szFileName);
 private:
 	// BaseDir is the working directory we load resource files from, and it's read-only.
 	//
@@ -58,4 +73,6 @@ private:
 	char m_libraryDir[MAX_PATH];
 	char m_tempDir[MAX_PATH];
 };
+
+
 

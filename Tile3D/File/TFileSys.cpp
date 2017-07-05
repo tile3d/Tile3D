@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <Container/TString.h>
 
+#ifdef PLATFORM_WIN
+	#include <io.h>
+#endif
+
+
+
 bool TFileSys::Initialize(const char* baseDir, const char* documentDir, const char* libraryDir, const char* tempDir)
 {
 	strncpy(m_baseDir, baseDir, MAX_PATH);
@@ -37,6 +43,55 @@ void TFileSys::GetFullPath(char * fullPath, const char * folderName, const char 
 void TFileSys::GetFullPath(char * fullPath, const char* fileName)
 {
 	GetFullPath(fullPath, m_baseDir, fileName);
+}
+
+void TFileSys::GetFullPath(TString& fullPath, const char* folderName, const char* fileName)
+{
+	char baseDir[MAX_PATH];
+	sprintf(baseDir, "%s/%s", m_baseDir, folderName);
+	GetFullPathNoBase(fullPath, baseDir, fileName);
+}
+
+void TFileSys::GetFullPath(TString& fullPath, const char* fileName)
+{
+	GetFullPathNoBase(fullPath, m_baseDir, fileName);
+}
+
+bool TFileSys::IsFileExist(const char* szFileName)
+{
+	if (_access(szFileName, 0) == 0)
+		return true;
+	return false;
+}
+
+void TFileSys::GetFullPathWithUpdate(TString& fullPath, const char* fileName, bool noCheckFileExist)
+{
+	TString fname = fileName;
+	fname.ToLower();
+	if (*m_libraryDir != '\0')
+	{
+		GetFullPathNoBase(fullPath, m_libraryDir, (const char*)fname);
+		if (noCheckFileExist)
+			return;
+		if (IsFileExist(fullPath))
+			return;
+	}
+	GetFullPathNoBase(fullPath, m_baseDir, (const char*)fname);
+}
+
+void TFileSys::GetFullPathWithDocument(TString& fullPath, const char* fileName, bool noCheckFileExist)
+{
+	TString strfilename = fileName;
+	strfilename.ToLower();
+	if (*m_documentDir != '\0')
+	{
+		GetFullPathNoBase(fullPath, m_documentDir, (const char*)strfilename);
+		if (noCheckFileExist)
+			return;
+		if (IsFileExist(fullPath))
+			return;
+	}
+	GetFullPathNoBase(fullPath, m_baseDir, (const char*)strfilename);
 }
 
 void TFileSys::GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename)
@@ -210,6 +265,7 @@ bool TFileSys::GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf)
 	return true;
 }
 
+
 bool TFileSys::GetFilePath(const char* pFile, TString& path)
 {
 	char pathBuf[MAX_PATH];
@@ -220,3 +276,131 @@ bool TFileSys::GetFilePath(const char* pFile, TString& path)
 
 	return bRet;
 }
+
+//	Check file extension
+bool TFileSys::CheckFileExt(const char* fileName, const char* extName, int extLen, int fileNameLen)
+{
+	TAssert(fileName && extName);
+
+	if (fileNameLen < 0)
+		fileNameLen = (int)strlen(fileName);
+
+	if (extLen < 0)
+		extLen = (int)strlen(extName);
+
+	const char* p1 = fileName + fileNameLen - 1;
+	const char* p2 = extName + extLen - 1;
+
+	bool bMatch = fileNameLen > 0 && extLen > 0;
+
+	while (bMatch && p2 >= extName && p1 >= fileName)
+	{
+		if (*p1 != *p2 && !(*p1 >= 'A' && *p1 <= 'Z' && *p2 == *p1 + 32) &&
+			!(*p1 >= 'a' && *p1 <= 'z' && *p2 == *p1 - 32))
+		{
+			bMatch = false;
+			break;
+		}
+
+		p1--;
+		p2--;
+	}
+
+	return bMatch;
+}
+
+//	Change file extension
+bool TFileSys::ChangeFileExt(char* fileNameBuf, int bufLen, const char* newExt)
+{
+	char szFile[MAX_PATH];
+	strcpy(szFile, fileNameBuf);
+
+	char* pTemp = strrchr(szFile, '.');
+	if (pTemp)
+		strcpy(pTemp, newExt);
+	else
+		strcat(szFile, newExt);
+
+	int iLen = (int)strlen(szFile);
+	if (iLen >= bufLen)
+	{
+		TAssert(iLen < bufLen);
+		return false;
+	}
+
+	strcpy(fileNameBuf, szFile);
+	return true;
+}
+
+bool TFileSys::ChangeFileExt(TString& fileName, const char* newExt)
+{
+	char fileBuf[MAX_PATH];
+	strcpy(fileBuf, fileName);
+
+	char* pTemp = strrchr(fileBuf, '.');
+	if (pTemp)
+		strcpy(pTemp, newExt);
+	else
+		strcat(fileBuf, newExt);
+
+	fileName = fileBuf;
+	return true;
+}
+
+void TFileSys::RemoveExtName(TString& fileName)
+{
+	int iPos = fileName.ReverseFind('.');
+	if (iPos >= 0)
+	{
+		fileName = fileName.Left(iPos);
+	}
+}
+
+bool TFileSys::ContainFilePath(const char* szFileName)
+{
+	return strchr(szFileName, '\\') || strchr(szFileName, '/');
+}
+
+
+void TFileSys::NormalizeFileName(char* fileName)
+{
+	if (fileName)
+	{
+		char* p = fileName;
+		while (*p)
+		{
+			if (*p >= 'A' && *p <= 'Z')
+				*p += 32;
+			else if (*p == '\\')
+				*p = '/';
+			p++;
+		}
+	}
+}
+
+void TFileSys::NormalizeFileName(const char* srcFileName, char* dstFileName)
+{
+	if (!srcFileName || !dstFileName)
+	{
+		TAssert(srcFileName && dstFileName);
+		return;
+	}
+
+	const char* ps = srcFileName;
+	char* pd = dstFileName;
+	while (*ps)
+	{
+		char ch = *ps++;
+		if (ch >= 'A' && ch <= 'Z')
+			*pd = ch + 32;
+		else if (ch == '\\')
+			*pd = '/';
+		else
+			*pd = ch;
+
+		pd++;
+	}
+
+	*pd = '\0';
+}
+
