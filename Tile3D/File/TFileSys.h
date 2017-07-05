@@ -1,0 +1,61 @@
+#pragma once
+
+#include <Util/TTypes.h>
+
+class TString;
+class TFileSys
+{
+public:
+	static TFileSys & GetInstance() {
+		static TFileSys fs;
+		return fs;
+	}
+
+	bool Initialize(const char* pszBaseDir, const char* pszDocumentDir, const char* pszLibraryDir, const char* pszTempDir);
+
+	void RemoveLastDirSlash(char* pDir);
+	
+	const char * GetBaseDir() { return m_baseDir; }	
+	const char * GetDocumentDir() { return m_documentDir; }
+	const char * GetLibraryDir() { return m_libraryDir; }
+	const char * GetTempDir() { return m_tempDir; }
+
+	void GetFullPath(char * fullPath, const char * folderName, const char * fileName);
+	void GetFullPath(char * fullPath, const char* fileName);
+	void GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename);
+	void GetFullPathNoBase(TString& fullpath, const char* baseDir, const char* filename);
+
+
+	void GetRelativePath(const char* fullPath, const char* folderName, char* relativePath);
+	void GetRelativePath(const char* fullPath, char* relativePath);
+	void GetRelativePath(const char* fullPath, const char* folderName, TString& relativePath);
+	void GetRelativePath(const char* fullPath, TString& relativePath);
+	void GetRelativePathNoBase(const char* fullpath, const char* parentPath, TString& strRelativePath);
+	void GetRelativePathNoBase(const char* fullpath, const char* parentPath, char* relativepath);
+
+	bool GetFileTitle(const char* pFile, char* pTitle);
+	bool GetFileTitle(const char* pFile, TString& title);
+
+	bool GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf);
+	bool GetFilePath(const char* pFile, TString& path);
+
+private:
+	// BaseDir is the working directory we load resource files from, and it's read-only.
+	//
+	// Under iOS system:
+	//
+	// These four directories are independent, and have different access authorities.
+	// We write files into Document directory or Library directory which could be synchronized automatically by system.
+	// We write temporary files like preprocessed .glsl files to TempDir.
+	//
+	// Under Windows system:
+	//
+	// BaseDir, DocumentDir and LibraryDir are same, they all pointed to the current working directory of the program.
+	// And the TempDir is a sub-dir under current working directory named Temp.
+
+	char m_baseDir[MAX_PATH];
+	char m_documentDir[MAX_PATH];
+	char m_libraryDir[MAX_PATH];
+	char m_tempDir[MAX_PATH];
+};
+

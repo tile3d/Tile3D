@@ -71,3 +71,5 @@ Test/TestCore/Debug/TestCore.log
 Test/TestCore/Debug/TestCore.log
 TestMisc/TestMisc/Debug/TestMisc.Build.CppClean.log
 Test/TestCore/Debug/TestCore.log
+Test/TestCore/Debug/TestCore.log
+*.log

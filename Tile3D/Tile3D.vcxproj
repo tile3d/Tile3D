@@ -83,7 +83,7 @@
       <SDLCheck>true</SDLCheck>
       <EnablePREfast>true</EnablePREfast>
       <BrowseInformation>true</BrowseInformation>
-      <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -142,6 +142,8 @@
     <ClInclude Include="Core\Memory\TMemVec.h" />
     <ClInclude Include="Core\TMemory.h" />
     <ClInclude Include="Core\TObject.h" />
+    <ClInclude Include="File\TFile.h" />
+    <ClInclude Include="File\TFileSys.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TMathUtil.h" />
     <ClInclude Include="Math\TMatrix.h" />
@@ -156,6 +158,7 @@
     <ClInclude Include="Math\TVector4.h" />
     <ClInclude Include="Util\TAssert.h" />
     <ClInclude Include="Util\TLog.h" />
+    <ClInclude Include="Util\TTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Container\TString.cpp" />
@@ -166,6 +169,8 @@
     <ClCompile Include="Core\Memory\TMemSmall.cpp" />
     <ClCompile Include="Core\TMemory.cpp" />
     <ClCompile Include="Core\TObject.cpp" />
+    <ClCompile Include="File\TFile.cpp" />
+    <ClCompile Include="File\TFileSys.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />
