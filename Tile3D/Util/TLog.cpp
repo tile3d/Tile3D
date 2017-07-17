@@ -41,7 +41,7 @@ const char * TLog::GetLogLevelStr(LOG_LEVEL logLevel)
 			return "INFO";
 		case LOG_WARNING:
 			return "WARNING";
-		case LOG_ERROR:
+		case LOG_ERR:
 			return "ERROR";
 		case LOG_FATAL:
 			return "FATAL";

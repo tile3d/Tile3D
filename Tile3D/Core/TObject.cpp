@@ -27,3 +27,7 @@ void TObject::operator delete[](void * pData)
 	return TMemory::Free(pData);
 }
 
+void * TObject::operator new(size_t size, void * p)
+{
+	return TMemory::Realloc(p, size);
+}

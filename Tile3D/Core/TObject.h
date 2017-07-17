@@ -44,7 +44,7 @@ public:
 	void * operator new[](size_t nSize);
 	void operator delete[](void * pData);
 
-
+	void * operator new(size_t size, void * p);
 
 
 private:

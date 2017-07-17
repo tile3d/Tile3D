@@ -7,7 +7,7 @@ enum LOG_LEVEL
 	LOG_NONE,			//0: not used
 	LOG_INFO,			//1: log info (normally for debug)
 	LOG_WARNING,		//2: log warnning
-	LOG_ERROR,			//3: log error info
+	LOG_ERR,			//3: log error info
 	LOG_FATAL,			//4: log fatal message
 };
 

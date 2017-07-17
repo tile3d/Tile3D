@@ -143,7 +143,9 @@
     <ClInclude Include="Core\TMemory.h" />
     <ClInclude Include="Core\TObject.h" />
     <ClInclude Include="File\TFile.h" />
+    <ClInclude Include="File\TFileMem.h" />
     <ClInclude Include="File\TFileSys.h" />
+    <ClInclude Include="File\TIniFile.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TMathUtil.h" />
     <ClInclude Include="Math\TMatrix.h" />
@@ -170,7 +172,9 @@
     <ClCompile Include="Core\TMemory.cpp" />
     <ClCompile Include="Core\TObject.cpp" />
     <ClCompile Include="File\TFile.cpp" />
+    <ClCompile Include="File\TFileMem.cpp" />
     <ClCompile Include="File\TFileSys.cpp" />
+    <ClCompile Include="File\TIniFile.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />

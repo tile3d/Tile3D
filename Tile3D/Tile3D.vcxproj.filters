@@ -123,6 +123,12 @@
     <ClInclude Include="File\TFileSys.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="File\TFileMem.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="File\TIniFile.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -186,6 +192,12 @@
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="File\TFileSys.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TFileMem.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TIniFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>

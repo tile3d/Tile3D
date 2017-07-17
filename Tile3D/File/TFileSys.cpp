@@ -5,6 +5,7 @@
 
 #ifdef PLATFORM_WIN
 	#include <io.h>
+	#include <sys/stat.h>
 #endif
 
 
@@ -62,6 +63,13 @@ bool TFileSys::IsFileExist(const char* szFileName)
 	if (_access(szFileName, 0) == 0)
 		return true;
 	return false;
+}
+
+int TFileSys::GetFileTimeStamp(const char * fileName)
+{	
+	struct stat fileStat;
+	stat(fileName, &fileStat);
+	return (int)(fileStat.st_mtime);
 }
 
 void TFileSys::GetFullPathWithUpdate(TString& fullPath, const char* fileName, bool noCheckFileExist)

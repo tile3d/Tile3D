@@ -6,9 +6,9 @@ class TString;
 class TFileSys
 {
 public:
-	static TFileSys & GetInstance() {
+	static TFileSys * GetInstance() {
 		static TFileSys fs;
-		return fs;
+		return &fs;
 	}
 
 	bool Initialize(const char* pszBaseDir, const char* pszDocumentDir, const char* pszLibraryDir, const char* pszTempDir);
@@ -49,11 +49,13 @@ public:
 	bool ChangeFileExt(TString& fileName, const char* newExt);
 	void RemoveExtName(TString& fileName);
 
-	bool ContainFilePath(const char* szFileName);
+	bool ContainFilePath(const char* fileName);
 	void NormalizeFileName(char* fileName);
 	void NormalizeFileName(const char* srcFileName, char* dstFileName);
 
-	bool IsFileExist(const char* szFileName);
+	bool IsFileExist(const char* fileName);
+
+	int GetFileTimeStamp(const char * fileName);
 private:
 	// BaseDir is the working directory we load resource files from, and it's read-only.
 	//
