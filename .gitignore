@@ -75,3 +75,6 @@ Test/TestCore/Debug/TestCore.log
 *.log
 Test/TestCore/Debug/TestCore.log
 Test/TestCore/Debug/TestCore.log
+*.idb
+.vs/Tile3D/v15/Solution.VC.db-wal
+*.db-shm
