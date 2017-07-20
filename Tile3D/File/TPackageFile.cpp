@@ -1,9 +1,10 @@
 #include "TPackageFile.h"
-#include "TFileSys.h"
+#include "TFileDir.h"
 #include <string.h>
 #include <algorithm>
 #include <Util/TLog.h>
 #include <Util/TAssert.h>
+#include <Sys/TSysFile.h>
 
 TPackageFile::TPackageFile()
 {
@@ -37,7 +38,7 @@ bool TPackageFile::Open(const char * fileName, const char * mode)
 	strncpy(m_mode, mode, 32);
 
 	strcpy(m_path2, m_path);
-	TFileSys::GetInstance()->ChangeFileExt(m_path2, MAX_PATH, ".pkx");
+	TFileDir::GetInstance()->ChangeFileExt(m_path2, MAX_PATH, ".pkx");
 	return true;
 }
 
@@ -49,7 +50,7 @@ bool TPackageFile::Phase2Open(int64 offset)
 		m_pFile2 = fopen(m_path2, m_mode);
 		if (NULL == m_pFile2)
 		{
-			if (stricmp(m_mode, "r+b") == 0 && !TFileSys::GetInstance()->IsFileExist(m_path2))
+			if (TSysFile::StrCmpNoCase(m_mode, "r+b") == 0 && !TFileDir::GetInstance()->IsFileExist(m_path2))
 			{
 				// it is the first time we access the second file	
 				m_pFile2 = fopen(m_path2, "wb+");
@@ -159,7 +160,7 @@ size_t TPackageFile::Write(const void *buffer, size_t size, size_t count)
 	else if (m_filePos < MAX_FILE_PACKAGE)
 	{
 		// case 2: partial in file1 and partial in file 2
-		size_t size_to_write1 = MAX_FILE_PACKAGE - m_filePos;
+		size_t size_to_write1 = (size_t)(MAX_FILE_PACKAGE - m_filePos);
 		size_t size_to_write2 = size_to_write - size_to_write1;
 
 		// write to file1
@@ -173,7 +174,7 @@ size_t TPackageFile::Write(const void *buffer, size_t size, size_t count)
 		// Also, if an error occurs, the file-position indicator cannot be determined.
 		if (writesize1 != size_to_write1)
 		{
-			fseek(m_pFile1, m_filePos, SEEK_SET);
+			fseek(m_pFile1, (long)m_filePos, SEEK_SET);
 			return writesize1;
 		}
 
@@ -241,15 +242,15 @@ void TPackageFile::Seek(int64 offset, int origin)
 			newpos = m_size1 + m_size2;
 
 		if (newpos < m_size1)
-			fseek(m_pFile1, newpos, SEEK_SET);
+			fseek(m_pFile1, (long)newpos, SEEK_SET);
 		else
-			fseek(m_pFile2, newpos - m_size1, SEEK_SET);
+			fseek(m_pFile2, (long)(newpos - m_size1), SEEK_SET);
 
 		m_filePos = newpos;
 	}
 	else
 	{
-		fseek(m_pFile1, offset, origin);
+		fseek(m_pFile1, (long)offset, origin);
 		m_filePos = ftell(m_pFile1);
 	}
 
@@ -267,8 +268,8 @@ void TPackageFile::SetPackageFileSize(int64 fileSize)
 	{
 		if (fileSize <= MAX_FILE_PACKAGE)
 		{
-			int fileHandle = _fileno(m_pFile1);
-			_chsize(fileHandle, fileSize);
+			int fileHandle = TSysFile::FileNo(m_pFile1);
+			TSysFile::SetFileSize(fileHandle, (int)fileSize);
 			m_size1 = fileSize;
 
 			fclose(m_pFile2);
@@ -278,15 +279,15 @@ void TPackageFile::SetPackageFileSize(int64 fileSize)
 		}
 		else
 		{
-			int fileHandle = _fileno(m_pFile2);
+			int fileHandle = TSysFile::FileNo(m_pFile2);
 			m_size2 = fileSize - MAX_FILE_PACKAGE;
-			_chsize(fileHandle, m_size2);
+			TSysFile::SetFileSize(fileHandle, (int)m_size2);
 		}
 	}
 	else
 	{
 		int fileHandle = _fileno(m_pFile1);
-		_chsize(fileHandle, fileSize);
+		TSysFile::SetFileSize(fileHandle, (int)fileSize);
 		m_size1 = fileSize;
 	}
 }
@@ -308,8 +309,8 @@ size_t TPackageFile::ReadFile(void* buffer, const size_t num_byte, FILE* stream)
 
 	unsigned char* pBuf = (unsigned char*)buffer;
 	size_t maxOnceReadSize = MAX_RW_SIZE;
-	int offset = 0;
-	while (offset<num_byte)
+	size_t offset = 0;
+	while (offset < num_byte)
 	{
 		int readSize = std::min(num_byte - offset, maxOnceReadSize);
 		int actuallyReadSize = fread(pBuf + offset, 1, readSize, stream);
@@ -357,7 +358,7 @@ size_t TPackageFile::WriteFile(const void* buffer, const size_t num_byte, FILE* 
 
 	const unsigned char* pBuf = (unsigned char*)buffer;
 	size_t maxOnceWriteSize = MAX_RW_SIZE;
-	int offset = 0;
+	size_t offset = 0;
 	while (offset<num_byte)
 	{
 		int writeSize = std::min(num_byte - offset, maxOnceWriteSize);

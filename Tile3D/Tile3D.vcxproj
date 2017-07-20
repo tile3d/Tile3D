@@ -97,6 +97,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,7 +129,9 @@
   <ItemGroup>
     <ClInclude Include="Container\TArray.h" />
     <ClInclude Include="Container\THashMap.h" />
+    <ClInclude Include="Container\THashSet.h" />
     <ClInclude Include="Container\TList.h" />
+    <ClInclude Include="Container\TQueue.h" />
     <ClInclude Include="Container\TString.h" />
     <ClInclude Include="Core\Lock\TAtomicInt.h" />
     <ClInclude Include="Core\Lock\TMutexLock.h" />
@@ -144,10 +147,11 @@
     <ClInclude Include="Core\TObject.h" />
     <ClInclude Include="File\TFile.h" />
     <ClInclude Include="File\TFileMem.h" />
-    <ClInclude Include="File\TFilePackBase.h" />
-    <ClInclude Include="File\TFileSys.h" />
+    <ClInclude Include="File\TFileDir.h" />
     <ClInclude Include="File\TIniFile.h" />
     <ClInclude Include="File\TPackageFile.h" />
+    <ClInclude Include="File\TPackageImp.h" />
+    <ClInclude Include="File\TPackageMan.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TMathUtil.h" />
     <ClInclude Include="Math\TMatrix.h" />
@@ -160,6 +164,8 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
+    <ClInclude Include="Sys\TSysFile.h" />
+    <ClInclude Include="Sys\Win\TSysFileWin.h" />
     <ClInclude Include="Util\TAssert.h" />
     <ClInclude Include="Util\TLog.h" />
     <ClInclude Include="Util\TTypes.h" />
@@ -175,10 +181,11 @@
     <ClCompile Include="Core\TObject.cpp" />
     <ClCompile Include="File\TFile.cpp" />
     <ClCompile Include="File\TFileMem.cpp" />
-    <ClCompile Include="File\TFilePackBase.cpp" />
-    <ClCompile Include="File\TFileSys.cpp" />
+    <ClCompile Include="File\TFileDir.cpp" />
     <ClCompile Include="File\TIniFile.cpp" />
     <ClCompile Include="File\TPackageFile.cpp" />
+    <ClCompile Include="File\TPackageImp.cpp" />
+    <ClCompile Include="File\TPackageMan.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />
@@ -189,6 +196,7 @@
     <ClCompile Include="Math\TRotator.cpp" />
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
+    <ClCompile Include="Sys\Win\TSysFileWin.cpp" />
     <ClCompile Include="Util\TLog.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

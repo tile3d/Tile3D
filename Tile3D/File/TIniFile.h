@@ -51,7 +51,6 @@ public:		//	Operaitons
 	//	Some facility functions
 	bool GetValueAsIntArray(const char* szSect, const char* szKey, int iNumInt, int* pBuf);
 	bool GetValueAsFloatArray(const char* szSect, const char* szKey, int iNumFloat, float* pBuf);
-	bool GetValueAsIntRect(const char* szSect, const char* szKey, ARectI* pRect);
 	bool GetValueAsBoolean(const char* szSect, const char* szKey, bool bDefault) { return GetValueAsInt(szSect, szKey, bDefault ? 1 : 0) ? true : false; }
 
 //	Attributes

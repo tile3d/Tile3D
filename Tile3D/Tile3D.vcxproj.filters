@@ -22,6 +22,18 @@
     <Filter Include="File">
       <UniqueIdentifier>{bdd4a85b-acdd-4905-b089-ff5c6423c318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sys">
+      <UniqueIdentifier>{3e2cefa0-5e47-48c9-a494-f97ba36027ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sys\Win">
+      <UniqueIdentifier>{79ab07e6-a41c-4b3a-9e5e-82cce0bdafe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sys\Android">
+      <UniqueIdentifier>{0bb560cc-b28d-400f-a5ff-7dd88bfa7d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sys\IOS">
+      <UniqueIdentifier>{8458b3d2-ea42-49cb-9fbc-b0f95cad26d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -120,20 +132,35 @@
     <ClInclude Include="Util\TTypes.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="File\TFileSys.h">
-      <Filter>File</Filter>
-    </ClInclude>
     <ClInclude Include="File\TFileMem.h">
       <Filter>File</Filter>
     </ClInclude>
     <ClInclude Include="File\TIniFile.h">
       <Filter>File</Filter>
     </ClInclude>
-    <ClInclude Include="File\TFilePackBase.h">
-      <Filter>File</Filter>
-    </ClInclude>
     <ClInclude Include="File\TPackageFile.h">
       <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys\TSysFile.h">
+      <Filter>Sys</Filter>
+    </ClInclude>
+    <ClInclude Include="Sys\Win\TSysFileWin.h">
+      <Filter>Sys\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="File\TFileDir.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="File\TPackageImp.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="File\TPackageMan.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\THashSet.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\TQueue.h">
+      <Filter>Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -197,19 +224,25 @@
     <ClCompile Include="File\TFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
-    <ClCompile Include="File\TFileSys.cpp">
-      <Filter>File</Filter>
-    </ClCompile>
     <ClCompile Include="File\TFileMem.cpp">
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="File\TIniFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
-    <ClCompile Include="File\TFilePackBase.cpp">
+    <ClCompile Include="File\TPackageFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
-    <ClCompile Include="File\TPackageFile.cpp">
+    <ClCompile Include="Sys\Win\TSysFileWin.cpp">
+      <Filter>Sys\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TFileDir.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TPackageImp.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TPackageMan.cpp">
       <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>

@@ -433,15 +433,6 @@ bool TIniFile::GetValueAsFloatArray(const char* szSect, const char* szKey, int i
 	return true;
 }
 
-bool TIniFile::GetValueAsIntRect(const char* szSect, const char* szKey, ARectI* pRect)
-{
-	int aVals[4];
-	if (!GetValueAsIntArray(szSect, szKey, 4, aVals))
-		return false;
-
-	pRect->SetRect(aVals[0], aVals[1], aVals[2], aVals[3]);
-	return true;
-}
 
 /*	Write integer value
 

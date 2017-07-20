@@ -1,4 +1,4 @@
-#include "TFileSys.h"
+#include "TFileDir.h"
 #include <string.h>
 #include <stdio.h>
 #include <Container/TString.h>
@@ -10,7 +10,7 @@
 
 
 
-bool TFileSys::Initialize(const char* baseDir, const char* documentDir, const char* libraryDir, const char* tempDir)
+bool TFileDir::Initialize(const char* baseDir, const char* documentDir, const char* libraryDir, const char* tempDir)
 {
 	strncpy(m_baseDir, baseDir, MAX_PATH);
 	RemoveLastDirSlash(m_baseDir);
@@ -27,52 +27,52 @@ bool TFileSys::Initialize(const char* baseDir, const char* documentDir, const ch
 }
 
 
-inline void TFileSys::RemoveLastDirSlash(char* pDir) {
+inline void TFileDir::RemoveLastDirSlash(char* pDir) {
 	// Get rid of last '\\'
 	int nLength = (int)strlen(pDir);
 	if (pDir[0] && (pDir[nLength - 1] == '\\' || pDir[nLength - 1] == '/'))
 		pDir[nLength - 1] = '\0';
 }
 
-void TFileSys::GetFullPath(char * fullPath, const char * folderName, const char * fileName)
+void TFileDir::GetFullPath(char * fullPath, const char * folderName, const char * fileName)
 {
 	char baseDir[MAX_PATH];
 	sprintf(baseDir, "%s/%s", m_baseDir, folderName);
 	GetFullPathNoBase(fullPath, baseDir, fileName);
 }
 
-void TFileSys::GetFullPath(char * fullPath, const char* fileName)
+void TFileDir::GetFullPath(char * fullPath, const char* fileName)
 {
 	GetFullPath(fullPath, m_baseDir, fileName);
 }
 
-void TFileSys::GetFullPath(TString& fullPath, const char* folderName, const char* fileName)
+void TFileDir::GetFullPath(TString& fullPath, const char* folderName, const char* fileName)
 {
 	char baseDir[MAX_PATH];
 	sprintf(baseDir, "%s/%s", m_baseDir, folderName);
 	GetFullPathNoBase(fullPath, baseDir, fileName);
 }
 
-void TFileSys::GetFullPath(TString& fullPath, const char* fileName)
+void TFileDir::GetFullPath(TString& fullPath, const char* fileName)
 {
 	GetFullPathNoBase(fullPath, m_baseDir, fileName);
 }
 
-bool TFileSys::IsFileExist(const char* szFileName)
+bool TFileDir::IsFileExist(const char* szFileName)
 {
 	if (_access(szFileName, 0) == 0)
 		return true;
 	return false;
 }
 
-int TFileSys::GetFileTimeStamp(const char * fileName)
+int TFileDir::GetFileTimeStamp(const char * fileName)
 {	
 	struct stat fileStat;
 	stat(fileName, &fileStat);
 	return (int)(fileStat.st_mtime);
 }
 
-void TFileSys::GetFullPathWithUpdate(TString& fullPath, const char* fileName, bool noCheckFileExist)
+void TFileDir::GetFullPathWithUpdate(TString& fullPath, const char* fileName, bool noCheckFileExist)
 {
 	TString fname = fileName;
 	fname.ToLower();
@@ -87,7 +87,7 @@ void TFileSys::GetFullPathWithUpdate(TString& fullPath, const char* fileName, bo
 	GetFullPathNoBase(fullPath, m_baseDir, (const char*)fname);
 }
 
-void TFileSys::GetFullPathWithDocument(TString& fullPath, const char* fileName, bool noCheckFileExist)
+void TFileDir::GetFullPathWithDocument(TString& fullPath, const char* fileName, bool noCheckFileExist)
 {
 	TString strfilename = fileName;
 	strfilename.ToLower();
@@ -102,7 +102,7 @@ void TFileSys::GetFullPathWithDocument(TString& fullPath, const char* fileName, 
 	GetFullPathNoBase(fullPath, m_baseDir, (const char*)strfilename);
 }
 
-void TFileSys::GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename)
+void TFileDir::GetFullPathNoBase(char* fullPath, const char* baseDir, const char* filename)
 {
 	fullPath[0] = '\0';
 
@@ -139,46 +139,46 @@ void TFileSys::GetFullPathNoBase(char* fullPath, const char* baseDir, const char
 	return;
 }
 
-void TFileSys::GetFullPathNoBase(TString& fullpath, const char* baseDir, const char* filename)
+void TFileDir::GetFullPathNoBase(TString& fullpath, const char* baseDir, const char* filename)
 {
 	char szFullPath[MAX_PATH];
 	GetFullPathNoBase(szFullPath, baseDir, filename);
 	fullpath = szFullPath;
 }
 
-void TFileSys::GetRelativePath(const char* fullPath, const char* folderName, char* relativePath)
+void TFileDir::GetRelativePath(const char* fullPath, const char* folderName, char* relativePath)
 {
 	char baseDir[MAX_PATH];
 	sprintf(baseDir, "%s/%s", m_baseDir, folderName);
 	GetRelativePathNoBase(fullPath, m_baseDir, relativePath);
 }
 
-void TFileSys::GetRelativePath(const char* fullPath, char* relativePath)
+void TFileDir::GetRelativePath(const char* fullPath, char* relativePath)
 {
 	GetRelativePathNoBase(fullPath, m_baseDir, relativePath);
 }
 
-void TFileSys::GetRelativePath(const char* fullPath, const char* folderName, TString& relativePath)
+void TFileDir::GetRelativePath(const char* fullPath, const char* folderName, TString& relativePath)
 {
 	char baseDir[MAX_PATH];
 	sprintf(baseDir, "%s/%s", m_baseDir, folderName);
 	GetRelativePathNoBase(fullPath, m_baseDir, relativePath);
 }
 
-void TFileSys::GetRelativePath(const char* fullPath, TString& relativePath)
+void TFileDir::GetRelativePath(const char* fullPath, TString& relativePath)
 {
 	GetRelativePathNoBase(fullPath, m_baseDir, relativePath);
 }
 
 
-void TFileSys::GetRelativePathNoBase(const char* fullpath, const char* parentPath, TString& relativePath)
+void TFileDir::GetRelativePathNoBase(const char* fullpath, const char* parentPath, TString& relativePath)
 {
 	char rPath[MAX_PATH];
 	GetRelativePathNoBase(fullpath, parentPath, rPath);
 	relativePath = rPath;
 }
 
-void TFileSys::GetRelativePathNoBase(const char* fullpath, const char* parentPath, char* relativepath)
+void TFileDir::GetRelativePathNoBase(const char* fullpath, const char* parentPath, char* relativepath)
 {
 	if (!fullpath || !parentPath || !relativepath)
 		return;
@@ -210,7 +210,7 @@ void TFileSys::GetRelativePathNoBase(const char* fullpath, const char* parentPat
 	strcpy(relativepath, p2);
 }
 
-bool TFileSys::GetFileTitle(const char* pFile, char* pTitle)
+bool TFileDir::GetFileTitle(const char* pFile, char* pTitle)
 {
 	if (!pFile || !pTitle)
 		return false;
@@ -238,7 +238,7 @@ bool TFileSys::GetFileTitle(const char* pFile, char* pTitle)
 	return true;
 }
 
-bool TFileSys::GetFileTitle(const char* pFile, TString& title)
+bool TFileDir::GetFileTitle(const char* pFile, TString& title)
 {
 	char titleBuf[MAX_PATH];
 	bool bRet = GetFileTitle(pFile, titleBuf);
@@ -248,7 +248,7 @@ bool TFileSys::GetFileTitle(const char* pFile, TString& title)
 	return bRet;
 }
 
-bool TFileSys::GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf)
+bool TFileDir::GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf)
 {
 	if (!pFile || !pPath)
 		return false;
@@ -274,7 +274,7 @@ bool TFileSys::GetFilePath(const char* pFile, char* pPath, unsigned short cbBuf)
 }
 
 
-bool TFileSys::GetFilePath(const char* pFile, TString& path)
+bool TFileDir::GetFilePath(const char* pFile, TString& path)
 {
 	char pathBuf[MAX_PATH];
 	bool bRet = GetFilePath(pFile, pathBuf, MAX_PATH);
@@ -286,7 +286,7 @@ bool TFileSys::GetFilePath(const char* pFile, TString& path)
 }
 
 //	Check file extension
-bool TFileSys::CheckFileExt(const char* fileName, const char* extName, int extLen, int fileNameLen)
+bool TFileDir::CheckFileExt(const char* fileName, const char* extName, int extLen, int fileNameLen)
 {
 	TAssert(fileName && extName);
 
@@ -318,7 +318,7 @@ bool TFileSys::CheckFileExt(const char* fileName, const char* extName, int extLe
 }
 
 //	Change file extension
-bool TFileSys::ChangeFileExt(char* fileNameBuf, int bufLen, const char* newExt)
+bool TFileDir::ChangeFileExt(char* fileNameBuf, int bufLen, const char* newExt)
 {
 	char szFile[MAX_PATH];
 	strcpy(szFile, fileNameBuf);
@@ -340,7 +340,7 @@ bool TFileSys::ChangeFileExt(char* fileNameBuf, int bufLen, const char* newExt)
 	return true;
 }
 
-bool TFileSys::ChangeFileExt(TString& fileName, const char* newExt)
+bool TFileDir::ChangeFileExt(TString& fileName, const char* newExt)
 {
 	char fileBuf[MAX_PATH];
 	strcpy(fileBuf, fileName);
@@ -355,7 +355,7 @@ bool TFileSys::ChangeFileExt(TString& fileName, const char* newExt)
 	return true;
 }
 
-void TFileSys::RemoveExtName(TString& fileName)
+void TFileDir::RemoveExtName(TString& fileName)
 {
 	int iPos = fileName.ReverseFind('.');
 	if (iPos >= 0)
@@ -364,13 +364,13 @@ void TFileSys::RemoveExtName(TString& fileName)
 	}
 }
 
-bool TFileSys::ContainFilePath(const char* szFileName)
+bool TFileDir::ContainFilePath(const char* szFileName)
 {
 	return strchr(szFileName, '\\') || strchr(szFileName, '/');
 }
 
 
-void TFileSys::NormalizeFileName(char* fileName)
+void TFileDir::NormalizeFileName(char* fileName)
 {
 	if (fileName)
 	{
@@ -386,7 +386,7 @@ void TFileSys::NormalizeFileName(char* fileName)
 	}
 }
 
-void TFileSys::NormalizeFileName(const char* srcFileName, char* dstFileName)
+void TFileDir::NormalizeFileName(const char* srcFileName, char* dstFileName)
 {
 	if (!srcFileName || !dstFileName)
 	{

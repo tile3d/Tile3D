@@ -1,5 +1,5 @@
 #include "TFile.h"
-#include "TFileSys.h"
+#include "TFileDir.h"
 #include <Container/TString.h>
 #include <string.h>
 #include <Util/TAssert.h>
@@ -32,7 +32,7 @@ void TFile::Close()
 bool TFile::Open(const char* folderName, const char* fileName, int flags)
 {
 	char fullPathFileName[MAX_PATH];
-	TFileSys::GetInstance()->GetFullPath(fullPathFileName, folderName, fileName);
+	TFileDir::GetInstance()->GetFullPath(fullPathFileName, folderName, fileName);
 
 	return Open(fullPathFileName, flags);
 }
@@ -46,7 +46,7 @@ bool TFile::Open(const char* fullPath, int flags)
 
 	// Get a relative path name of this file, may use a little time, but
 	// this call is not too often, so this is not matter
-	TFileSys::GetInstance()->GetRelativePath(fullPath, m_relativeFileName);
+	TFileDir::GetInstance()->GetRelativePath(fullPath, m_relativeFileName);
 
 	char szOpenFlag[32];
 	szOpenFlag[0] = '\0';
@@ -72,14 +72,14 @@ bool TFile::Open(const char* fullPath, int flags)
 	strpath.ToLower();
 	char pathfile[MAX_PATH];
 	//判断是否为空
-	if (*TFileSys::GetInstance()->GetLibraryDir() != '\0')
+	if (*TFileDir::GetInstance()->GetLibraryDir() != '\0')
 	{
-		TFileSys::GetInstance()->GetFullPathNoBase(pathfile, TFileSys::GetInstance()->GetLibraryDir(), (const char*)strpath);
+		TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetLibraryDir(), (const char*)strpath);
 		m_pFile = fopen(pathfile, szOpenFlag);
 		if (NULL == m_pFile)
 		{
 			//读取app bundle 是否有分离文件
-			TFileSys::GetInstance()->GetFullPathNoBase(pathfile, TFileSys::GetInstance()->GetBaseDir(), (const char*)strpath);
+			TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetBaseDir(), (const char*)strpath);
 			m_pFile = fopen(pathfile, szOpenFlag);
 			if (NULL == m_pFile)
 				return false;
@@ -88,7 +88,7 @@ bool TFile::Open(const char* fullPath, int flags)
 	else
 	{
 		//读取app bundle 是否有分离文件
-		TFileSys::GetInstance()->GetFullPathNoBase(pathfile, TFileSys::GetInstance()->GetBaseDir(), (const char*)strpath);
+		TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetBaseDir(), (const char*)strpath);
 		m_pFile = fopen(pathfile, szOpenFlag);
 		if (NULL == m_pFile)
 		{
@@ -138,7 +138,7 @@ bool TFile::Open(const char* fullPath, int flags)
 	//	_fstat(idFile, &fileStat);
 	//	m_dwTimeStamp = (int)fileStat.st_mtime;
 
-	m_timestamp = TFileSys::GetInstance()->GetFileTimeStamp(m_fullPathFileName);
+	m_timestamp = TFileDir::GetInstance()->GetFileTimeStamp(m_fullPathFileName);
 	m_hasOpen = true;
 	return true;
 }
@@ -222,7 +222,7 @@ bool TFile::OpenWithAbsFullPath(const char* fullPath, int flags)
 	//	_fstat(idFile, &fileStat);
 	//	m_dwTimeStamp = (int)fileStat.st_mtime;
 
-	m_timestamp = TFileSys::GetInstance()->GetFileTimeStamp(fullPath);
+	m_timestamp = TFileDir::GetInstance()->GetFileTimeStamp(fullPath);
 	m_hasOpen = true;
 	return true;
 }

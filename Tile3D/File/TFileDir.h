@@ -3,11 +3,11 @@
 #include <Util/TTypes.h>
 
 class TString;
-class TFileSys
+class TFileDir
 {
 public:
-	static TFileSys * GetInstance() {
-		static TFileSys fs;
+	static TFileDir * GetInstance() {
+		static TFileDir fs;
 		return &fs;
 	}
 
