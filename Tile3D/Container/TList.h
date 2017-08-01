@@ -4,12 +4,13 @@
 
 
 
-//
+//TBD
 //1) support node pool? (manager the list node memory by self) [done]
 //2) support iterator?
 //3) support Reverse
 //4) support Swap
 //5) support RemoveAll
+//
 template<typename T> class TList
 {
 public:
@@ -176,6 +177,7 @@ public:
 		}
 		FreeNode(pNode);
 	}
+
 	void RemoveTail() {
 		TAssert(m_pTail);
 
@@ -230,6 +232,19 @@ public:
 	void SetPoolSize(int pool_size) {
 		m_pool_size = pool_size;
 	}
+
+	bool IsEmpty() {
+		return m_count != 0;
+	}
+
+	void Clear() {
+		while (m_pHead != nullptr) {
+			TListNode * node = m_pHead;
+			m_pHead = m_pHead->m_pNext;
+			delete node;
+		}
+	}
+
 private:
 	TListNode * AllocNode() {
 		if (m_free == nullptr) {
