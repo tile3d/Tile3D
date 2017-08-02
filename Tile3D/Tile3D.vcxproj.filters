@@ -162,6 +162,9 @@
     <ClInclude Include="Container\TQueue.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Container\THashTable.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">

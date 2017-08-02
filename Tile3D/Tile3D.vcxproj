@@ -130,6 +130,7 @@
     <ClInclude Include="Container\TArray.h" />
     <ClInclude Include="Container\THashMap.h" />
     <ClInclude Include="Container\THashSet.h" />
+    <ClInclude Include="Container\THashTable.h" />
     <ClInclude Include="Container\TList.h" />
     <ClInclude Include="Container\TQueue.h" />
     <ClInclude Include="Container\TString.h" />
