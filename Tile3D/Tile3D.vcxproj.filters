@@ -165,6 +165,15 @@
     <ClInclude Include="Container\THashTable.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Container\TRBTree.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\TTreeMap.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\TTreeSet.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
