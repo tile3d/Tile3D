@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Container\TAlgo.h" />
     <ClInclude Include="Container\TArray.h" />
     <ClInclude Include="Container\THashMap.h" />
     <ClInclude Include="Container\THashSet.h" />

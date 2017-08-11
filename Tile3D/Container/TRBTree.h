@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TAlgo.h"
+
 enum TRBTreeColor
 {
 	COLOR_RED = false,
@@ -124,8 +126,17 @@ public:
 
 	void Rebalance(TRBTreeNode * pNode);
 
+	TRBTreeNode * Find(const KEY & key);
+
+	bool Remove(const KEY & key);
+	void Remove(TRBTreeNode * pNode);
+
+	bool IsEmpty() const { return m_count == 0; }
+
+	int Size() const { return m_count; }
 private:
 	TRBTreeNode * CreateNode(const KEY & key, const VALUE & value);
+	void RemoveNode(TRBTreeNode * pNode);
 
 private:
 	TRBTreeNode *  m_head;
@@ -300,4 +311,186 @@ template<typename KEY, typename VALUE> void TRBTree::Rebalance(TRBTreeNode * pNo
 	}
 	pRoot->m_color = COLOR_BLOACK;
 }
+
+template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Find(const KEY & key)
+{
+	TRBTreeNode * pNode = GetRoot();
+	while (pNode != nullptr) {
+		if (pNode->m_key < key) {
+			pNode = pNode->m_left;
+		}
+		else if(pNode->m_key > key){
+			pNode = pNode->m_right;
+		}
+		else if (pNode->m_key == key) {
+			return pNode;
+		}
+	}
+	return nullptr;
+}
+
+template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Remove(const KEY & key)
+{
+
+}
+
+template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Remove(TRBTreeNode * z)
+{
+	RemoveNode(z);
+}
+
+template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::RemoveNode(TRBTreeNode * z)
+{
+	TRBTreeNode * pRoot = GetRoot();
+	TRBTreeNode * pLeftMost = GetLeftMost();
+	TRBTreeNode * pRightMost = GetRightMost();
+
+	TRBTreeNode * y = z;
+	TRBTreeNode * x = nullptr;
+	TRBTreeNode * x_parent = nullptr
+
+	if (y->m_left == nullptr) {
+		x = y->m_right;
+	}
+	else {
+		if (y->m_right == nullptr) {
+			x = y->m_left;
+		}
+		else {
+			y = y->m_right;
+			while (y->m_left != nullptr) {
+				y = y->m_left;
+			}
+			x = y->m_right;
+		}
+	}
+
+	if (y != z) {
+		z->m_left->m_parent = y;
+		y->m_left = z->m_left;
+		if (y != z->m_right) {
+			x_parent = y->m_parent;
+			if (x) {
+				x->m_parent = y->m_parent;
+			}
+			y->m_parent->m_left = x;
+			y->m_right = z->m_right;
+			z->m_right->m_parent = y;
+
+		}
+		else {
+			x_parent = y;
+		}
+
+		if (pRoot == z) {
+			pRoot = y;
+		}
+		else if (z->m_parent->m_left == z) {
+			z->m_parent->m_left = y;
+		}
+		else {
+			z->m_parent->m_right = y;
+		}
+
+		y->m_parent = z->m_parent;
+		TSwap(y->m_color, z->m_color);
+
+		y = z;
+	}
+	else {
+		if (z->m_parent->m_left == z) {
+			z->m_parent->m_left = x;
+		}
+		else {
+			z->m_parent->m_right = x;
+		}
+
+		if (pLeftMost == z) {
+			if (z->m_right == 0) {
+				pLeftMost = z->m_parent;
+			}
+			else {
+				pLeftMost = x->GetLeftMost();
+			}
+		}
+
+		if (pRightMost == z) {
+			if (z->m_left == 0) {
+				pRightMost = z->m_parent;
+			}
+			else {
+				pRightMost = x->GetRightMost();
+			}
+		}
+	}
+
+	if (y->m_color != COLOR_RED) {
+		while (x != pRoot && (x == nullptr || x->m_color == COLOR_BLACK)) {
+			if (x == x->m_parent->m_left) {
+				TRBTreeNode * w = x_parent->m_right;
+				if (w->m_color == COLOR_RED) {
+					w->color = COLOR_BLACK;
+					x_parent->m_color = COLOR_RED;
+					LeftRotate(x_parent);
+					w = x_parent->m_right;
+				}
+				if ((w->m_left == 0 || w->m_left->m_color == COLOR_BLACK) && (w->m_right == 0 || w->m_right->m_color == COLOR_BLACK) {
+					w->m_color = COLOR_RED;
+					x = x_parent;
+					x_parent = x_parent->m_parent;
+				}
+				else {
+					if (w->m_right == 0 || w->m_right->m_color == COLOR_BLACK) {
+						w->m_left->m_color = COLOR_BLACK;
+						w->m_color = COLOR_RED;
+						RightRotate(w);
+						w = x_parent->m_right;
+					}
+					w->m_color = x_parent->m_color;
+					x_parent->m_color = COLOR_BLACK;
+					if (w->m_right != nullptr) {
+						w->m_right->m_color = COLOR_BLACK;
+					}
+					LeftRotate(x_parent);
+					break;
+				}
+			}
+			else {
+				TRBTreeNode * w = x_parent->m_left;
+				if (w->m_color == COLOR_RED) {
+					w->m_color = COLOR_BLACK;
+					x_parent->m_color = COLOR_RED;
+					RightRotate(x_parent);
+					w = x_parent->m_left;
+				}
+
+				if ((w->m_right == 0 || w->m_right->m_color == COLOR_BLACK) && (w->m_left == nullptr || w->m_left->m_color == COLOR_BLACK)) {
+					w->m_color = COLOR_RED;
+					x = x_parent;
+					x_parent = x_parent->m_parent;
+				}
+				else {
+					if (w->m_left == 0 || w->m_left->m_color == COLOR_BLACK) {
+						w->m_right->m_color = COLOR_BLACK;
+						w->m_color = COLOR_RED;
+						LeftRotate(w);
+						w = x_parent->m_left;
+					}
+					w->m_color = x_parent->m_color;
+					x_parent->m_color = COLOR_BLACK;
+					if (w->m_left) {
+						w->m_left->m_color = COLOR_BLACK;
+					}
+					RightRotate(x_parent);
+					break;
+				}
+			}
+		}
+		if (x) {
+			x->m_color = COLOR_BLACK;
+		}
+	}
+	return y;
+}
+
 

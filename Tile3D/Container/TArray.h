@@ -94,7 +94,7 @@ public:
 	//Remove the element
 	void Remove(const T * pos);
 
-	//Remove the element at once, implement it by the exchange the last elment to this position, disorder the array
+	//Remove the element at once, implement it by the exchange the last elment to this position, disorder the array, simlar to the STL remove generic alogorithm
 	void RemoveAtOnce(int index);
 
 	//Find the element within the array and return the index if exist, if not exist return ARRAY_INDEX_NONE
