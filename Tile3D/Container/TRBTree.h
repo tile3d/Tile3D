@@ -118,13 +118,7 @@ public:
 		return pNode->m_right;
 	}
 
-	void LeftRotate(TRBTreeNode * pNode);
-	void RightRotate(TRBTreeNode * pNode);
-
 	bool InsertUnique(const KEY & key, const VALUE & value);
-	void Insert(TRBTreeNode * x, TRBTreeNode * y, const KEY & key, const VALUE & value);
-
-	void Rebalance(TRBTreeNode * pNode);
 
 	TRBTreeNode * Find(const KEY & key);
 
@@ -134,9 +128,36 @@ public:
 	bool IsEmpty() const { return m_count == 0; }
 
 	int Size() const { return m_count; }
+
+	void Clear() {
+		if (m_count != 0) {
+			Clear(GetRoot());
+			GetLeftMost() = m_head;
+			GetRoot() = nullptr;
+			GetRightMost() = m_head;
+			m_count = 0;
+		}
+	}
+	
+	void Clear(TRBTreeNode * pNode) {
+		while (pNode != nullptr) {
+			Clear(pNode->m_right);
+			TRBTreeNode * pNext = pNode->m_left;
+			delete pNode;
+			pNode = pNext;
+		}
+	}
+
 private:
 	TRBTreeNode * CreateNode(const KEY & key, const VALUE & value);
+	void LeftRotate(TRBTreeNode * pNode);
+	void RightRotate(TRBTreeNode * pNode);
+	
+	void Insert(TRBTreeNode * x, TRBTreeNode * y, const KEY & key, const VALUE & value);
+
 	void RemoveNode(TRBTreeNode * pNode);
+	void Rebalance(TRBTreeNode * pNode);
+
 
 private:
 	TRBTreeNode *  m_head;

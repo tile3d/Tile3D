@@ -3,6 +3,10 @@
 #include <Util/TTypes.h>
 #include <stdio.h>
 
+
+//
+//PCK package file implementation
+//
 class TPackageFile
 {
 public:

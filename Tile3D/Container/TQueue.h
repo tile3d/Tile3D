@@ -5,7 +5,7 @@
 
 //TBD
 //1) Implement Enqueue(const T && value) version
-//
+//2) Consider Dequeue version
 //
 //
 template<typename T> class TQueue

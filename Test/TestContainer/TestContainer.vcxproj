@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="TestArray.cpp" />
     <ClCompile Include="TestList.cpp" />
+    <ClCompile Include="TestTreeMap.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{59D16D05-D149-4979-92A7-CC263D04813E}</ProjectGuid>

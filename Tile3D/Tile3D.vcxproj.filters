@@ -177,6 +177,9 @@
     <ClInclude Include="Container\TAlgo.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="File\TFileImage.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -258,6 +261,9 @@
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="File\TPackageMan.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TFileImage.cpp">
       <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
