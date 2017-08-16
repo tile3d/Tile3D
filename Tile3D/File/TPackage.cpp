@@ -6,6 +6,7 @@
 #include "Util/TLog.h"
 #include "Util/TAssert.h"
 #include "Sys/TSysFile.h"
+#include "zlib/zlib.h"
 
 int TPackage::PackageDir::SearchItemIndex(const char * name, int * pos)
 {
@@ -319,16 +320,15 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			pEntryCache->m_pEntryCompressed = (char*)TMemory::Alloc(nCompressedSize);
 
 			m_pPackageFile->Read(pEntryCache->m_pEntryCompressed, nCompressedSize, 1);
-			int entrySize = sizeof(FileEntry);
-
+			unsigned long entrySize = sizeof(FileEntry);
 			if (entrySize == nCompressedSize)
 			{
 				memcpy(pEntry, pEntryCache->m_pEntryCompressed, sizeof(FileEntry));
 
 				// maybe the original package FileEntry has not been compressed
-				int compressedSize = sizeof(FileEntry);
-				char * pBuffer = (char *)TMemory::Alloc(sizeof(FileEntry));
-				int nRet = Compress((char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
+				unsigned long compressedSize = sizeof(FileEntry);
+				unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry));
+				int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 				if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 				{
 					compressedSize = sizeof(FileEntry);
@@ -341,7 +341,7 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			}
 			else
 			{
-				if (0 != Uncompress(pEntryCache->m_pEntryCompressed, nCompressedSize, (char*)pEntry, &entrySize))
+				if (0 != Uncompress((unsigned char*)(pEntryCache->m_pEntryCompressed), nCompressedSize, (unsigned char*)pEntry, &entrySize))
 				{
 					TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen,decode file entry fail!");
 					return false;
@@ -573,7 +573,7 @@ bool TPackage::RemoveFileFromDir(const char * filename)
 }
 
 
-bool TPackage::AppendFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress)
+bool TPackage::AppendFile(const char* fileName, unsigned char* pFileBuffer, unsigned long fileLength, bool bCompress)
 {
 	// We should use a function to check whether szFileName has been added into the package;
 	if (m_bReadOnly)
@@ -590,11 +590,11 @@ bool TPackage::AppendFile(const char* fileName, char* pFileBuffer, int fileLengt
 		return false;
 	}
 
-	int compressedLength = fileLength;
+	unsigned long compressedLength = fileLength;
 	if (bCompress)
 	{
 		//	Compress the file
-		char* pBuffer = (char*)TMemory::Alloc(fileLength);
+		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileLength);
 		if (!pBuffer)
 			return false;
 
@@ -632,7 +632,7 @@ bool TPackage::AppendFile(const char* fileName, char* pFileBuffer, int fileLengt
 	return true;
 }
 
-bool TPackage::AppendFileCompressed(const char* fileName, char* pCompressedFileBuffer, int fileLength, int compressedLength)
+bool TPackage::AppendFileCompressed(const char* fileName, unsigned char* pCompressedFileBuffer, unsigned long fileLength, unsigned long compressedLength)
 {
 	FileEntry* pEntry = new FileEntry();
 
@@ -664,9 +664,9 @@ bool TPackage::AppendFileCompressed(const char* fileName, char* pCompressedFileB
 	m_fileEntries.Add(pEntry);
 
 	FileEntryCache* pEntryCache = new FileEntryCache();
-	int compressedSize = sizeof(FileEntry);
-	char * pBuffer = (char *)new char[sizeof(FileEntry)];
-	int nRet = Compress(pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
+	unsigned long compressedSize = sizeof(FileEntry);
+	unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry)); 
+	int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 	{
 		compressedSize = sizeof(FileEntry);
@@ -733,16 +733,16 @@ bool TPackage::RemoveFile(const char* fileName)
 	return true;
 }
 
-bool TPackage::ReplaceFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress)
+bool TPackage::ReplaceFile(const char* fileName, unsigned char* pFileBuffer, unsigned long fileLength, bool bCompress)
 {
 	//	We only add a new file copy at the end of the file part, and modify the 
 	//	file entry point to that file body;
-	int compressedLength = fileLength;
+	unsigned long compressedLength = fileLength;
 
 	if (bCompress)
 	{
 		//	Try to compress the file
-		char* pBuffer = (char*)TMemory::Alloc(fileLength);
+		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileLength);
 		if (!pBuffer)
 			return false;
 
@@ -781,7 +781,7 @@ bool TPackage::ReplaceFile(const char* fileName, char* pFileBuffer, int fileLeng
 	return true;
 }
 
-bool TPackage::ReplaceFileCompressed(const char * fileName, char* pCompressedBuffer, int fileLength, int compressedLength)
+bool TPackage::ReplaceFileCompressed(const char * fileName, unsigned char* pCompressedBuffer, unsigned long fileLength, unsigned long compressedLength)
 {
 	if (m_bReadOnly)
 	{
@@ -793,7 +793,7 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, char* pCompressedBuf
 	int	nIndex;
 	if (!GetFileEntry(fileName, &entry, &nIndex))
 	{
-		TLog::Log(LOG_ERR, "FILE", "TPackage::ReplaceFile(), Can not find file %s", fileName));
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReplaceFile(), Can not find file %s", fileName);
 		return false;
 	}
 
@@ -816,9 +816,9 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, char* pCompressedBuf
 	pEntry->m_compressedLength = compressedLength;
 
 	FileEntryCache* pEntryCache = m_fileEntryCaches[nIndex];
-	int compressedSize = sizeof(FileEntry);
-	char * pBuffer = (char *)TMemory::Alloc(sizeof(FileEntry));
-	int nRet = Compress((char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
+	unsigned long compressedSize = sizeof(FileEntry);
+	unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry));
+	int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 	{
 		compressedSize = sizeof(FileEntry);
@@ -841,6 +841,261 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, char* pCompressedBuf
 	return true;
 }
 
+
+
+bool TPackage::ReadFile(const char* szFileName, unsigned char* pFileBuffer, unsigned long* pbufferLen)
+{
+	FileEntry fileEntry;
+	int index;
+	if (!GetFileEntry(szFileName, &fileEntry, &index))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReadFile(), Can not find file entry [%s]!", szFileName);
+		return false;
+	}
+
+	return ReadFile(fileEntry, pFileBuffer, pbufferLen);
+}
+
+bool TPackage::ReadFile(FileEntry & fileEntry, unsigned char* pFileBuffer, unsigned long * pBufferLen)
+{
+	if (*pBufferLen < fileEntry.m_length)
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReadFile(), Buffer is too small!");
+		return false;
+	}
+
+	// We can automaticly determine whether compression has been used;
+	if (fileEntry.m_length > fileEntry.m_compressedLength)
+	{
+		unsigned long fileLength = fileEntry.m_length;
+		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileEntry.m_compressedLength);
+		if (!pBuffer)
+			return false;
+
+		m_readFileLock.Lock();
+		m_pPackageFile->Seek(fileEntry.m_offset, SEEK_SET);
+		m_pPackageFile->Read(pBuffer, fileEntry.m_compressedLength, 1);
+		Decrypt(pBuffer, fileEntry.m_compressedLength);
+		m_readFileLock.Unlock();
+
+
+		if (0 != Uncompress(pBuffer, fileEntry.m_compressedLength, pFileBuffer, &fileLength))
+		{
+			FILE * fp = fopen("logs\\bad.dat", "wb");
+			if (fp)
+			{
+				fwrite(pBuffer, fileEntry.m_compressedLength, 1, fp);
+				fclose(fp);
+			}
+
+			TMemory::Free(pBuffer);
+			return false;
+		}
+
+		//uncompress(pFileBuffer, &dwFileLength, m_pBuffer, fileEntry.dwCompressedLength);
+
+		*pBufferLen = fileLength;
+
+		TMemory::Free(pBuffer);
+	}
+	else
+	{
+		m_readFileLock.Lock();
+		m_pPackageFile->Seek(fileEntry.m_offset, SEEK_SET);
+		m_pPackageFile->Read(pFileBuffer, fileEntry.m_length, 1);
+		Decrypt(pFileBuffer, fileEntry.m_length);
+		m_readFileLock.Unlock();
+
+		*pBufferLen = fileEntry.m_length;
+	}
+
+	return true;
+}
+
+
+bool TPackage::ReadCompressedFile(const char* fileName, unsigned char* pCompressedBuffer, unsigned long* pBufferLen)
+{
+	FileEntry fileEntry;
+
+	int index;
+	if (!GetFileEntry(fileName, &fileEntry, &index))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReadCompressedFile(), Can not find file entry [%s]!", fileName);
+		return false;
+	}
+
+	return ReadCompressedFile(fileEntry, pCompressedBuffer, pBufferLen);
+}
+
+bool TPackage::ReadCompressedFile(FileEntry& fileEntry, unsigned char* pCompressedBuffer, unsigned long * pdwBufferLen)
+{
+	if (*pdwBufferLen < fileEntry.m_compressedLength)
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReadCompressedFile(), Buffer is too small!");
+		return false;
+	}
+
+	m_readFileLock.Lock();
+	m_pPackageFile->Seek(fileEntry.m_offset, SEEK_SET);
+	*pdwBufferLen = m_pPackageFile->Read(pCompressedBuffer, 1, fileEntry.m_compressedLength);
+	Decrypt(pCompressedBuffer, fileEntry.m_compressedLength);
+	m_readFileLock.Unlock();
+	return true;
+}
+
+void* Zlib_User_Alloc(void* opaque, unsigned int items, unsigned int size)
+{
+	return TMemory::Alloc(size * items);
+}
+
+void Zlib_User_Free(void* opaque, void* ptr)
+{
+	TMemory::Free(ptr);
+}
+
+
+int Zlib_Compress(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level = Z_BEST_SPEED)
+{
+	z_stream stream;
+	int err;
+
+	stream.next_in = (Bytef*)source;
+	stream.avail_in = (uInt)sourceLen;
+#ifdef MAXSEG_64K
+	/* Check for source > 64K on 16-bit machine: */
+	if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;
+#endif
+	stream.next_out = dest;
+	stream.avail_out = (uInt)*destLen;
+	if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;
+
+	stream.zalloc = &Zlib_User_Alloc;	//0;
+	stream.zfree = &Zlib_User_Free;		//0;
+	stream.opaque = (voidpf)0;
+
+	err = deflateInit(&stream, level);
+	if (err != Z_OK) return err;
+
+	err = deflate(&stream, Z_FINISH);
+	if (err != Z_STREAM_END) {
+		deflateEnd(&stream);
+		return err == Z_OK ? Z_BUF_ERROR : err;
+	}
+	*destLen = stream.total_out;
+
+	err = deflateEnd(&stream);
+	return err;
+}
+
+int Zlib_UnCompress(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
+{
+	z_stream stream;
+	int err;
+
+	stream.next_in = (Bytef*)source;
+	stream.avail_in = (uInt)sourceLen;
+	/* Check for source > 64K on 16-bit machine: */
+	if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;
+
+	stream.next_out = dest;
+	stream.avail_out = (uInt)*destLen;
+	if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;
+
+	stream.zalloc = &Zlib_User_Alloc;  //0;
+	stream.zfree = &Zlib_User_Free;   //0;
+
+	err = inflateInit(&stream);
+	if (err != Z_OK) return err;
+
+	err = inflate(&stream, Z_FINISH);
+	if (err != Z_STREAM_END) {
+		inflateEnd(&stream);
+		return err == Z_OK ? Z_BUF_ERROR : err;
+	}
+	*destLen = stream.total_out;
+
+	err = inflateEnd(&stream);
+	return err;
+}
+
+/*
+Compress a data buffer
+pFileBuffer		IN		buffer contains data to be compressed
+fileLength		IN		the bytes in buffer to be compressed
+pCompressedBuffer	OUT		the buffer to hold the compressed data
+pCompressedLength IN/OUT	the compressed buffer size when used as input when out, it contains the real compressed length
+
+RETURN: 0,		ok
+-1,		dest buffer is too small
+-2,		unknown error
+*/
+int TPackage::Compress(unsigned char* pFileBuffer, int fileLength, unsigned char* pCompressedBuffer, unsigned long * pCompressedLength)
+{
+	int nRet = compress2(pCompressedBuffer, pCompressedLength, pFileBuffer, fileLength, 1);
+	if (Z_OK == nRet)
+		return 0;
+
+	if (Z_BUF_ERROR == nRet)
+		return -1;
+	else
+		return -2;
+}
+
+
+int TPackage::Uncompress(unsigned char* pCompressedBuffer, int compressedLength, unsigned char* pFileBuffer, unsigned long * pFileLength)
+{
+	int nRet = Zlib_UnCompress(pFileBuffer, pFileLength, pCompressedBuffer, compressedLength);
+	if (Z_OK == nRet)
+		return 0;
+
+	if (Z_BUF_ERROR == nRet)
+		return -1;
+	else
+		return -2;
+}
+
+void TPackage::Encrypt(unsigned char* pBuffer, unsigned long length)
+{
+	if ((m_header.m_flags & PCK_FLAG_ENCRYPT) == 0)
+		return;
+
+	unsigned long mask = length + 0x739802ab;
+	for (int i = 0; i<length; i += 4)
+	{
+		if (i + 3 < length)
+		{
+			unsigned long data = (pBuffer[i] << 24) | (pBuffer[i + 1] << 16) | (pBuffer[i + 2] << 8) | pBuffer[i + 3];
+			data ^= mask;
+			data = (data << 16) | ((data >> 16) & 0xffff);
+			pBuffer[i] = (data >> 24) & 0xff;
+			pBuffer[i + 1] = (data >> 16) & 0xff;
+			pBuffer[i + 2] = (data >> 8) & 0xff;
+			pBuffer[i + 3] = data & 0xff;
+		}
+	}
+}
+
+void TPackage::Decrypt(unsigned char* pBuffer, unsigned long length)
+{
+	if ((m_header.m_flags & PCK_FLAG_ENCRYPT) == 0)
+		return;
+
+	unsigned long mask = length + 0x739802ab;
+
+	for (int i = 0; i< length; i += 4)
+	{
+		if (i + 3 < length)
+		{
+			unsigned long data = (pBuffer[i] << 24) | (pBuffer[i + 1] << 16) | (pBuffer[i + 2] << 8) | pBuffer[i + 3];
+			data = (data << 16) | ((data >> 16) & 0xffff);
+			data ^= mask;
+			pBuffer[i] = (data >> 24) & 0xff;
+			pBuffer[i + 1] = (data >> 16) & 0xff;
+			pBuffer[i + 2] = (data >> 8) & 0xff;
+			pBuffer[i + 3] = data & 0xff;
+		}
+	}
+}
 
 /*
 Safe Header section
@@ -1055,6 +1310,92 @@ void TPackage::ClearFileCache()
 		else
 			++it;
 	}
+}
+
+unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen, bool bTempMem)
+{
+	//	Get file entry
+	FileEntry FileEntry;
+	int entryIndex;
+	if (!GetFileEntry(fileName, &FileEntry, &entryIndex))
+	{
+		if (!strstr(fileName, "Textures") && !strstr(fileName, "Tex_"))
+		{
+			TLog::Log(LOG_ERR, "FILE", "TPackage:::OpenSharedFile, Failed to find file [%s] in package", fileName);
+		}
+		return false;
+	}
+
+	TAssert(m_fileEntries[entryIndex]);
+
+	//	Allocate file data buffer
+	char* pFileData = NULL;
+	if (bTempMem)
+		pFileData = (BYTE*)a_malloctemp(FileEntry.dwLength);
+	else
+		pFileData = (BYTE*)a_malloc(FileEntry.dwLength);
+
+	if (!pFileData)
+	{
+		AFERRLOG(("AFilePackage::OpenSharedFile, Not enough memory!"));
+		return false;
+	}
+
+	//	Read file data
+	DWORD dwFileLen = FileEntry.dwLength;
+	if (!ReadFile(FileEntry, pFileData, &dwFileLen))
+	{
+		if (bTempMem)
+			a_freetemp(pFileData);
+		else
+			a_free(pFileData);
+
+		AFERRLOG(("AFilePackage::OpenSharedFile, Failed to read file data [%s] !", szFileName));
+		return false;
+	}
+
+	//	Add it to shared file arrey
+	SHAREDFILE* pFileItem = new SHAREDFILE;
+	if (!pFileItem)
+	{
+		if (bTempMem)
+			a_freetemp(pFileData);
+		else
+			a_free(pFileData);
+
+		AFERRLOG(("AFilePackage::OpenSharedFile, Not enough memory!"));
+		return false;
+	}
+
+	pFileItem->bCached = false;
+	pFileItem->bTempMem = bTempMem;
+	pFileItem->dwFileID = 0;
+	pFileItem->dwFileLen = dwFileLen;
+	pFileItem->iRefCnt = 1;
+	pFileItem->pFileData = pFileData;
+	pFileItem->pFileEntry = m_aFileEntries[entryIndex];
+
+	//	pFileItem->pFileEntry->iAccessCnt++;
+
+	*ppFileBuf = pFileData;
+	*pdwFileLen = dwFileLen;
+
+	return (DWORD)pFileItem;
+}
+
+//	Close a shared file
+void TPackage::CloseSharedFile(DWORD dwFileHandle)
+{
+	SHAREDFILE* pFileItem = (SHAREDFILE*)dwFileHandle;
+	ASSERT(pFileItem && pFileItem->iRefCnt > 0);
+
+	//	No cache file, release it
+	if (pFileItem->bTempMem)
+		a_freetemp(pFileItem->pFileData);
+	else
+		a_free(pFileItem->pFileData);
+
+	delete pFileItem;
 }
 
 

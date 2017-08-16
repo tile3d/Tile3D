@@ -4,7 +4,9 @@
 #include <Container/TArray.h>
 #include <Container/THashMap.h>
 #include <Util/TTypes.h>
+#include <Core/Lock/TMutexLock.h>
 #include "TPackageFile.h"
+
 
 //	#define AFPCK_VERSION	0x00010001
 //	#define AFPCK_VERSION	0x00010002	//	Add compression
@@ -145,21 +147,26 @@ public:
 
 	virtual bool IsFileExist(const char* szFileName);
 
-	bool AppendFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress);
-	bool AppendFileCompressed(const char * fileName, char* pCompressedBuffer, int fileLength, int compressedLength);
+	bool AppendFile(const char* fileName, unsigned char* pFileBuffer, unsigned long fileLength, bool bCompress);
+	bool AppendFileCompressed(const char * fileName, unsigned char* pCompressedBuffer, unsigned long fileLength, unsigned long compressedLength);
 
 	//Remove a file from the package, only remove the file entry from the package, the file's data will remain in the package
 	bool RemoveFile(const char* szFileName);
 
 	//Replace a file in the package, we will only replace the file entry in the package, the old file's data will remain in the package
-	bool ReplaceFile(const char* szFileName, char* pFileBuffer, int fileLength, bool bCompress);
-	bool ReplaceFileCompressed(const char * szFileName, char* pCompressedBuffer, int fileLength, int compressedLength);
+	bool ReplaceFile(const char* szFileName, unsigned char* pFileBuffer, unsigned long fileLength, bool bCompress);
+	bool ReplaceFileCompressed(const char * szFileName, unsigned char* pCompressedBuffer, unsigned long fileLength, unsigned long compressedLength);
 
-	bool ReadFile(const char* szFileName, char* pFileBuffer, int* pbufferLen);
-	bool ReadFile(FileEntry& fileEntry, char* pFileBuffer, int* pbufferLen);
+	bool ReadFile(const char* szFileName, unsigned char* pFileBuffer, unsigned long* pbufferLen);
+	bool ReadFile(FileEntry& fileEntry, unsigned char* pFileBuffer, unsigned long* pbufferLen);
 
-	bool ReadCompressedFile(const char * szFileName, char* pCompressedBuffer, int * pdwBufferLen);
-	bool ReadCompressedFile(FileEntry& fileEntry, char* pCompressedBuffer, int * pdwBufferLen);
+	bool ReadCompressedFile(const char* fileName, unsigned char* pCompressedBuffer, unsigned long* pBufferLen);
+	bool ReadCompressedFile(FileEntry& fileEntry, unsigned char* pCompressedBuffer, unsigned long * pdwBufferLen);
+
+	//	Open a shared file
+	virtual unsigned long OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen, bool bTempMem);
+	//	Close a shared file
+	virtual void CloseSharedFile(unsigned long fileHandle);
 
 	//	Get current cached file total size
 	int GetCachedFileSize() const { return m_cacheSize; }
@@ -171,6 +178,39 @@ public:
 	virtual const char * GetFolder() { return m_folder; }
 	const char* GetPckFileName() { return m_pckFileName; }
 	int64 GetPackageFileSize() { return m_pPackageFile->GetPackageFileSize(); }
+
+
+	/*
+	Compress a data buffer
+	pFileBuffer		IN		buffer contains data to be compressed
+	fileLength		IN		the bytes in buffer to be compressed
+	pCompressedBuffer	OUT		the buffer to hold the compressed data
+	pCompressedLength IN/OUT	the compressed buffer size when used as input when out, it contains the real compressed length
+
+	RETURN: 0,		ok
+	-1,		dest buffer is too small
+	-2,		unknown error
+	*/
+	int Compress(unsigned char* pFileBuffer, int fileLength, unsigned char* pCompressedBuffer, unsigned long * pCompressedLength);
+
+	/*
+	Uncompress a data buffer
+	pCompressedBuffer	IN		buffer contains compressed data to be uncompressed
+	compressedLength	IN		the compressed data size
+	pFileBuffer			OUT		the uncompressed data buffer
+	pFileLength			IN/OUT	the uncompressed data buffer size as input
+	when out, it is the real uncompressed data length
+
+	RETURN: 0,		ok
+	-1,		dest buffer is too small
+	-2,		unknown error
+	*/
+	int Uncompress(unsigned char* pCompressedBuffer, int compressedLength, unsigned char* pFileBuffer, unsigned long * pFileLength);
+
+
+	void Encrypt(unsigned char* pBuffer, unsigned long length);
+	void Decrypt(unsigned char* pBuffer, unsigned long length);
+
 private:
 	bool InnerOpen(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName);
 
@@ -215,6 +255,8 @@ private:
 
 	THashMap<int, CacheFilename*> m_cachedFiles;
 	THashMap<int, SharedFile*> m_sharedFiles;
+
+	TMutexLock m_readFileLock;
 };
 
 

@@ -180,6 +180,8 @@
     <ClInclude Include="File\TPackage.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="Sys\Android\TSysFileAndroid.h" />
+    <ClInclude Include="Sys\IOS\TSysFileIOS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -266,5 +268,7 @@
     <ClCompile Include="File\TPackage.cpp">
       <Filter>File</Filter>
     </ClCompile>
+    <ClCompile Include="Sys\Android\TSysFileAndroid.cpp" />
+    <ClCompile Include="Sys\IOS\TSysFileIOS.cpp" />
   </ItemGroup>
 </Project>
