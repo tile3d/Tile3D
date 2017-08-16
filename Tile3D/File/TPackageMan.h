@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Container/TArray.h>
-#include "TPackageFile.h"
 
+
+class TPackage;
 class TPackageMan
 {
 public:
@@ -23,22 +24,28 @@ public:
 		CloseAllPackages();
 	}
 
+	bool CreateFilePackage(const char * pckFile, const char * folder, int flags);
+
 	bool OpenFilePackage(const char * pckFile, int flags);
 	bool OpenFilePackage(const char * pckFile, const char * folder, int flags);
 	bool OpenFilePackageInGame(const char * pckFile, int flags);
 	bool OpenFilePackageInGame(const char * pckFile, const char * folder, int flags);
-	bool CreateFilePackage(const char * pckFile, const char * folder, int flags);
 
-	void CloseAllPackages();
-	bool ClosePackageFile(TPackageFile * pPackage);
 
-	int GetPackageNum() { return m_filePackages.Size(); }
-	TPackageFile * GetPackageFile(int index) { return m_filePackages[index]; }
+
+	int GetPackageNum() { return m_packages.Size(); }
+	TPackage * GetPackage(int index) { return m_packages[index]; }
 
 	//Get the package file using a path
-	TPackageFile * GetPackageFile(const char * path);
+	TPackage * GetPackage(const char * path);
 
+	void CloseAllPackages();
+	bool ClosePackage(TPackage * pPackage);
+
+	//	Set algorithm id
+	bool SetAlgorithmID(int id);
 private:
-	TArray<TPackageFile*> m_filePackages;
+	TArray<TPackage*> m_packages;
 };
+
 

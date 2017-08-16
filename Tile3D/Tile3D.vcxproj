@@ -156,7 +156,7 @@
     <ClInclude Include="File\TFileDir.h" />
     <ClInclude Include="File\TIniFile.h" />
     <ClInclude Include="File\TPackageFile.h" />
-    <ClInclude Include="File\TPackageImp.h" />
+    <ClInclude Include="File\TPackage.h" />
     <ClInclude Include="File\TPackageMan.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TMathUtil.h" />
@@ -191,7 +191,7 @@
     <ClCompile Include="File\TFileDir.cpp" />
     <ClCompile Include="File\TIniFile.cpp" />
     <ClCompile Include="File\TPackageFile.cpp" />
-    <ClCompile Include="File\TPackageImp.cpp" />
+    <ClCompile Include="File\TPackage.cpp" />
     <ClCompile Include="File\TPackageMan.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
