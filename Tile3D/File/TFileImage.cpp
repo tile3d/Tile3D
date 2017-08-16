@@ -1,5 +1,6 @@
 #include "TFileImage.h"
 #include "TFileDir.h"
+#include "TPackageMan.h"
 
 TFileImage::TFileImage() : TFile()
 {
@@ -22,8 +23,7 @@ bool TFileImage::Init(const char * fullName, bool bTempMem)
 	strncpy(m_fullPathFileName, fullName, MAX_PATH);
 
 	TFileDir::GetInstance()->GetRelativePath(fullName, m_relativeFileName);
-	m_pPackage = TPackageMan::GetInstance()->GetFilePackage(m_relativeFileName, true);
-
-
+	m_pPackage = TPackageMan::GetInstance()->GetPackage(m_relativeFileName);
 
 }
+

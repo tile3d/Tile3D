@@ -170,6 +170,8 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
+    <ClInclude Include="Sys\Android\TSysFileAndroid.h" />
+    <ClInclude Include="Sys\IOS\TSysFileIOS.h" />
     <ClInclude Include="Sys\TSysFile.h" />
     <ClInclude Include="Sys\Win\TSysFileWin.h" />
     <ClInclude Include="Util\TAssert.h" />
@@ -203,6 +205,8 @@
     <ClCompile Include="Math\TRotator.cpp" />
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
+    <ClCompile Include="Sys\Android\TSysFileAndroid.cpp" />
+    <ClCompile Include="Sys\IOS\TSysFileIOS.cpp" />
     <ClCompile Include="Sys\Win\TSysFileWin.cpp" />
     <ClCompile Include="Util\TLog.cpp" />
   </ItemGroup>

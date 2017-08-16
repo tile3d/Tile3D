@@ -1,15 +1,11 @@
+#include "TFileDir.h"
 #include "TPackage.h"
 #include "TPackageFile.h"
-#include "TFileDir.h"
+#include "TPackageMan.h"
+#include "Core/TMemory.h"
 #include "Util/TLog.h"
 #include "Util/TAssert.h"
-#include "Core/TMemory.h"
-
-TPackage::PackageDir::~PackageDir()
-{
-	Clear();
-}
-
+#include "Sys/TSysFile.h"
 
 int TPackage::PackageDir::SearchItemIndex(const char * name, int * pos)
 {
@@ -126,8 +122,7 @@ int TPackage::PackageDir::SearchEntry(const char * filename)
 }
 
 
-int
-TPackage::PackageDir::Clear()
+int TPackage::PackageDir::Clear()
 {
 	size_t i;
 	for (i = 0; i< m_list.Size(); i++)
@@ -145,12 +140,18 @@ TPackage::TPackage()
 	m_bChanged = false;
 	m_bReadOnly = false;
 	m_bUseShortName = false;
+
+	memset(&m_header, 0, sizeof(m_header));
+
 	m_pPackageFile = nullptr;
+	m_pckFileName[0] = '\0';
+	m_folder[0] = '\0';
+
 	m_sharedSize = 0;
 	m_cacheSize = 0;
 
-	m_pckFileName[0] = '\0';
 	m_bHasSaferHeader = false;
+	memset(&m_safeHeader, 0, sizeof(m_safeHeader));
 }
 
 TPackage::~TPackage()
@@ -209,7 +210,7 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 	{
 		strncpy(m_folder, folder, MAX_PATH);
 		strlwr(m_folder);
-		NormalizeFileName(m_folder);
+		TFileDir::GetInstance()->NormalizeFileName(m_folder);
 
 		//	Add '\' at folder tail
 		if (m_folder[folderLen - 1] != '\\')
@@ -244,13 +245,13 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 	m_pPackageFile->Seek(0, SEEK_SET);
 
 	if (m_bHasSaferHeader)
-		offset = (int)m_safeHeader.offset;
+		offset = (int)m_safeHeader.m_offset;
 
 	// Now analyse the file entries of the package;
 	int version;
 	// First version;
 	m_pPackageFile->Seek(offset - sizeof(int), SEEK_SET);
-	m_pPackageFile->Seek(&version, sizeof(int), 1);
+	m_pPackageFile->Read(&version, sizeof(int), 1);
 
 	if (version == 0x00020002 || version == 0x00020001)
 	{
@@ -263,24 +264,24 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 		m_pPackageFile->Read(&m_header, sizeof(FileHeader), 1);
 		if (strstr(m_header.m_description, "lica File Package") == NULL)
 			return false;
-		strncpy(m_header.m_description, AFPCK_COPYRIGHT_TAG, sizeof(m_header.m_description));
+		strncpy(m_header.m_description, PCK_COPYRIGHT_TAG, sizeof(m_header.m_description));
 
 		// if we don't expect one encrypt package, we will let the error come out.
 		// make sure the encrypt flag is correct
-		bool bPackIsEncrypt = (m_header.m_flags & PACKFLAG_ENCRYPT) != 0;
+		bool bPackIsEncrypt = (m_header.m_flags & PCK_FLAG_ENCRYPT) != 0;
 		if (bEncrypt != bPackIsEncrypt)
 		{
 			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, wrong encrypt flag");
 			return false;
 		}
 
-		m_header.m_entryOffset ^= AFPCK_MASKDWORD;
+		m_header.m_entryOffset ^= TPackageMan::GetInstance()->GetMaskPasswd();
 
-		if (m_header.m_guardByte0 != AFPCK_GUARDBYTE0 ||
-			m_header.m_guardByte1 != AFPCK_GUARDBYTE1)
+		if (m_header.m_guardByte0 != TPackageMan::GetInstance()->GetGuardByte0() ||
+			m_header.m_guardByte1 != TPackageMan::GetInstance()->GetGuardByte1())
 		{
 			// corrput file
-			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, GuardBytes corrupted [%s]", pckPath));
+			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, GuardBytes corrupted [%s]", pckPath);
 			return false;
 		}
 
@@ -288,8 +289,8 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 		m_pPackageFile->Seek(m_header.m_entryOffset, SEEK_SET);
 
 		//	Create entries
-		m_fileEntries.SetSize(numFile, 100);
-		m_fileEntryCaches.SetSize(numFile, 100);
+		m_fileEntries.Reserve(numFile);
+		m_fileEntryCaches.Reserve(numFile);
 
 		for (i = 0; i < numFile; i++)
 		{
@@ -302,11 +303,11 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			// first read the entry size after compressed
 			int nCompressedSize;
 			m_pPackageFile->Read(&nCompressedSize, sizeof(int), 1);
-			nCompressedSize ^= AFPCK_MASKDWORD;
+			nCompressedSize ^= TPackageMan::GetInstance()->GetMaskPasswd();
 
 			int checkSize;
 			m_pPackageFile->Read(&checkSize, sizeof(int), 1);
-			checkSize = checkSize ^ AFPCK_CHECKMASK ^ AFPCK_MASKDWORD;
+			checkSize = checkSize ^ TPackageMan::GetInstance()->GetCheckMask() ^ TPackageMan::GetInstance()->GetMaskPasswd();
 
 			if (nCompressedSize != checkSize)
 			{
@@ -324,7 +325,7 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			{
 				memcpy(pEntry, pEntryCache->m_pEntryCompressed, sizeof(FileEntry));
 
-				// maybe the original package fileentry has not been compressed
+				// maybe the original package FileEntry has not been compressed
 				int compressedSize = sizeof(FileEntry);
 				char * pBuffer = (char *)TMemory::Alloc(sizeof(FileEntry));
 				int nRet = Compress((char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
@@ -351,10 +352,10 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 
 			//	Note: A bug existed in AppendFileCompressed() after m_bUseShortName was introduced. The bug
 			//		didn't normalize file name when new file is added to package, so that the szFileName of
-			//		FILEENTRY may contain '/' character. The bug wasn't fixed until 2013.3.18, many 'new' files
+			//		FileEntry may contain '/' character. The bug wasn't fixed until 2013.3.18, many 'new' files
 			//		have been added to package, so NormalizeFileName is inserted here to ensure all szFileName
-			//		of FILEENTRY uses '\' instead of '/', at least in memory.
-			NormalizeFileName(pEntry->m_fileName, false);
+			//		of FileEntry uses '\' instead of '/', at least in memory.
+			TFileDir::GetInstance()->NormalizeFileName(pEntry->m_fileName);
 
 			m_fileEntries[i] = pEntry;
 			m_fileEntryCaches[i] = pEntryCache;
@@ -368,15 +369,692 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 	}
 	else
 	{
-		TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen,Incorrect version!"));
+		TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen,Incorrect version!");
 		return false;
 	}
 
 
-	m_mode = OPEN_EXIST;
 	m_bChanged = false;
 	m_sharedSize = 0;
 	m_cacheSize = 0;
 	return true;
 }
+
+
+bool TPackage::GetFileEntry(const char* fileName, FileEntry* pFileEntry, int* pIndex)
+{
+	char findName[MAX_PATH];
+
+	//	Normalize file name
+	strncpy(findName, fileName, MAX_PATH);
+	TFileDir::GetInstance()->NormalizeFileName(findName);
+	if (m_bUseShortName) {
+		char fullName[MAX_PATH];
+		strcpy(fullName, findName);
+		TFileDir::GetInstance()->GetRelativePathNoBase(fullName, m_folder, findName);
+	}
+
+	memset(pFileEntry, 0, sizeof(FileEntry));
+	int iEntry = m_directory.SearchEntry(findName);
+	if (iEntry < 0)
+		return false;
+
+	if (!m_fileEntries[iEntry])
+		return false;
+
+	*pFileEntry = *m_fileEntries[iEntry];
+
+	if (!CheckFileEntryValid(pFileEntry))
+	{
+		pFileEntry->m_length = 0;
+		pFileEntry->m_compressedLength = 0;
+	}
+
+	if (pIndex)
+		*pIndex = iEntry;
+
+	return true;
+}
+
+bool TPackage::CheckFileEntryValid(FileEntry* pFileEntry)
+{
+	if (pFileEntry->m_compressedLength > MAX_FILE_PACKAGE)
+	{
+		// patcher在更新pck的时候，如果遇到了文件长度为0的文件，会给进一个错误的pFileEntry->dwCompressedLength
+		// 通常情况下该值为0xFFFFFFFC，但是也可能有其他情况被写成了其他的值，正常情况下一个包里的小文件不应该太大
+		// 我们认为过大的FileEntry是错的 
+		// 标准：大于MAX_FILE_PACKAGE的情况都认为是过大的，因为pck文件大于该值时会自动拆包，理论上不会有任何一个文件大于这个值
+		TLog::Log(LOG_ERR, "FILE", "CheckFileEntryValid, file entry [%s]'s length is not correct!", pFileEntry->m_fileName);
+		return false;
+	}
+
+	return true;
+}
+
+bool TPackage::IsFileExist(const char* fileName)
+{
+	FileEntry fileEntry;
+	int index;
+	return GetFileEntry(fileName, &fileEntry, &index);
+}
+
+TPackage::PackageDir * TPackage::GetDirEntry(const char * path)
+{
+	char findName[MAX_PATH];
+	int len, i;
+	char *name, *tok;
+
+	strncpy(findName, path, MAX_PATH);
+	strlwr(findName);
+	name = findName;
+	len = strlen(findName);
+	for (i = 0; i<len; i++)
+	{
+		if (findName[i] == '/')
+			findName[i] = '\\';
+	}
+	tok = strtok(name, "\\");
+	PackageDir * pDir = &m_directory;
+	while (tok && *tok)
+	{
+		PackageEntry * pEnt = pDir->SearchItem(tok);
+		if (pEnt == NULL) return NULL; //entry not found
+		if (!pEnt->IsContainer()) return NULL;
+		tok = strtok(NULL, "\\");
+		pDir = (PackageDir*)pEnt;
+	}
+	return pDir;
+}
+
+bool TPackage::InsertFileToDir(const char * filename, int index)
+{
+	char findName[MAX_PATH];
+	int len, i;
+	char *name, *tok;
+
+	strncpy(findName, filename, MAX_PATH);
+	TSysFile::StrToLower(findName);
+	name = findName;
+	len = strlen(findName);
+	for (i = 0; i<len; i++)
+	{
+		if (findName[i] == '/')
+			findName[i] = '\\';
+	}
+	tok = strtok(name, "\\");
+	PackageDir * pDir = &m_directory;
+	while (tok)
+	{
+		char * next = strtok(NULL, "\\");
+		PackageEntry * pEnt = pDir->SearchItem(tok);
+		if (next)
+		{
+			if (pEnt == NULL)
+			{
+				PackageDir *tmp = new PackageDir(tok);
+				pDir->AppendEntry(tmp);
+				pDir = tmp;
+			}
+			else
+			{
+				TAssert(pEnt->IsContainer());
+				if (!pEnt->IsContainer())
+				{
+					TLog::Log(LOG_ERR, "FILE", "TPackage::InsertFileToDir(), Directory conflict:%s", filename);
+					return false;
+				}
+				pDir = (PackageDir*)pEnt;
+			}
+		}
+		else
+		{
+			if (pEnt == NULL)
+			{
+				pDir->AppendEntry(new PackageFile(tok, index));
+			}
+			else
+			{
+				TAssert(!pEnt->IsContainer());
+				if (pEnt->IsContainer())
+					return false;
+				else
+					((PackageFile*)pEnt)->SetIndex(index);
+				break;
+			}
+		}
+		tok = next;
+	}
+	return true;
+}
+
+
+
+bool TPackage::RemoveFileFromDir(const char * filename)
+{
+	char szFindName[MAX_PATH];
+	int nLength, i;
+	char *name, *tok;
+
+	strncpy(szFindName, filename, MAX_PATH);
+	TSysFile::StrToLower(szFindName);
+	name = szFindName;
+	nLength = strlen(szFindName);
+	for (i = 0; i<nLength; i++)
+	{
+		if (szFindName[i] == '/')
+			szFindName[i] = '\\';
+	}
+	tok = strtok(name, "\\");
+	PackageDir * pDir = &m_directory;
+	while (tok)
+	{
+		PackageEntry * pEnt = pDir->SearchItem(tok);
+		if (pEnt == NULL) return false; //entry not found
+		char * next = strtok(NULL, "\\");
+		if (next == NULL)
+		{
+			if (!pEnt->IsContainer())
+			{
+				pDir->RemoveItem(tok);
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (pEnt->IsContainer())
+				pDir = (PackageDir *)pEnt;
+			else
+				return false;
+		}
+		tok = next;
+	}
+	return false;
+}
+
+
+bool TPackage::AppendFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress)
+{
+	// We should use a function to check whether szFileName has been added into the package;
+	if (m_bReadOnly)
+	{
+		TLog::Log(LOG_ERR, "FILE", "AFilePackage::AppendFile(), Read only package, can not append!");
+		return false;
+	}
+
+	FileEntry fileEntry;
+	int index;
+	if (GetFileEntry(fileName, &fileEntry, &index))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::AppendFile(), file entry [%s] already exist!", fileName);
+		return false;
+	}
+
+	int compressedLength = fileLength;
+	if (bCompress)
+	{
+		//	Compress the file
+		char* pBuffer = (char*)TMemory::Alloc(fileLength);
+		if (!pBuffer)
+			return false;
+
+		if (0 != Compress(pFileBuffer, fileLength, pBuffer, &compressedLength))
+		{
+			//compress error, so use uncompressed format
+			compressedLength = fileLength;
+		}
+
+		if (compressedLength < fileLength)
+		{
+			if (!AppendFileCompressed(fileName, pBuffer, fileLength, compressedLength))
+			{
+				TMemory::Free(pBuffer);
+				return false;
+			}
+		}
+		else
+		{
+			if (!AppendFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
+			{
+				TMemory::Free(pBuffer);
+				return false;
+			}
+		}
+
+		TMemory::Free(pBuffer);
+	}
+	else
+	{
+		if (!AppendFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
+			return false;
+	}
+
+	return true;
+}
+
+bool TPackage::AppendFileCompressed(const char* fileName, char* pCompressedFileBuffer, int fileLength, int compressedLength)
+{
+	FileEntry* pEntry = new FileEntry();
+
+	//	Normalize file name
+	char savedFileName[MAX_PATH];
+	strcpy(savedFileName, fileName);
+	TFileDir::GetInstance()->NormalizeFileName(savedFileName);
+	if (m_bUseShortName) {
+		char fullName[MAX_PATH];
+		strcpy(fullName, savedFileName);
+		TFileDir::GetInstance()->GetRelativePathNoBase(fullName, m_folder, savedFileName);
+	}
+
+	fileName = savedFileName;
+
+	//	Store this file;
+	strncpy(pEntry->m_fileName, fileName, MAX_PATH);
+	pEntry->m_offset = m_header.m_entryOffset;
+	pEntry->m_length = fileLength;
+	pEntry->m_compressedLength = compressedLength;
+	pEntry->m_accessCnt = 0;
+	if (!CheckFileEntryValid(pEntry))
+	{
+		delete pEntry;
+		TLog::Log(LOG_ERR, "FILE", "TPackage::AppendFile(), Invalid File Entry!");
+		return false;
+	}
+
+	m_fileEntries.Add(pEntry);
+
+	FileEntryCache* pEntryCache = new FileEntryCache();
+	int compressedSize = sizeof(FileEntry);
+	char * pBuffer = (char *)new char[sizeof(FileEntry)];
+	int nRet = Compress(pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
+	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
+	{
+		compressedSize = sizeof(FileEntry);
+		memcpy(pBuffer, pEntry, sizeof(FileEntry));
+	}
+	pEntryCache->m_compressedLength = compressedSize;
+	pEntryCache->m_pEntryCompressed = (char *)new char[compressedSize];
+	memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
+	m_fileEntryCaches.Add(pEntryCache);
+	delete[] pBuffer;
+
+	m_pPackageFile->Seek(m_header.m_entryOffset, SEEK_SET);
+
+	//	We write the compressed buffer into the disk;
+	Encrypt(pCompressedFileBuffer, compressedLength);
+	m_pPackageFile->Write(pCompressedFileBuffer, compressedLength, 1);
+	Decrypt(pCompressedFileBuffer, compressedLength);
+	m_header.m_entryOffset += compressedLength;
+
+	InsertFileToDir(fileName, m_fileEntries.Size() - 1);
+	m_bChanged = true;
+	return true;
+}
+
+
+bool TPackage::RemoveFile(const char* fileName)
+{
+	if (m_bReadOnly)
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::RemoveFile(), Read only package, can not remove file!");
+		return false;
+	}
+
+	FileEntry Entry;
+	int	nIndex;
+	if (!GetFileEntry(fileName, &Entry, &nIndex))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::RemoveFile(), Can not find file %s", fileName);
+		return false;
+	}
+
+	FileEntry* pEntry = m_fileEntries[nIndex];
+	RemoveFileFromDir(pEntry->m_fileName);
+
+	//	Added by dyx on 2013.10.14. Now we only delete entry object and leave a NULL at it's position
+	//	in m_aFileEntries, this is in order that the entry indices recoreded in file items of m_directory 
+	//	can still be valid and needn't updating.
+	delete pEntry;
+	m_fileEntries[nIndex] = NULL;
+
+	FileEntryCache* pEntryCache = m_fileEntryCaches[nIndex];
+	if (pEntryCache)
+	{
+		if (pEntryCache->m_pEntryCompressed)
+			TMemory::Free(pEntryCache->m_pEntryCompressed);
+
+		delete pEntryCache;
+		m_fileEntryCaches[nIndex] = NULL;
+	}
+
+	//	ResortEntries();
+
+	m_bChanged = true;
+	return true;
+}
+
+bool TPackage::ReplaceFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress)
+{
+	//	We only add a new file copy at the end of the file part, and modify the 
+	//	file entry point to that file body;
+	int compressedLength = fileLength;
+
+	if (bCompress)
+	{
+		//	Try to compress the file
+		char* pBuffer = (char*)TMemory::Alloc(fileLength);
+		if (!pBuffer)
+			return false;
+
+		if (0 != Compress(pFileBuffer, fileLength, pBuffer, &compressedLength))
+		{
+			//compress error, so use uncompressed format
+			compressedLength = fileLength;
+		}
+
+		if (compressedLength < fileLength)
+		{
+			if (!ReplaceFileCompressed(fileName, pBuffer, fileLength, compressedLength))
+			{
+				TMemory::Free(pBuffer);
+				return false;
+			}
+		}
+		else
+		{
+			if (!ReplaceFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
+			{
+				TMemory::Free(pBuffer);
+				return false;
+			}
+		}
+
+		TMemory::Free(pBuffer);
+	}
+	else
+	{
+		if (!ReplaceFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
+			return false;
+	}
+
+
+	return true;
+}
+
+bool TPackage::ReplaceFileCompressed(const char * fileName, char* pCompressedBuffer, int fileLength, int compressedLength)
+{
+	if (m_bReadOnly)
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReplaceFileCompressed, Read only package, can not replace!");
+		return false;
+	}
+
+	FileEntry entry;
+	int	nIndex;
+	if (!GetFileEntry(fileName, &entry, &nIndex))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReplaceFile(), Can not find file %s", fileName));
+		return false;
+	}
+
+	entry.m_offset = m_header.m_entryOffset;
+	entry.m_length = fileLength;
+	entry.m_compressedLength = compressedLength;
+	if (!CheckFileEntryValid(&entry))
+	{
+		// 先行检查输入参数是否合法，如果不合法，则提前返回，不做任何修改
+		TLog::Log(LOG_ERR, "FILE", "TPackage::ReplaceFile(), Invalid File Entry");
+		return false;
+	}
+
+	FileEntry* pEntry = m_fileEntries[nIndex];
+	TAssert(pEntry);
+
+	// modify this file entry to point to the new file body;			
+	pEntry->m_offset = m_header.m_entryOffset;
+	pEntry->m_length = fileLength;
+	pEntry->m_compressedLength = compressedLength;
+
+	FileEntryCache* pEntryCache = m_fileEntryCaches[nIndex];
+	int compressedSize = sizeof(FileEntry);
+	char * pBuffer = (char *)TMemory::Alloc(sizeof(FileEntry));
+	int nRet = Compress((char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
+	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
+	{
+		compressedSize = sizeof(FileEntry);
+		memcpy(pBuffer, pEntry, sizeof(FileEntry));
+	}
+	pEntryCache->m_compressedLength = compressedSize;
+	pEntryCache->m_pEntryCompressed = (char *)TMemory::Realloc(pEntryCache->m_pEntryCompressed, compressedSize);
+	memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
+	TMemory::Free(pBuffer);
+
+	m_pPackageFile->Seek(m_header.m_entryOffset, SEEK_SET);
+
+	//	We write the compressed buffer into the disk;
+	Encrypt(pCompressedBuffer, compressedLength);
+	m_pPackageFile->Write(pCompressedBuffer, compressedLength, 1);
+	Decrypt(pCompressedBuffer, compressedLength);
+	m_header.m_entryOffset += compressedLength;
+
+	m_bChanged = true;
+	return true;
+}
+
+
+/*
+Safe Header section
+*/
+bool TPackage::LoadSafeHeader()
+{
+	m_pPackageFile->Seek(0, SEEK_SET);
+
+	m_pPackageFile->Read(&m_safeHeader, sizeof(SafeFileHeader), 1);
+	if (m_safeHeader.m_tag1 == 0x4DCA23EF && m_safeHeader.m_tag2 == 0x56a089b7)
+		m_bHasSaferHeader = true;
+	else
+		m_bHasSaferHeader = false;
+
+	if (m_bHasSaferHeader)
+		m_pPackageFile->Phase2Open(m_safeHeader.m_offset);
+
+	m_pPackageFile->Seek(0, SEEK_SET);
+	return true;
+}
+
+bool TPackage::CreateSafeHeader()
+{
+	m_bHasSaferHeader = true;
+
+	m_safeHeader.m_tag1 = 0x4DCA23EF;
+	m_safeHeader.m_tag2 = 0x56a089b7;
+	m_safeHeader.m_offset = 0;
+
+	return true;
+}
+
+bool TPackage::SaveSafeHeader()
+{
+	if (m_bHasSaferHeader)
+	{
+		m_pPackageFile->Seek(0, SEEK_END);
+		m_safeHeader.m_offset = m_pPackageFile->Tell();
+
+		m_pPackageFile->Seek(0, SEEK_SET);
+		m_pPackageFile->Write(&m_safeHeader, sizeof(SafeFileHeader), 1);
+		m_pPackageFile->Seek(0, SEEK_SET);
+	}
+
+	return true;
+}
+
+bool TPackage::ResortEntries()
+{
+	m_directory.Clear();
+	for (int i = 0; i < m_fileEntries.Size(); i++)
+	{
+		if (m_fileEntries[i])
+		{
+			InsertFileToDir(m_fileEntries[i]->m_fileName, i);
+		}
+	}
+	return true;
+}
+
+#define ENTRY_BUFFER_SIZE		(1024 * 1024)
+
+bool TPackage::SaveEntries(int * pEntrySize)
+{
+	int totalSize = 0;
+	int numFile = m_fileEntries.Size();
+
+	//Remove NULL entries at first, see RemoveFile for detail.
+	for (int i = numFile - 1; i >= 0; i--)
+	{
+		FileEntry* pEntry = m_fileEntries[i];
+		if (!pEntry)
+		{
+			m_fileEntries.Remove(i);
+			TAssert(!m_fileEntryCaches[i]);
+			m_fileEntryCaches.Remove(i);
+		}
+	}
+
+	numFile = m_fileEntries.Size();
+
+	int bufferUsed = 0;
+	char * pEntryBuffer = new char[ENTRY_BUFFER_SIZE];
+	if (NULL == pEntryBuffer)
+		return false;
+
+	// Rewrite file entries and file header here;
+	m_pPackageFile->Seek(m_header.m_entryOffset, SEEK_SET);
+	for (int i = 0; i < numFile; i++)
+	{
+		FileEntry* pEntry = m_fileEntries[i];
+		FileEntryCache* pEntryCache = m_fileEntryCaches[i];
+
+		if (bufferUsed + sizeof(FileEntry) + sizeof(int) + sizeof(int) > ENTRY_BUFFER_SIZE)
+		{
+			// flush entry buffer;
+			m_pPackageFile->Write(pEntryBuffer, bufferUsed, 1);
+			bufferUsed = 0;
+		}
+
+		int compressedSize = pEntryCache->m_compressedLength;
+
+		compressedSize ^= TPackageMan::GetInstance()->GetMaskPasswd();
+		memcpy(&pEntryBuffer[bufferUsed], &compressedSize, sizeof(int));
+		bufferUsed += sizeof(int);
+
+		compressedSize ^= TPackageMan::GetInstance()->GetCheckMask();
+		memcpy(&pEntryBuffer[bufferUsed], &compressedSize, sizeof(int));
+		bufferUsed += sizeof(int);
+
+		memcpy(&pEntryBuffer[bufferUsed], pEntryCache->m_pEntryCompressed, pEntryCache->m_compressedLength);
+		bufferUsed += pEntryCache->m_compressedLength;
+
+		totalSize += sizeof(int) + sizeof(int) + pEntryCache->m_compressedLength;
+	}
+
+	if (bufferUsed)
+	{
+		// flush entry buffer;
+		m_pPackageFile->Write(pEntryBuffer, bufferUsed, 1);
+		bufferUsed = 0;
+	}
+
+	delete[] pEntryBuffer;
+	pEntryBuffer = NULL;
+
+	if (pEntrySize)
+		*pEntrySize = totalSize;
+	return true;
+}
+
+//	Add a file name to file cache list
+bool TPackage::AddCacheFileName(const char* fileName)
+{
+	CacheFilename* pCacheFile = new CacheFilename();
+	if (!pCacheFile)
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::AddCacheFileName, Not enough memory !");
+		return false;
+	}
+
+	pCacheFile->m_fileName = fileName;
+	pCacheFile->m_fileID = TFileDir::GetInstance()->GetIDFromFileName(fileName);
+
+	if(!m_cachedFiles.Put(pCacheFile->m_fileID, pCacheFile))
+	{
+		//	Failed to put item into table, this maybe caused by file name collision
+		delete pCacheFile;
+		return false;
+	}
+
+	return true;
+}
+
+
+//	Add a group of file names to file cache list
+bool TPackage::AddCacheFileNameList(const char* descFile)
+{
+	TScriptFile scriptFile;
+	if (!scriptFile.Open(descFile))
+	{
+		TLog::Log(LOG_ERR, "FILE", "TPackage::AddCacheFileNameList, Failed to open file %s !", descFile));
+		return false;
+	}
+
+	while (scriptFile.GetNextToken(true))
+	{
+		AddCacheFileName(scriptFile.m_szToken);
+	}
+
+	scriptFile.Close();
+	return true;
+}
+
+
+//	Search a cache file name from list
+//	Return index of file name for success, otherwise return -1
+TPackage::CacheFilename* TPackage::SearchCacheFileName(const char* szFileName)
+{
+	int fileID = TFileDir::GetInstance()->GetIDFromFileName(szFileName);
+	return SearchCacheFileName(fileID);
+}
+
+
+//	Search a cache file name from list
+//	Return index of file name for success, otherwise return -1
+TPackage::CacheFilename* TPackage::SearchCacheFileName(int fileID)
+{
+	CacheFilename * pCacheFileName = *(m_cachedFiles.Find(fileID));
+	if (pCacheFileName == nullptr) return nullptr;
+
+	return pCacheFileName;
+}
+
+
+//	Clear file cache
+void TPackage::ClearFileCache()
+{
+	SharedTable::iterator it = m_sharedFiles.begin();
+	for (; it != m_SharedFileTab.end(); )
+	{
+		SHAREDFILE* pFileItem = *it.value();
+
+		//	Don't release file which is still referenced
+		if (!pFileItem->iRefCnt)
+		{
+			a_free(pFileItem->pFileData);
+			delete pFileItem;
+
+			it = m_SharedFileTab.erase(it);
+		}
+		else
+			++it;
+	}
+}
+
 

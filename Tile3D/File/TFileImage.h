@@ -1,9 +1,9 @@
 #pragma once
 
 #include "TFile.h"
-#include "TPackageFile.h"
 #include <Container/TString.h>
 
+class TPackage;
 class TFileImage : public TFile
 {
 public:
@@ -18,8 +18,8 @@ public:
 	virtual bool Read(void* pBuffer, int bufferLength, int * pReadLength);
 	virtual bool Write(const void* pBuffer, int bufferLength, int * pWriteLength);
 
-	virtual bool ReadLine(char * lineBuffer, int dwBufferLength, int * pdwReadLength);
-	virtual bool ReadString(char * lineBuffer, int dwBufferLength, int * pdwReadLength);
+	virtual bool ReadLine(char * lineBuffer, int bufferLength, int * pReadLength);
+	virtual bool ReadString(char * lineBuffer, int bufferLength, int * pReadLength);
 	virtual bool WriteLine(const char* lineBuffer);
 	virtual bool WriteString(const TString& str);
 	virtual bool ReadString(TString& str);
@@ -40,11 +40,11 @@ protected:
 	bool Init(const char* szFullPath, bool bTempMem);
 	bool Release();
 	bool ReadFileData(const char* szFullPath, bool bPrintError = true);
-	bool ReadPackData(AFilePackBase* pPackage, bool bTempMem, bool bPrintError = true);
+	bool ReadPackData(TPackage* pPackage, bool bTempMem, bool bPrintError = true);
 	bool ReadAPKFileData(const char* szRelativePath, bool bPrintError = true);
 
 private:
-	AFilePackBase *	m_pPackage;		//	package object this file image open with
+	TPackage *	m_pPackage;		//	package object this file image open with
 	unsigned char*	m_pFileImage;	//	Memory pointer of the file image in memory;
 	int				m_nCurPtr;		//	In index into the file image buffer;
 	int				m_fileLength;	//	File length;

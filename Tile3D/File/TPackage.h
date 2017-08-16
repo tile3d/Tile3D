@@ -4,14 +4,31 @@
 #include <Container/TArray.h>
 #include <Container/THashMap.h>
 #include <Util/TTypes.h>
+#include "TPackageFile.h"
+
+//	#define AFPCK_VERSION	0x00010001
+//	#define AFPCK_VERSION	0x00010002	//	Add compression
+//  #define AFPCK_VERSION	0x00010003	//	The final release version on June 2002
+//	#define AFPCK_VERSION	0x00020001	//	The version for element before Oct 2005
+#define PCK_VERSION		0x00020002	//	The version with safe header
+#define PCK_COPYRIGHT_TAG "Angelica File Package, Perfect World Co. Ltd. 2002~2008. All Rights Reserved. "
+#define PCK_MAX_FILE_SIZE	0x7fffff00U
 
 
-
-
-class TPackageFile;
+//TBD
+//1) Resolve the pck file size problem(2G problem)
+//2) Support single large pck file (for example 8G)
+//3) Consider if need the cache files (memory printfoot)
+//4) Use the same memory allocation and deallocation method
 class TPackage
 {
 public:
+	enum PCK_FLAG
+	{
+		PCK_FLAG_ENCRYPT = 0x80000000
+	};
+
+
 	class PackageEntry
 	{
 	public:
@@ -31,7 +48,7 @@ public:
 	public:
 		PackageDir(const char * name) :PackageEntry(name) {}
 		PackageDir() {}
-		~PackageDir();
+		~PackageDir(){ Clear(); }
 		int Clear();
 		virtual bool IsContainer() { return true; }
 		virtual int GetIndex() { return -1; }
@@ -55,12 +72,6 @@ public:
 		void SetIndex(int index) { m_index = index; }
 	};
 
-	enum OPEN_MODE
-	{
-		OPEN_EXIST = 0,
-		CREATE_NEW = 1
-	};
-
 	struct FileEntry
 	{
 		char	m_fileName[MAX_PATH];	//	The file name of this entry; this may contain a path;
@@ -76,11 +87,12 @@ public:
 		char * m_pEntryCompressed;
 	};
 
+	//TBD: new version has changed the m_entryOffset size
 	struct FileHeader
 	{
-		int	m_guardByte0;				//	0xabcdefab
+		int	m_guardByte0;			//	0xabcdefab
 		int	m_version;				//	Composed by two word version, major part and minor part;
-		int64 m_entryOffset;			//	The entry list offset from the beginning;
+		int m_entryOffset;			//	The entry list offset from the beginning;
 		int	m_flags;				//	package flags. the highest bit means the encrypt state;
 		char m_description[252];		//	Description
 		int	m_guardByte1;				//	0xffeeffee
@@ -101,19 +113,16 @@ public:
 	//	Cache file name
 	struct CacheFilename
 	{
-		TString	fileName;	//	File name
-		int	fileID;		//	File ID
+		TString	m_fileName;	//	File name
+		int	m_fileID;		//	File ID
 	};
 
-#pragma pack(push)
-#pragma pack(4)
 	struct SafeFileHeader
 	{	
-		int	tag;			//	tag of safe header, current it is 0x4DCA23EF
-		int64 offset;		//	offset of real entries
+		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
+		int m_offset;		//	offset of real entries
+		int m_tag2;
 	};
-#pragma pack(pop)
-
 
 public:
 	TPackage();
@@ -123,8 +132,66 @@ public:
 	bool Open(const char* pckPath, const char *folder, bool bEncrypt);
 	virtual bool Close();
 
+	// Find a file entry
+	bool GetFileEntry(const char* szFileName, FileEntry* pFileEntry, int* pIndex);
+	const FileEntry* GetFileEntryByIndex(int index) const { return m_fileEntries[index]; }
+	bool CheckFileEntryValid(FileEntry* pFileEntry);
+
+	PackageDir* GetDirEntry(const char* path);
+	//	Append a file into directroy
+	bool InsertFileToDir(const char * filename, int index);
+	// Remove File from directory
+	bool RemoveFileFromDir(const char * filename);
+
+	virtual bool IsFileExist(const char* szFileName);
+
+	bool AppendFile(const char* fileName, char* pFileBuffer, int fileLength, bool bCompress);
+	bool AppendFileCompressed(const char * fileName, char* pCompressedBuffer, int fileLength, int compressedLength);
+
+	//Remove a file from the package, only remove the file entry from the package, the file's data will remain in the package
+	bool RemoveFile(const char* szFileName);
+
+	//Replace a file in the package, we will only replace the file entry in the package, the old file's data will remain in the package
+	bool ReplaceFile(const char* szFileName, char* pFileBuffer, int fileLength, bool bCompress);
+	bool ReplaceFileCompressed(const char * szFileName, char* pCompressedBuffer, int fileLength, int compressedLength);
+
+	bool ReadFile(const char* szFileName, char* pFileBuffer, int* pbufferLen);
+	bool ReadFile(FileEntry& fileEntry, char* pFileBuffer, int* pbufferLen);
+
+	bool ReadCompressedFile(const char * szFileName, char* pCompressedBuffer, int * pdwBufferLen);
+	bool ReadCompressedFile(FileEntry& fileEntry, char* pCompressedBuffer, int * pdwBufferLen);
+
+	//	Get current cached file total size
+	int GetCachedFileSize() const { return m_cacheSize; }
+	//	Get current shared file total size
+	int GetSharedFileSize() const { return m_sharedSize; }
+
+	int GetFileNumber() const { return m_fileEntries.Size(); }
+	FileHeader * GetFileHeader() { return &m_header; }
+	virtual const char * GetFolder() { return m_folder; }
+	const char* GetPckFileName() { return m_pckFileName; }
+	int64 GetPackageFileSize() { return m_pPackageFile->GetPackageFileSize(); }
 private:
 	bool InnerOpen(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName);
+
+	//	Safe header
+	bool LoadSafeHeader();
+	bool SaveSafeHeader();
+	bool CreateSafeHeader();
+
+	// Sort the file entry list;
+	bool ResortEntries();
+	//	Save file entries
+	bool SaveEntries(int * pEntrySize);
+
+
+	//	Add a file name to file cache list
+	bool AddCacheFileName(const char* fileName);
+	//	Add a group of file names to file cache list
+	bool AddCacheFileNameList(const char* descFile);
+	//	Search a cache file name from table
+	CacheFilename* SearchCacheFileName(const char* fileName);
+	CacheFilename* SearchCacheFileName(int fileID);
 
 private:
 	bool m_bChanged;
@@ -132,10 +199,7 @@ private:
 	bool m_bUseShortName;
 
 	FileHeader	m_header;
-	OPEN_MODE	m_mode;
-
 	PackageDir	m_directory;	//	the ROOT of directory tree. 
-
 	TPackageFile * m_pPackageFile;
 	char	m_pckFileName[MAX_PATH];
 	char	m_folder[MAX_PATH];
@@ -149,8 +213,8 @@ private:
 	TArray<FileEntry*>	m_fileEntries;
 	TArray<FileEntryCache*> m_fileEntryCaches;
 
-	THashMap<int, CacheFilename> m_cachedFiles;
-	THashMap<int, SharedFile> m_sharedFiles;
+	THashMap<int, CacheFilename*> m_cachedFiles;
+	THashMap<int, SharedFile*> m_sharedFiles;
 };
 
 

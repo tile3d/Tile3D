@@ -4,11 +4,12 @@
 
 enum LOG_LEVEL
 {
-	LOG_NONE,			//0: not used
-	LOG_INFO,			//1: log info (normally for debug)
-	LOG_WARNING,		//2: log warnning
-	LOG_ERR,			//3: log error info
-	LOG_FATAL,			//4: log fatal message
+	LOG_NONE,			//not used
+	LOG_DEBUG,			//debug info for development
+	LOG_INFO,			//log info (Log user information, for server end normally use this)
+	LOG_WARNING,		//warning info
+	LOG_ERR,			//log error info
+	LOG_FATAL,			//log fatal message
 };
 
 //TBD

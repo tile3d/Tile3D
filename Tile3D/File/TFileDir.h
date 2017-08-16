@@ -13,7 +13,6 @@ public:
 
 	bool Initialize(const char* pszBaseDir, const char* pszDocumentDir, const char* pszLibraryDir, const char* pszTempDir);
 
-	void RemoveLastDirSlash(char* pDir);
 	
 	const char * GetBaseDir() { return m_baseDir; }	
 	const char * GetDocumentDir() { return m_documentDir; }
@@ -50,12 +49,19 @@ public:
 	void RemoveExtName(TString& fileName);
 
 	bool ContainFilePath(const char* fileName);
-	void NormalizeFileName(char* fileName);
-	void NormalizeFileName(const char* srcFileName, char* dstFileName);
+
+	void ConvertFileName(char* fileName);
+	void ConvertFileName(const char* srcFileName, char* dstFileName);
+
+	bool NormalizeFileName(char* szFileName);
+
+	void RemoveLastDirSlash(char* pDir);
 
 	bool IsFileExist(const char* fileName);
 
 	int GetFileTimeStamp(const char * fileName);
+
+	int GetIDFromFileName(const char * fileName);
 private:
 	// BaseDir is the working directory we load resource files from, and it's read-only.
 	//
