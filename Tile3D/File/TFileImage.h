@@ -32,12 +32,15 @@ public:
 
 	inline unsigned char* GetFileBuffer() { return m_pFileImage; }
 
+private:
 	bool ReadImage(unsigned char* pBuffer, int nSize, int * pReadSize); // read some size of data into a buffer;
-	bool ReadImageByLine(char * szLineBuffer, int nMaxLength, int * pReadSize); // read a line into a buffer;
-	bool SeekImage(int nOffset, int startPos); // offset current pointer
+	bool ReadImageByLine(char * lineBuffer, int maxLength, int * pReadSize); // read a line into a buffer;
+	bool SeekImage(int offset, int startPos); // offset current pointer
 
 protected:
-	bool Init(const char* szFullPath, bool bTempMem);
+	bool Init(const char* fullPath);
+	bool InitWithSepFile(const char * fullName);
+
 	bool Release();
 	bool ReadFileData(const char* szFullPath, bool bPrintError = true);
 	bool ReadPackData(TPackage* pPackage, bool bTempMem, bool bPrintError = true);
@@ -49,7 +52,6 @@ private:
 	int				m_nCurPtr;		//	In index into the file image buffer;
 	int				m_fileLength;	//	File length;
 	int				m_handle;		//	Handle in file package
-	bool			m_bTempMem;		//	true, use temporary memory alloctor
 };
 
 

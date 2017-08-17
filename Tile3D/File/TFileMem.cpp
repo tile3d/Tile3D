@@ -110,7 +110,7 @@ bool TFileMem::ExtendFileBeforeWrite(int writeSize)
 	if (!pNewBuf)
 	{
 		//	Not enough memory to extend file
-		TLog::Log(LOG_ERR, "FILE", "TFileMeM::ExtendFileBeforeWrite, Not enough memory");
+		TLog::Log(LOG_ERR, "FILE", "TFileMem::ExtendFileBeforeWrite, Not enough memory");
 		return false;
 	}
 

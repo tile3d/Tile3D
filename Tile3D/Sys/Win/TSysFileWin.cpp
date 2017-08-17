@@ -1,18 +1,28 @@
 #ifdef PLATFORM_WIN
 
-#include "TSysFileWin.h"
+#include <Sys/TSysFile.h>
 #include <stdio.h>
 #include <string.h>
 #include <io.h>
+#include <sys/stat.h>
 
 int TSysFile::FileNo(FILE * fp)
 {
 	return _fileno(fp);
 }
 
+
 int TSysFile::SetFileSize(int fd, int size)
 {
 	return _chsize(fd, size);
+}
+
+
+int TSysFile::GetFileTimeStamp(const char* szFileName)
+{
+	struct stat fileStat;
+	stat(szFileName, &fileStat);
+	return fileStat.st_mtime;
 }
 
 int TSysFile::StrCmpNoCase(const char * str1, const char * str2)

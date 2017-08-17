@@ -187,15 +187,13 @@ bool TPackage::Open(const char* pckPath, bool bEncrypt)
 	*pext++ = '\\';
 	*pext = '\0';
 
-	return InnerOpen(pckPath, folder, bEncrypt, false);
+	return Open(pckPath, folder, bEncrypt, false);
 }
 
-bool TPackage::Open(const char* pckPath, const char* folder,  bool bEncrypt)
-{
-	return InnerOpen(pckPath, folder, bEncrypt, true);
-}
 
-bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt, bool bShortName)
+
+
+bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName)
 {
 	char fullPckPath[MAX_PATH];
 	TFileDir::GetInstance()->GetFullPath(fullPckPath, pckPath);
@@ -210,7 +208,7 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 	if (folderLen > 0)
 	{
 		strncpy(m_folder, folder, MAX_PATH);
-		strlwr(m_folder);
+		TSysFile::StrToLower(m_folder);
 		TFileDir::GetInstance()->NormalizeFileName(m_folder);
 
 		//	Add '\' at folder tail
@@ -261,8 +259,8 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 		// Now read file number;
 		m_pPackageFile->Seek(offset - (sizeof(int) + sizeof(int)), SEEK_SET);
 		m_pPackageFile->Read(&numFile, sizeof(int), 1);
-		m_pPackageFile->Seek(offset - (sizeof(FileHeader) + sizeof(int) + sizeof(int)), SEEK_SET);
-		m_pPackageFile->Read(&m_header, sizeof(FileHeader), 1);
+		m_pPackageFile->Seek(offset - (sizeof(PackageHeader) + sizeof(int) + sizeof(int)), SEEK_SET);
+		m_pPackageFile->Read(&m_header, sizeof(PackageHeader), 1);
 		if (strstr(m_header.m_description, "lica File Package") == NULL)
 			return false;
 		strncpy(m_header.m_description, PCK_COPYRIGHT_TAG, sizeof(m_header.m_description));
@@ -276,10 +274,10 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			return false;
 		}
 
-		m_header.m_entryOffset ^= TPackageMan::GetInstance()->GetMaskPasswd();
+		m_header.m_entryOffset ^= GetMaskPasswd();
 
-		if (m_header.m_guardByte0 != TPackageMan::GetInstance()->GetGuardByte0() ||
-			m_header.m_guardByte1 != TPackageMan::GetInstance()->GetGuardByte1())
+		if (m_header.m_guardByte0 != GetGuardByte0() ||
+			m_header.m_guardByte1 != GetGuardByte1())
 		{
 			// corrput file
 			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, GuardBytes corrupted [%s]", pckPath);
@@ -304,11 +302,11 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 			// first read the entry size after compressed
 			int nCompressedSize;
 			m_pPackageFile->Read(&nCompressedSize, sizeof(int), 1);
-			nCompressedSize ^= TPackageMan::GetInstance()->GetMaskPasswd();
+			nCompressedSize ^= GetMaskPasswd();
 
 			int checkSize;
 			m_pPackageFile->Read(&checkSize, sizeof(int), 1);
-			checkSize = checkSize ^ TPackageMan::GetInstance()->GetCheckMask() ^ TPackageMan::GetInstance()->GetMaskPasswd();
+			checkSize = checkSize ^ GetCheckMask() ^ GetMaskPasswd();
 
 			if (nCompressedSize != checkSize)
 			{
@@ -380,6 +378,61 @@ bool TPackage::InnerOpen(const char* pckPath, const char* folder,  bool bEncrypt
 	return true;
 }
 
+bool TPackage::Create(const char* pckPath, const char *folder, bool bEncrypt)
+{
+	char fullPckPath[MAX_PATH];
+	TFileDir::GetInstance()->GetFullPath(fullPckPath, pckPath);
+
+	m_bUseShortName = true;
+
+	//	Save folder name
+	TAssert(folder);
+	int folderLen = strlen(folder);
+	memset(m_folder, 0, sizeof(m_folder));
+
+	if (folderLen > 0)
+	{
+		strncpy(m_folder, folder, MAX_PATH);
+		TSysFile::StrToLower(m_folder);
+		TFileDir::GetInstance()->NormalizeFileName(m_folder);
+
+		//	Add '\' at folder tail
+		if (m_folder[folderLen - 1] != '\\')
+		{
+			m_folder[folderLen] = '\\';
+			m_folder[folderLen + 1] = '\0';
+		}
+	}
+
+	m_bReadOnly = false;
+	m_pPackageFile = new TPackageFile();
+	if (!m_pPackageFile->Open(fullPckPath, "wb"))
+	{
+		delete m_pPackageFile;
+		m_pPackageFile = NULL;
+		TLog::Log(LOG_ERR, "FILE", "TPackage::Create(), Can not create file [%s]", fullPckPath);
+		return false;
+	}
+	strncpy(m_pckFileName, pckPath, MAX_PATH);
+
+	CreateSafeHeader();
+
+	// Init header;
+	memset(&m_header, 0, sizeof(PackageHeader));
+	m_header.m_guardByte0 = m_guardByte0;
+	m_header.m_entryOffset = sizeof(SafeFileHeader);
+	m_header.m_version = PCK_VERSION;
+	m_header.m_flags = bEncrypt ? PCK_FLAG_ENCRYPT : 0;
+	m_header.m_guardByte1 = m_guardByte1;
+	strncpy(m_header.m_description, PCK_COPYRIGHT_TAG, sizeof(m_header.m_description));
+
+	m_fileEntries.Clear();
+	m_fileEntryCaches.Clear();
+
+	m_bChanged = false;
+	m_sharedSize = 0;
+	m_cacheSize = 0;
+}
 
 bool TPackage::GetFileEntry(const char* fileName, FileEntry* pFileEntry, int* pIndex)
 {
@@ -424,7 +477,7 @@ bool TPackage::CheckFileEntryValid(FileEntry* pFileEntry)
 		// 通常情况下该值为0xFFFFFFFC，但是也可能有其他情况被写成了其他的值，正常情况下一个包里的小文件不应该太大
 		// 我们认为过大的FileEntry是错的 
 		// 标准：大于MAX_FILE_PACKAGE的情况都认为是过大的，因为pck文件大于该值时会自动拆包，理论上不会有任何一个文件大于这个值
-		TLog::Log(LOG_ERR, "FILE", "CheckFileEntryValid, file entry [%s]'s length is not correct!", pFileEntry->m_fileName);
+		TLog::Log(LOG_ERR, "FILE", "TPackage::CheckFileEntryValid, file entry [%s]'s length is not correct!", pFileEntry->m_fileName);
 		return false;
 	}
 
@@ -445,7 +498,7 @@ TPackage::PackageDir * TPackage::GetDirEntry(const char * path)
 	char *name, *tok;
 
 	strncpy(findName, path, MAX_PATH);
-	strlwr(findName);
+	TSysFile::StrToLower(findName);
 	name = findName;
 	len = strlen(findName);
 	for (i = 0; i<len; i++)
@@ -1105,7 +1158,7 @@ bool TPackage::LoadSafeHeader()
 	m_pPackageFile->Seek(0, SEEK_SET);
 
 	m_pPackageFile->Read(&m_safeHeader, sizeof(SafeFileHeader), 1);
-	if (m_safeHeader.m_tag1 == 0x4DCA23EF && m_safeHeader.m_tag2 == 0x56a089b7)
+	if (m_safeHeader.m_tag == 0x4DCA23EF)
 		m_bHasSaferHeader = true;
 	else
 		m_bHasSaferHeader = false;
@@ -1121,8 +1174,7 @@ bool TPackage::CreateSafeHeader()
 {
 	m_bHasSaferHeader = true;
 
-	m_safeHeader.m_tag1 = 0x4DCA23EF;
-	m_safeHeader.m_tag2 = 0x56a089b7;
+	m_safeHeader.m_tag = 0x4DCA23EF;
 	m_safeHeader.m_offset = 0;
 
 	return true;
@@ -1198,11 +1250,11 @@ bool TPackage::SaveEntries(int * pEntrySize)
 
 		int compressedSize = pEntryCache->m_compressedLength;
 
-		compressedSize ^= TPackageMan::GetInstance()->GetMaskPasswd();
+		compressedSize ^= GetMaskPasswd();
 		memcpy(&pEntryBuffer[bufferUsed], &compressedSize, sizeof(int));
 		bufferUsed += sizeof(int);
 
-		compressedSize ^= TPackageMan::GetInstance()->GetCheckMask();
+		compressedSize ^= GetCheckMask();
 		memcpy(&pEntryBuffer[bufferUsed], &compressedSize, sizeof(int));
 		bufferUsed += sizeof(int);
 
@@ -1293,26 +1345,26 @@ TPackage::CacheFilename* TPackage::SearchCacheFileName(int fileID)
 
 //	Clear file cache
 void TPackage::ClearFileCache()
-{
-	SharedTable::iterator it = m_sharedFiles.begin();
-	for (; it != m_SharedFileTab.end(); )
-	{
-		SHAREDFILE* pFileItem = *it.value();
-
-		//	Don't release file which is still referenced
-		if (!pFileItem->iRefCnt)
+{	
+	THashNode<int, SharedFile*> * pHead = m_sharedFiles.GetHead();
+	THashNode<int, SharedFile*> * pNode = pHead;
+	while (pNode) {
+		SharedFile* pFileItem = pNode->m_value;
+		if (!pFileItem->m_refCnt == 0)
 		{
-			a_free(pFileItem->pFileData);
+			TMemory::Free(pFileItem->m_pFileData);
 			delete pFileItem;
-
-			it = m_SharedFileTab.erase(it);
+			THashNode<int, SharedFile*> * pSave = pNode;
+			pNode = m_sharedFiles.GetNext(pNode);
+			m_sharedFiles.Remove(pSave->m_key);
 		}
-		else
-			++it;
+		else {
+			pNode = m_sharedFiles.GetNext(pNode);
+		}
 	}
 }
 
-unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen, bool bTempMem)
+unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen)
 {
 	//	Get file entry
 	FileEntry FileEntry;
@@ -1321,81 +1373,84 @@ unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppF
 	{
 		if (!strstr(fileName, "Textures") && !strstr(fileName, "Tex_"))
 		{
-			TLog::Log(LOG_ERR, "FILE", "TPackage:::OpenSharedFile, Failed to find file [%s] in package", fileName);
+			TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Failed to find file [%s] in package", fileName);
 		}
 		return false;
 	}
 
 	TAssert(m_fileEntries[entryIndex]);
-
 	//	Allocate file data buffer
-	char* pFileData = NULL;
-	if (bTempMem)
-		pFileData = (BYTE*)a_malloctemp(FileEntry.dwLength);
-	else
-		pFileData = (BYTE*)a_malloc(FileEntry.dwLength);
-
+	unsigned char*  pFileData = (unsigned char*)TMemory::Alloc(FileEntry.m_length);
 	if (!pFileData)
 	{
-		AFERRLOG(("AFilePackage::OpenSharedFile, Not enough memory!"));
+		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Not enough memory");
 		return false;
 	}
 
 	//	Read file data
-	DWORD dwFileLen = FileEntry.dwLength;
+	unsigned long dwFileLen = FileEntry.m_length;
 	if (!ReadFile(FileEntry, pFileData, &dwFileLen))
 	{
-		if (bTempMem)
-			a_freetemp(pFileData);
-		else
-			a_free(pFileData);
-
-		AFERRLOG(("AFilePackage::OpenSharedFile, Failed to read file data [%s] !", szFileName));
+		TMemory::Free(pFileData);
+		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Failed to read file data [%s]", fileName);
 		return false;
 	}
 
 	//	Add it to shared file arrey
-	SHAREDFILE* pFileItem = new SHAREDFILE;
+	SharedFile* pFileItem = new SharedFile;
 	if (!pFileItem)
 	{
-		if (bTempMem)
-			a_freetemp(pFileData);
-		else
-			a_free(pFileData);
-
-		AFERRLOG(("AFilePackage::OpenSharedFile, Not enough memory!"));
+		TMemory::Free(pFileData);
+		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Not enough memory");
 		return false;
 	}
 
-	pFileItem->bCached = false;
-	pFileItem->bTempMem = bTempMem;
-	pFileItem->dwFileID = 0;
-	pFileItem->dwFileLen = dwFileLen;
-	pFileItem->iRefCnt = 1;
-	pFileItem->pFileData = pFileData;
-	pFileItem->pFileEntry = m_aFileEntries[entryIndex];
+	pFileItem->m_cached = false;
+	pFileItem->m_tempMem = false;
+	pFileItem->m_fileID = 0;
+	pFileItem->m_fileLen = dwFileLen;
+	pFileItem->m_refCnt = 1;
+	pFileItem->m_pFileData = pFileData;
+	pFileItem->m_pFileEntry = m_fileEntries[entryIndex];
 
 	//	pFileItem->pFileEntry->iAccessCnt++;
-
 	*ppFileBuf = pFileData;
-	*pdwFileLen = dwFileLen;
-
-	return (DWORD)pFileItem;
+	*pFileLen = dwFileLen;
+	
+	//TBD: Why this
+	return (int)pFileItem;
 }
 
 //	Close a shared file
-void TPackage::CloseSharedFile(DWORD dwFileHandle)
+void TPackage::CloseSharedFile(int fileHandle)
 {
-	SHAREDFILE* pFileItem = (SHAREDFILE*)dwFileHandle;
-	ASSERT(pFileItem && pFileItem->iRefCnt > 0);
+	SharedFile* pFileItem = (SharedFile*)fileHandle;
+	TAssert(pFileItem && pFileItem->m_refCnt > 0);
 
 	//	No cache file, release it
-	if (pFileItem->bTempMem)
-		a_freetemp(pFileItem->pFileData);
-	else
-		a_free(pFileItem->pFileData);
-
+	TMemory::Free(pFileItem->m_pFileData);
 	delete pFileItem;
 }
 
 
+bool TPackage::SetAlgorithmID(int id)
+{
+	switch (id)
+	{
+	case 111:
+		m_guardByte0 = 0xab12908f;
+		m_guardByte1 = 0xb3231902;
+		m_maskPasswd = 0x2a63810e;
+		m_checkMask = 0x18734563;
+		break;
+
+	default:
+		m_guardByte0 = 0xfdfdfeee + id * 0x72341f2;
+		m_guardByte1 = 0xf00dbeef + id * 0x1237a73;
+		m_maskPasswd = 0xa8937462 + id * 0xab2321f;
+		m_checkMask = 0x59374231 + id * 0x987a223;
+		break;
+	}
+
+	return true;
+}

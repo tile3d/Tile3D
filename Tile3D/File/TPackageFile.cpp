@@ -8,8 +8,8 @@
 
 TPackageFile::TPackageFile()
 {
-	m_pFile1 = NULL;
-	m_pFile2 = NULL;
+	m_pFile1 = nullptr;
+	m_pFile2 = nullptr;
 
 	m_size1 = 0;
 	m_size2 = 0;
@@ -19,14 +19,15 @@ TPackageFile::TPackageFile()
 
 TPackageFile::~TPackageFile()
 {
+	Close();
 }
 
 bool TPackageFile::Open(const char * fileName, const char * mode)
 {
-	Close();
+	TAssert(m_pFile1 == nullptr);
 
 	m_pFile1 = fopen(fileName, mode);
-	if (NULL == m_pFile1)
+	if (m_pFile1 == nullptr)
 		return false;
 
 	fseek(m_pFile1, 0, SEEK_END);

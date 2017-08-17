@@ -1,12 +1,20 @@
 #ifdef PLATFORM_IOS
 
-#include "TSysFileIOS.h"
+#include <Sys/TSysFile.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 int TSysFile::FileNo(FILE * fp)
 {
 	return fileno(_File);
+}
+
+int TSysFile::GetFileTimeStamp(const char* szFileName)
+{
+	struct stat fileStat;
+	stat(szFileName, &fileStat);
+	return fileStat.st_mtime;
 }
 
 int TSysFile::SetFileSize(int fd, int size)

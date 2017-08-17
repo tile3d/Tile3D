@@ -12,7 +12,6 @@ public:
 		return m_ht.Put(key, value);
 	}
 
-
 	bool Put(TPair & pair) {
 		return m_ht.Put(pair.m_key, pair.m_value);
 	}
@@ -27,6 +26,14 @@ public:
 
 	bool Remove(KEY_TYPE  &  key) {
 		return m_ht.Remove(key);
+	}
+
+	THashNode * GetHead() {
+		return m_ht.GetHead();
+	}
+
+	THashNode * GetNext(THashNode * pNode) {
+		return m_ht.GetNext();
 	}
 
 private:

@@ -17,11 +17,13 @@
 #define PCK_MAX_FILE_SIZE	0x7fffff00U
 
 
+//
 //TBD
-//1) Resolve the pck file size problem(2G problem)
-//2) Support single large pck file (for example 8G)
-//3) Consider if need the cache files (memory printfoot)
-//4) Use the same memory allocation and deallocation method
+//1) Resolve the pck file size problem(2G problem), Support single large pck file (for example 8G) 
+//2) Cache implementation, open method not to open the content
+//3) Use the same memory allocation and deallocation method (new vs TMemory::Alloc)
+//4) Possiblly share file not implemented now
+//
 class TPackage
 {
 public:
@@ -89,12 +91,12 @@ public:
 		char * m_pEntryCompressed;
 	};
 
-	//TBD: new version has changed the m_entryOffset size
-	struct FileHeader
+
+	struct PackageHeader
 	{
 		int	m_guardByte0;			//	0xabcdefab
 		int	m_version;				//	Composed by two word version, major part and minor part;
-		int m_entryOffset;			//	The entry list offset from the beginning;
+		int64 m_entryOffset;			//	The entry list offset from the beginning;
 		int	m_flags;				//	package flags. the highest bit means the encrypt state;
 		char m_description[252];		//	Description
 		int	m_guardByte1;				//	0xffeeffee
@@ -107,7 +109,7 @@ public:
 		bool	m_cached;		//	Cached flag
 		bool	m_tempMem;		//	true, use temporary memory alloctor
 		int		m_refCnt;		//	Reference counter
-		char*	m_pFileData;		//	File data buffer
+		unsigned char*	m_pFileData;		//	File data buffer
 		int		m_fileLen;		//	File data length
 		FileEntry*	m_pFileEntry;	//	Point to file entry
 	};
@@ -121,18 +123,18 @@ public:
 
 	struct SafeFileHeader
 	{	
-		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
-		int m_offset;		//	offset of real entries
-		int m_tag2;
+		int	m_tag;			//	tag of safe header, current it is 0x4DCA23EF
+		int64 m_offset;		//	offset of real entries
 	};
 
 public:
 	TPackage();
 	virtual ~TPackage();
+	virtual bool Close();
 
 	bool Open(const char* pckPath, bool bEncrypt);
-	bool Open(const char* pckPath, const char *folder, bool bEncrypt);
-	virtual bool Close();
+	bool Open(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName);
+	bool Create(const char* pckPath, const char *folder, bool bEncrypt);
 
 	// Find a file entry
 	bool GetFileEntry(const char* szFileName, FileEntry* pFileEntry, int* pIndex);
@@ -140,6 +142,7 @@ public:
 	bool CheckFileEntryValid(FileEntry* pFileEntry);
 
 	PackageDir* GetDirEntry(const char* path);
+
 	//	Append a file into directroy
 	bool InsertFileToDir(const char * filename, int index);
 	// Remove File from directory
@@ -164,9 +167,9 @@ public:
 	bool ReadCompressedFile(FileEntry& fileEntry, unsigned char* pCompressedBuffer, unsigned long * pdwBufferLen);
 
 	//	Open a shared file
-	virtual unsigned long OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen, bool bTempMem);
+	virtual unsigned long OpenSharedFile(const char* fileName, unsigned char** ppFileBuf, unsigned long* pFileLen);
 	//	Close a shared file
-	virtual void CloseSharedFile(unsigned long fileHandle);
+	virtual void CloseSharedFile(int fileHandle);
 
 	//	Get current cached file total size
 	int GetCachedFileSize() const { return m_cacheSize; }
@@ -174,7 +177,7 @@ public:
 	int GetSharedFileSize() const { return m_sharedSize; }
 
 	int GetFileNumber() const { return m_fileEntries.Size(); }
-	FileHeader * GetFileHeader() { return &m_header; }
+	PackageHeader * GetFileHeader() { return &m_header; }
 	virtual const char * GetFolder() { return m_folder; }
 	const char* GetPckFileName() { return m_pckFileName; }
 	int64 GetPackageFileSize() { return m_pPackageFile->GetPackageFileSize(); }
@@ -212,8 +215,6 @@ public:
 	void Decrypt(unsigned char* pBuffer, unsigned long length);
 
 private:
-	bool InnerOpen(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName);
-
 	//	Safe header
 	bool LoadSafeHeader();
 	bool SaveSafeHeader();
@@ -232,13 +233,27 @@ private:
 	//	Search a cache file name from table
 	CacheFilename* SearchCacheFileName(const char* fileName);
 	CacheFilename* SearchCacheFileName(int fileID);
+	void ClearFileCache();
+
+	//	Set algorithm id
+	bool SetAlgorithmID(int id);
+
+	int GetGuardByte0() { return m_guardByte0; }
+	int GetGuardByte1() { return m_guardByte1; }
+	int GetMaskPasswd() { return m_maskPasswd; }
+	int GetCheckMask() { return m_checkMask; }
 
 private:
 	bool m_bChanged;
 	bool m_bReadOnly;
 	bool m_bUseShortName;
 
-	FileHeader	m_header;
+	int	m_guardByte0;
+	int	m_guardByte1;
+	int m_maskPasswd;
+	int	m_checkMask;
+
+	PackageHeader	m_header;
 	PackageDir	m_directory;	//	the ROOT of directory tree. 
 	TPackageFile * m_pPackageFile;
 	char	m_pckFileName[MAX_PATH];

@@ -46,19 +46,7 @@ public:
 	void CloseAllPackages();
 	bool ClosePackage(TPackage * pPackage);
 
-	//	Set algorithm id
-	bool SetAlgorithmID(int id);
-
-	int GetGuardByte0() { return m_guardByte0; }
-	int GetGuardByte1() { return m_guardByte1; }
-	int GetMaskPasswd() { return m_maskPasswd; }
-	int GetCheckMask() { return m_checkMask; }
-
 private:
-	int	m_guardByte0;
-	int	m_guardByte1;
-	int m_maskPasswd;
-	int	m_checkMask;
 	TArray<TPackage*> m_packages;
 };
 

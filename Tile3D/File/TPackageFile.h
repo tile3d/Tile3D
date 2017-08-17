@@ -6,6 +6,8 @@
 
 //
 //PCK package file implementation
+//TBD
+//1) Change to only support one file
 //
 class TPackageFile
 {

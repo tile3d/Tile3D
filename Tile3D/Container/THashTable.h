@@ -58,7 +58,12 @@ struct HashFunc
 	}
 };
 
-
+//
+//TBD
+//1) need support load factor for rehash
+//2) if need support multimap
+//
+//
 template<typename KEY_TYPE, typename VALUE_TYPE> class THashTable
 {
 public:
@@ -84,7 +89,7 @@ public:
 			ReHash(m_buckets * 2);
 		}
 
-		int hashValue = GetHash(key);
+		int hashValue = GetHashIndex(key);
 
 		//Try to find if exist, if exist return false
 		THashNode * pHead = m_buckets[hashValue];
@@ -109,7 +114,7 @@ public:
 			ReHash(m_buckets * 2);
 		}
 
-		int hashValue = GetHash(key);
+		int hashValue = GetHashIndex(key);
 
 		//Try to find if exist, replace it if exist
 		THashNode * pHead = m_buckets[hashValue];
@@ -127,7 +132,7 @@ public:
 	}
 
 	VALUE_TYPE * Find(KEY_TYPE & key) {
-		int hashValue = GetHash(key);
+		int hashValue = GetHashIndex(key);
 		THashNode * pNode = m_buckets[hashValue];
 		while (pNode != nullptr) {
 			if (pNode->m_key == key) {
@@ -141,14 +146,14 @@ public:
 	}
 
 	bool Remove(KEY_TYPE  &  key) {
-		int hashValue = GetHash(key);
-		THashNode * pHead = m_buckets[hashValue];
-		THashNode * pNode = pHead;
+		int hashIndex = GetHashIndex(key);
+		THashNode * pBucket = m_buckets[hashIndex];
+		THashNode * pNode = pBucket;
 		THashNode * pPrevNode = nullptr;
 		while (pNode != nullptr) {
 			if (pNode->m_key == key) {
-				if (pNode == pHead) {
-					pHead = nullptr;
+				if (pNode == pBucket) {
+					pBucket = pNode->m_pNext;
 				}
 				else {
 					pPrevNode->m_pNext = pNode->m_pNext;
@@ -165,8 +170,37 @@ public:
 		return false;
 	}
 
+
+	THashNode * GetHead() {
+		for (int i = 0; i < m_bucketSize; ++i) {
+			if (m_buckets[i] != nullptr) {
+				return m_buckets[i];
+			}
+		}
+		return nullptr;
+	}
+
+	THashNode * GetNext(THashNode * pHashNode) {
+		if (pHashNode == nullptr) return nullptr;
+
+		THashNode * pNext = pHashNode->m_pNext;
+		if (pNext != nullptr) {
+			return pNext;
+		}
+		else {
+			KEY key = pHashNode->m_key;
+			int hashIndex = GetHashIndex(key);
+			for (int i = hashIndex; i < m_bucketSize; ++i) {
+				if (m_buckets[i] != nullptr) {
+					return m_buckets[i];
+				}
+			}
+		}
+		return nullptr;
+	}
+
 private:
-	unsigned int GetHash(KEY_TYPE & key) {
+	unsigned int GetHashIndex(KEY_TYPE & key) {
 		return HashFunc(key) % m_bucketSize;
 	}
 
@@ -182,7 +216,7 @@ private:
 			THashNode * pNode = pOldBuckets[i];
 			while (pNode != nullptr) {
 				pNode = pNode->m_pNext;
-				Add(pNode->m_key, pNode->m_value, GetHash(pNode->m_key);
+				Add(pNode->m_key, pNode->m_value, GetHashIndex(pNode->m_key);
 			}
 		}
 

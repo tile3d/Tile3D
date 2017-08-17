@@ -1,6 +1,7 @@
+#include "Util/TLog.h"
 #include "TPackageMan.h"
 #include "TPackage.h"
-#include "Util/TLog.h"
+#include "TFileDir.h"
 
 bool TPackageMan::CreateFilePackage(const char* pckFile, const char* folder, int flags)
 {
@@ -90,7 +91,7 @@ TPackage* TPackageMan::GetPackage(const char* path)
 	char lowPath[MAX_PATH];
 	strncpy(lowPath, path, MAX_PATH);
 	_strlwr(lowPath);
-	TPackage::NormalizeFileName(lowPath);
+	TFileDir::GetInstance()->NormalizeFileName(lowPath);
 
 	//	Check other packages through file path
 	int count = m_packages.Size();
@@ -132,26 +133,6 @@ bool TPackageMan::ClosePackage(TPackage * pPackage)
 }
 
 
-bool TPackageMan::SetAlgorithmID(int id)
-{
-	switch (id)
-	{
-	case 111:
-		m_guardByte0 = 0xab12908f;
-		m_guardByte1 = 0xb3231902;
-		m_maskPasswd = 0x2a63810e;
-		m_checkMask = 0x18734563;
-		break;
 
-	default:
-		m_guardByte0 = 0xfdfdfeee + id * 0x72341f2;
-		m_guardByte1 = 0xf00dbeef + id * 0x1237a73;
-		m_maskPasswd = 0xa8937462 + id * 0xab2321f;
-		m_checkMask = 0x59374231 + id * 0x987a223;
-		break;
-	}
-
-	return true;
-}
 
 
