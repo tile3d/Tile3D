@@ -1,6 +1,7 @@
 #pragma once
 
 #include "THashTable.h"
+#include "TPair.h"
 
 template<typename KEY_TYPE, typename VALUE_TYPE> class THashMap
 {
@@ -12,7 +13,7 @@ public:
 		return m_ht.Put(key, value);
 	}
 
-	bool Put(TPair & pair) {
+	bool Put(TPair<KEY_TYPE, VALUE_TYPE>  & pair) {
 		return m_ht.Put(pair.m_key, pair.m_value);
 	}
 
@@ -28,12 +29,12 @@ public:
 		return m_ht.Remove(key);
 	}
 
-	THashNode * GetHead() {
+	THashNode<KEY_TYPE, VALUE_TYPE> * GetHead() {
 		return m_ht.GetHead();
 	}
 
-	THashNode * GetNext(THashNode * pNode) {
-		return m_ht.GetNext();
+	THashNode<KEY_TYPE, VALUE_TYPE> * GetNext(THashNode<KEY_TYPE, VALUE_TYPE> * pNode) {
+		return m_ht.GetNext(pNode);
 	}
 
 private:

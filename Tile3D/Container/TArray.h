@@ -199,7 +199,7 @@ template<typename T> void TArray<T>::Remove(const T * pos)
 {
 	TAssert(pos >= m_data && pos < m_data + m_count);
 
-	Remove(pos - m_data);
+	Remove((int)(pos - m_data));
 }
 
 template<typename T> void TArray<T>::RemoveAtOnce(int index)

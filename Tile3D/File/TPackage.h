@@ -80,8 +80,8 @@ public:
 	{
 		char	m_fileName[MAX_PATH];	//	The file name of this entry; this may contain a path;
 		int64	m_offset;				//	The offset from the beginning of the package file;
-		int		m_length;				//	The length of this file;
-		int		m_compressedLength;		//	The compressed data length;
+		unsigned long	m_length;		//	The length of this file;
+		unsigned long	m_compressedLength;		//	The compressed data length;
 		int		m_accessCnt;			//	Access counter used by OpenSharedFile	
 	};
 

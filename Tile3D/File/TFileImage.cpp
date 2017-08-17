@@ -45,6 +45,7 @@ bool TFileImage::Init(const char * fullName)
 		m_timestamp = 0;
 		return true;
 	}
+	return false;
 }
 
 bool TFileImage::InitWithSepFile(const char * fullName)
@@ -76,6 +77,7 @@ bool TFileImage::InitWithSepFile(const char * fullName)
 	fread(m_pFileImage, m_fileLength, 1, pFile);
 
 	m_timestamp = TSysFile::GetFileTimeStamp(fullName);
+	return true;
 }
 
 bool TFileImage::Open(const char* folderName, const char * fileName, int dwFlags)

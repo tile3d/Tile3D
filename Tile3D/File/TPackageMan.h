@@ -18,12 +18,7 @@ public:
 		return &pm;
 	}
 
-	TPackageMan() {
-		m_guardByte0 = 0xfdfdfeee;
-		m_guardByte1 = 0xf00dbeef;
-		m_maskPasswd = 0xa8937462;
-		m_checkMask = 0x59374231;
-	}
+	TPackageMan(){}
 
 	//close all the pck file
 	~TPackageMan() {

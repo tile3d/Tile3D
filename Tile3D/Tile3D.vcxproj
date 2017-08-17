@@ -133,6 +133,7 @@
     <ClInclude Include="Container\THashSet.h" />
     <ClInclude Include="Container\THashTable.h" />
     <ClInclude Include="Container\TList.h" />
+    <ClInclude Include="Container\TPair.h" />
     <ClInclude Include="Container\TQueue.h" />
     <ClInclude Include="Container\TRBTree.h" />
     <ClInclude Include="Container\TString.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="File\TPackageFile.h" />
     <ClInclude Include="File\TPackage.h" />
     <ClInclude Include="File\TPackageMan.h" />
+    <ClInclude Include="File\TScriptFile.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TMathUtil.h" />
     <ClInclude Include="Math\TMatrix.h" />
@@ -195,6 +197,7 @@
     <ClCompile Include="File\TPackageFile.cpp" />
     <ClCompile Include="File\TPackage.cpp" />
     <ClCompile Include="File\TPackageMan.cpp" />
+    <ClCompile Include="File\TScriptFile.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />

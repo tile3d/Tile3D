@@ -169,6 +169,10 @@ public:
 		return IsEmpty() ? 0.0 : atof(m_pStr);
 	}
 
+	char * ToString() const {
+		return m_pStr;
+	}
+
 	TString& Replace(const char* szFrom, const char* szTo);	
 	TString& Replace(const char cFrom, const char cTo);
 

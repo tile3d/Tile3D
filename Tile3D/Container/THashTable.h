@@ -1,9 +1,5 @@
 #pragma once
 
-template<typename KEY_TYPE, typename VALUE_TYPE> struct TPair {
-	KEY_TYPE key;
-	VALUE_TYPE value;
-};
 
 template<typename KEY_TYPE, typename VALUE_TYPE> struct THashNode
 {
@@ -31,14 +27,14 @@ struct HashFunc
 	HashFunc() {}
 	HashFunc(const HashFunc & hf) {}
 
-	unsigned int operator() (int x) const { return x; }
-	unsigned int operator() (short x) const { return x; }
 	unsigned int operator() (char x) const { return x; }
+	unsigned int operator() (short x) const { return x; }
+	unsigned int operator() (int x) const { return x; }
 	unsigned int operator() (long x) const { return x; }
 
-	unsigned int operator() (unsigned int x) const { return x; }
-	unsigned int operator() (unsigned short x) const { return x; }
 	unsigned int operator() (unsigned char x) const { return x; }
+	unsigned int operator() (unsigned short x) const { return x; }
+	unsigned int operator() (unsigned int x) const { return x; }
 	unsigned int operator() (unsigned long x) const { return x; }
 
 	unsigned int operator() (char * x) const { 
@@ -73,8 +69,8 @@ public:
 
 public:
 	THashTable() {
-		m_buckets = new (THashNode*)[HASH_TABLE_INIT_SIZE];
-		memset(m_buckets, 0, sizeof(THashNode*)*HASH_TABLE_INIT_SIZE);
+		m_buckets = new THashNode<KEY_TYPE, VALUE_TYPE>*[HASH_TABLE_INIT_SIZE];
+		memset(m_buckets, 0, sizeof(THashNode<KEY_TYPE, VALUE_TYPE>*)*HASH_TABLE_INIT_SIZE);
 		m_bucketSize = HASH_TABLE_INIT_SIZE;
 		m_count = 0;
 	}
@@ -85,15 +81,15 @@ public:
 
 
 	bool Put(KEY_TYPE & key, VALUE_TYPE & value) {
-		if (m_count >= m_buckets * 2) {
-			ReHash(m_buckets * 2);
+		if (m_count >= m_bucketSize * 2) {
+			Rehash(m_bucketSize * 2);
 		}
 
 		int hashValue = GetHashIndex(key);
 
 		//Try to find if exist, if exist return false
-		THashNode * pHead = m_buckets[hashValue];
-		THashNode * pNode = pHead;
+		THashNode<KEY_TYPE, VALUE_TYPE> * pHead = m_buckets[hashValue];
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNode = pHead;
 		while (pNode != nullptr) {
 			if (pNode->m_key == key) {
 				return false;
@@ -133,7 +129,7 @@ public:
 
 	VALUE_TYPE * Find(KEY_TYPE & key) {
 		int hashValue = GetHashIndex(key);
-		THashNode * pNode = m_buckets[hashValue];
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNode = m_buckets[hashValue];
 		while (pNode != nullptr) {
 			if (pNode->m_key == key) {
 				return &(pNode->m_value);
@@ -147,9 +143,9 @@ public:
 
 	bool Remove(KEY_TYPE  &  key) {
 		int hashIndex = GetHashIndex(key);
-		THashNode * pBucket = m_buckets[hashIndex];
-		THashNode * pNode = pBucket;
-		THashNode * pPrevNode = nullptr;
+		THashNode<KEY_TYPE, VALUE_TYPE> * pBucket = m_buckets[hashIndex];
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNode = pBucket;
+		THashNode<KEY_TYPE, VALUE_TYPE> * pPrevNode = nullptr;
 		while (pNode != nullptr) {
 			if (pNode->m_key == key) {
 				if (pNode == pBucket) {
@@ -171,7 +167,7 @@ public:
 	}
 
 
-	THashNode * GetHead() {
+	THashNode<KEY_TYPE, VALUE_TYPE> * GetHead() {
 		for (int i = 0; i < m_bucketSize; ++i) {
 			if (m_buckets[i] != nullptr) {
 				return m_buckets[i];
@@ -180,15 +176,15 @@ public:
 		return nullptr;
 	}
 
-	THashNode * GetNext(THashNode * pHashNode) {
+	THashNode<KEY_TYPE, VALUE_TYPE> * GetNext(THashNode<KEY_TYPE, VALUE_TYPE> * pHashNode) {
 		if (pHashNode == nullptr) return nullptr;
 
-		THashNode * pNext = pHashNode->m_pNext;
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNext = pHashNode->m_pNext;
 		if (pNext != nullptr) {
 			return pNext;
 		}
 		else {
-			KEY key = pHashNode->m_key;
+			KEY_TYPE key = pHashNode->m_key;
 			int hashIndex = GetHashIndex(key);
 			for (int i = hashIndex; i < m_bucketSize; ++i) {
 				if (m_buckets[i] != nullptr) {
@@ -201,34 +197,34 @@ public:
 
 private:
 	unsigned int GetHashIndex(KEY_TYPE & key) {
-		return HashFunc(key) % m_bucketSize;
+		return hashFunc(key) % m_bucketSize;
 	}
 
 	void Rehash(int newSize) {
-		THashNode ** pOldBuckets = m_buckets;
+		THashNode<KEY_TYPE, VALUE_TYPE>  ** pOldBuckets = m_buckets;
 		int oldBucketSize = m_bucketSize;
 
-		m_buckets = new (THashNode*)[newSize];
-		memset(m_buckets, 0, sizeof(THashNode*)*newSize);
+		m_buckets = new THashNode<KEY_TYPE, VALUE_TYPE>*[newSize];
+		memset(m_buckets, 0, sizeof(THashNode<KEY_TYPE, VALUE_TYPE>*)*newSize);
 		m_bucketSize = newSize;
 
 		for (int i = 0; i < oldBucketSize; ++oldBucketSize) {
-			THashNode * pNode = pOldBuckets[i];
+			THashNode<KEY_TYPE, VALUE_TYPE> * pNode = pOldBuckets[i];
 			while (pNode != nullptr) {
 				pNode = pNode->m_pNext;
-				Add(pNode->m_key, pNode->m_value, GetHashIndex(pNode->m_key);
+				Add(pNode->m_key, pNode->m_value, GetHashIndex(pNode->m_key));
 			}
 		}
 
 		ClearBuckets(pOldBuckets, oldBucketSize);
 	}
 
-	void ClearBuckets(THashNode ** buckets, int bucket_size)
+	void ClearBuckets(THashNode<KEY_TYPE, VALUE_TYPE> ** buckets, int bucket_size)
 	{
 		for (int i = 0; i < bucket_size; ++bucket_size) {
-			THashNode * pNode = buckets[i];
+			THashNode<KEY_TYPE, VALUE_TYPE> * pNode = buckets[i];
 			while (pNode != nullptr) {
-				THashNode * pPrevNode = pNode;
+				THashNode<KEY_TYPE, VALUE_TYPE> * pPrevNode = pNode;
 				pNode = pNode->m_pNext;
 				delete pPrevNode;
 			}
@@ -236,17 +232,20 @@ private:
 	}
 
 	void Add(KEY_TYPE & key, VALUE_TYPE & value, int hashValue) {
-		THashNode * pHead = m_buckets[hashValue];
+		THashNode<KEY_TYPE, VALUE_TYPE> * pHead = m_buckets[hashValue];
+
 		//if not exist, add it to the bucket list
-		THashNode * pNewNode = new HashNode(key, value);
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNewNode = new THashNode<KEY_TYPE, VALUE_TYPE>(key, value);
 		pNewNode->m_pNext = pHead->m_pNext;
 		pHead = pNewNode;
 		++m_count;
 	}
 
 private:	
-	THashNode ** m_buckets;
+	THashNode<KEY_TYPE, VALUE_TYPE> ** m_buckets;
 	int m_bucketSize;
 	int m_count;
+
+	HashFunc hashFunc;
 };
 

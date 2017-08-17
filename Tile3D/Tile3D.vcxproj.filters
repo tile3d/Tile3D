@@ -186,6 +186,12 @@
     <ClInclude Include="Sys\Android\TSysFileAndroid.h">
       <Filter>Sys\Android</Filter>
     </ClInclude>
+    <ClInclude Include="File\TScriptFile.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\TPair.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -277,6 +283,9 @@
     </ClCompile>
     <ClCompile Include="Sys\Android\TSysFileAndroid.cpp">
       <Filter>Sys\Android</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TScriptFile.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -41,7 +41,7 @@ bool TPackageMan::OpenFilePackage(const char* pckFile, const char* folder, int f
 	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
 
 	TPackage * pPackage = new TPackage();
-	if (!pPackage->Open(pckFile, folder,  encrypt))
+	if (!pPackage->Open(pckFile, folder,  encrypt, true))
 	{
 		delete pPackage;
 		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackage(), Can not open package [%s]", pckFile);
@@ -74,7 +74,7 @@ bool TPackageMan::OpenFilePackageInGame(const char* pckFile, const char* folder,
 	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
 
 	TPackage * pPackage = new TPackage();
-	if (!pPackage->Open(pckFile, folder, encrypt))
+	if (!pPackage->Open(pckFile, folder, encrypt, true))
 	{
 		delete pPackage;
 		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackageInGame(), Can not open package [%s]", pckFile);

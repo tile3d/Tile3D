@@ -1,7 +1,9 @@
-#include "TIniFile.h"
-#include "TFile.h"
 #include <Util/TLog.h>
 #include <Util/TAssert.h>
+
+#include "TIniFile.h"
+#include "TFile.h"
+#include "TFileImage.h"
 
 TIniFile::TIniFile()
 {
@@ -42,7 +44,7 @@ szFile: ini file's name, can be both absolute path and relative path.
 bool TIniFile::Open(const char* szFile)
 {
 	TFileImage fi;
-	if (!fi.Open("", szFile, TFILE_OPENEXIST | TFILE_BINARY | TFILE_TEMPMEMORY))
+	if (!fi.Open("", szFile, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY))
 	{
 		fi.Close();
 		TLog::Log(LOG_ERR, "AIniFile::Open Can't open file [%s].", szFile);
@@ -85,7 +87,7 @@ bool TIniFile::Open(TFile* pFile)
 	}
 
 	//	Load all file into memory
-	unsigned char * pBuf = new (unsigned char*)[fileLen];
+	unsigned char * pBuf = new unsigned char[fileLen];
 	if (!pBuf)
 	{
 		TLog::Log(LOG_ERR, "FILE", "AIniFile::Open, Not enough memory");
@@ -609,13 +611,13 @@ bool TIniFile::Save(const char* szFile)
 		TIniFileSection* pSect = m_sects[i];
 		if (pSect->m_comment)
 		{
-			fprintf(fp, "%s\n", pSect->m_name);
+			fprintf(fp, "%s\n", pSect->m_name.ToString());
 			continue;
 		}
 
 		//	Write section name
 		strValue = "[" + pSect->m_name + "]";
-		fprintf(fp, "%s\n", strValue);
+		fprintf(fp, "%s\n", strValue.ToString());
 
 		for (j = 0; j < pSect->m_keys.Size(); j++)
 		{
@@ -623,7 +625,7 @@ bool TIniFile::Save(const char* szFile)
 
 			//	Write key name and value
 			strValue = pKey->m_key + " = " + pKey->m_value;
-			fprintf(fp, "%s\n", strValue);
+			fprintf(fp, "%s\n", strValue.ToString());
 		}
 
 		fprintf(fp, "\n");

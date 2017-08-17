@@ -7,6 +7,7 @@
 #include "Util/TAssert.h"
 #include "Sys/TSysFile.h"
 #include "zlib/zlib.h"
+#include "TScriptFile.h"
 
 int TPackage::PackageDir::SearchItemIndex(const char * name, int * pos)
 {
@@ -17,7 +18,7 @@ int TPackage::PackageDir::SearchItemIndex(const char * name, int * pos)
 	while (left <= right)
 	{
 		mid = (left + right) / 2;
-		int rst = stricmp(name, m_list[mid]->_name);
+		int rst = TSysFile::StrCmpNoCase(name, m_list[mid]->_name);
 		if (rst < 0)
 		{
 			right = mid - 1;
@@ -77,7 +78,7 @@ int TPackage::PackageDir::AppendEntry(PackageEntry * item)
 	}
 	else
 	{
-		int rst = stricmp(item->_name, m_list[pos]->_name);
+		int rst = TSysFile::StrCmpNoCase(item->_name, m_list[pos]->_name);
 		if (rst < 0)
 		{
 			m_list.Insert(item, pos);
@@ -125,8 +126,7 @@ int TPackage::PackageDir::SearchEntry(const char * filename)
 
 int TPackage::PackageDir::Clear()
 {
-	size_t i;
-	for (i = 0; i< m_list.Size(); i++)
+	for (int i = 0; i< m_list.Size(); i++)
 	{
 		delete m_list[i];
 	}
@@ -238,13 +238,13 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 
 	LoadSafeHeader();
 
-	int offset;
+	int64 offset;
 	m_pPackageFile->Seek(0, SEEK_END);
 	offset = m_pPackageFile->Tell();
 	m_pPackageFile->Seek(0, SEEK_SET);
 
 	if (m_bHasSaferHeader)
-		offset = (int)m_safeHeader.m_offset;
+		offset = m_safeHeader.m_offset;
 
 	// Now analyse the file entries of the package;
 	int version;
@@ -432,6 +432,7 @@ bool TPackage::Create(const char* pckPath, const char *folder, bool bEncrypt)
 	m_bChanged = false;
 	m_sharedSize = 0;
 	m_cacheSize = 0;
+	return true;
 }
 
 bool TPackage::GetFileEntry(const char* fileName, FileEntry* pFileEntry, int* pIndex)
@@ -1113,7 +1114,7 @@ void TPackage::Encrypt(unsigned char* pBuffer, unsigned long length)
 		return;
 
 	unsigned long mask = length + 0x739802ab;
-	for (int i = 0; i<length; i += 4)
+	for (unsigned long i = 0; i<length; i += 4)
 	{
 		if (i + 3 < length)
 		{
@@ -1135,7 +1136,7 @@ void TPackage::Decrypt(unsigned char* pBuffer, unsigned long length)
 
 	unsigned long mask = length + 0x739802ab;
 
-	for (int i = 0; i< length; i += 4)
+	for (unsigned long i = 0; i< length; i += 4)
 	{
 		if (i + 3 < length)
 		{
@@ -1309,13 +1310,13 @@ bool TPackage::AddCacheFileNameList(const char* descFile)
 	TScriptFile scriptFile;
 	if (!scriptFile.Open(descFile))
 	{
-		TLog::Log(LOG_ERR, "FILE", "TPackage::AddCacheFileNameList, Failed to open file %s !", descFile));
+		TLog::Log(LOG_ERR, "FILE", "TPackage::AddCacheFileNameList, Failed to open file %s !", descFile);
 		return false;
 	}
 
 	while (scriptFile.GetNextToken(true))
 	{
-		AddCacheFileName(scriptFile.m_szToken);
+		AddCacheFileName(scriptFile.m_token);
 	}
 
 	scriptFile.Close();

@@ -22,7 +22,7 @@ int TSysFile::GetFileTimeStamp(const char* szFileName)
 {
 	struct stat fileStat;
 	stat(szFileName, &fileStat);
-	return fileStat.st_mtime;
+	return (int)fileStat.st_mtime;
 }
 
 int TSysFile::StrCmpNoCase(const char * str1, const char * str2)
