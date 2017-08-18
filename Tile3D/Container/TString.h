@@ -5,8 +5,10 @@
 #include <Util/TAssert.h>
 
 //
+//TBD
 //1) AllocBuffer(adjust the alloc size to match the memory pool)
 //2) Consider the benefit of reference count (cons and pro)
+//
 class TString
 {
 public:

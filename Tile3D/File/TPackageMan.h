@@ -29,8 +29,7 @@ public:
 
 	bool OpenFilePackage(const char * pckFile, int flags);
 	bool OpenFilePackage(const char * pckFile, const char * folder, int flags);
-	bool OpenFilePackageInGame(const char * pckFile, int flags);
-	bool OpenFilePackageInGame(const char * pckFile, const char * folder, int flags);
+
 
 	int GetPackageNum() { return m_packages.Size(); }
 	TPackage * GetPackage(int index) { return m_packages[index]; }

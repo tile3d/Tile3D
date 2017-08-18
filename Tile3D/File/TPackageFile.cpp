@@ -27,8 +27,10 @@ bool TPackageFile::Open(const char * fileName, const char * mode)
 	TAssert(m_pFile1 == nullptr);
 
 	m_pFile1 = fopen(fileName, mode);
-	if (m_pFile1 == nullptr)
+	if (m_pFile1 == nullptr) {
+		TLog::Log(LOG_ERR, "FILE", "TPackageFile::Open() failed to open the package file, filename=%s", fileName);
 		return false;
+	}
 
 	fseek(m_pFile1, 0, SEEK_END);
 	m_size1 = ftell(m_pFile1);
@@ -181,13 +183,15 @@ size_t TPackageFile::Write(const void *buffer, size_t size, size_t count)
 
 		m_size1 = MAX_FILE_PACKAGE;
 
-		if (!m_pFile2)
+		size_t writesize2 = 0;
+		if (m_pFile2 != nullptr) {
 			Phase2Open(MAX_FILE_PACKAGE);
+			// write to file2
+			fseek(m_pFile2, 0, SEEK_SET);
+			writesize2 = WriteFile((unsigned char*)buffer + size_to_write1, size_to_write2, m_pFile2);
+			m_filePos += writesize2;
+		}
 
-		// write to file2
-		fseek(m_pFile2, 0, SEEK_SET);
-		size_t writesize2 = WriteFile((unsigned char*)buffer + size_to_write1, size_to_write2, m_pFile2);
-		m_filePos += writesize2;
 		if (m_filePos > m_size1 + m_size2)
 			m_size2 = m_filePos - m_size1;
 		return writesize1 + writesize2;
@@ -200,7 +204,7 @@ size_t TPackageFile::Write(const void *buffer, size_t size, size_t count)
 		//	and m_filePos was moved to MAX_FILE_PACKAGE after writting at it happens. Then
 		//	next write operation will come to case 3 other than case 2, so we should check whether
 		//	m_pFile2 has been existed or not.
-		if (!m_pFile2)
+		if (m_pFile2 != nullptr)
 		{
 			Phase2Open(MAX_FILE_PACKAGE);
 			fseek(m_pFile2, 0, SEEK_SET);
@@ -304,7 +308,7 @@ size_t TPackageFile::ReadFile(void* buffer, const size_t num_byte, FILE* stream)
 	const long beginOffset = ftell(stream);
 	if (beginOffset == -1L)
 	{
-		TLog::Log(LOG_ERR, "FILE", "ftell ERROR, check whether devices support file seeking!!\n\n");
+		TLog::Log(LOG_ERR, "FILE", "TPackageFile::ReadFile(): ftell ERROR, check whether devices support file seeking");
 		return 0;
 	}
 

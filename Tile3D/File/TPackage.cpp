@@ -142,23 +142,34 @@ TPackage::TPackage()
 	m_bReadOnly = false;
 	m_bUseShortName = false;
 
+	m_totalCount = 0;
+
 	memset(&m_header, 0, sizeof(m_header));
 
 	m_pPackageFile = nullptr;
 	m_pckFileName[0] = '\0';
 	m_folder[0] = '\0';
 
-	m_sharedSize = 0;
-	m_cacheSize = 0;
+	m_sharedCount = 0;
+	m_cacheCount = 0;
 
 	m_bHasSaferHeader = false;
 	memset(&m_safeHeader, 0, sizeof(m_safeHeader));
+
+	m_guardByte0 = 0xfdfdfeee;
+	m_guardByte1 = 0xf00dbeef;
+	m_maskPasswd = 0xa8937462;
+	m_checkMask = 0x59374231;
 }
 
 TPackage::~TPackage()
 {
 }
 
+bool TPackage::Close()
+{
+	return true;
+}
 
 bool TPackage::Open(const char* pckPath, bool bEncrypt)
 {
@@ -195,6 +206,7 @@ bool TPackage::Open(const char* pckPath, bool bEncrypt)
 
 bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName)
 {
+	TLog::Log(LOG_INFO, "FILE", "TPackage::Open(), start open pck file pck_path=%s, folder=%s", pckPath, folder);
 	char fullPckPath[MAX_PATH];
 	TFileDir::GetInstance()->GetFullPath(fullPckPath, pckPath);
 
@@ -228,7 +240,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 			delete m_pPackageFile;
 			m_pPackageFile = NULL;
 
-			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, Can not open file [%s]", fullPckPath);
+			TLog::Log(LOG_ERR, "FILE", "TPackage::Open, Can not open file [%s]", fullPckPath);
 			return false;
 		}
 		m_bReadOnly = true;
@@ -252,7 +264,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 	m_pPackageFile->Seek(offset - sizeof(int), SEEK_SET);
 	m_pPackageFile->Read(&version, sizeof(int), 1);
 
-	if (version == 0x00020002 || version == 0x00020001)
+	if (version == PCK_VERSION)
 	{
 		int i, numFile;
 
@@ -270,7 +282,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 		bool bPackIsEncrypt = (m_header.m_flags & PCK_FLAG_ENCRYPT) != 0;
 		if (bEncrypt != bPackIsEncrypt)
 		{
-			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, wrong encrypt flag");
+			TLog::Log(LOG_ERR, "FILE", "TPackage::Open, wrong encrypt flag");
 			return false;
 		}
 
@@ -280,7 +292,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 			m_header.m_guardByte1 != GetGuardByte1())
 		{
 			// corrput file
-			TLog::Log(LOG_ERR, "FILE", "TPackage::InnerOpen, GuardBytes corrupted [%s]", pckPath);
+			TLog::Log(LOG_ERR, "FILE", "TPackage::Open, GuardBytes corrupted [%s]", pckPath);
 			return false;
 		}
 
@@ -290,7 +302,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 		//	Create entries
 		m_fileEntries.Reserve(numFile);
 		m_fileEntryCaches.Reserve(numFile);
-
+		m_totalCount = numFile;
 		for (i = 0; i < numFile; i++)
 		{
 			FileEntry* pEntry = new FileEntry;
@@ -373,8 +385,10 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 
 
 	m_bChanged = false;
-	m_sharedSize = 0;
-	m_cacheSize = 0;
+	m_sharedCount = 0;
+	m_cacheCount = 0;
+
+	TLog::Log(LOG_INFO, "FILE", "TPackage::Open(), finish open pck file pck_path=%s, folder=%s", pckPath, folder);
 	return true;
 }
 
@@ -430,8 +444,8 @@ bool TPackage::Create(const char* pckPath, const char *folder, bool bEncrypt)
 	m_fileEntryCaches.Clear();
 
 	m_bChanged = false;
-	m_sharedSize = 0;
-	m_cacheSize = 0;
+	m_sharedCount = 0;
+	m_cacheCount = 0;
 	return true;
 }
 
@@ -1158,11 +1172,23 @@ bool TPackage::LoadSafeHeader()
 {
 	m_pPackageFile->Seek(0, SEEK_SET);
 
-	m_pPackageFile->Read(&m_safeHeader, sizeof(SafeFileHeader), 1);
-	if (m_safeHeader.m_tag == 0x4DCA23EF)
+	SafeFileHeaderOld oldFileHeader;
+	m_pPackageFile->Read(&oldFileHeader, sizeof(SafeFileHeaderOld), 1);
+
+	if (oldFileHeader.m_tag1 == 0x4dca23ef && oldFileHeader.m_tag2 == 0x56a089b7) {
+		m_safeHeader.m_tag = oldFileHeader.m_tag1;
+		m_safeHeader.m_offset = oldFileHeader.m_offset;
 		m_bHasSaferHeader = true;
-	else
+	}
+	//Currently only support to 8G
+	else if(oldFileHeader.m_tag1 == 0x4dca23ef && oldFileHeader.m_tag2 <= 1){
+		m_safeHeader.m_tag = oldFileHeader.m_tag1;
+		m_safeHeader.m_offset = ((int64)oldFileHeader.m_tag2 << 32) + oldFileHeader.m_offset;
+		m_bHasSaferHeader = true;
+	}
+	else {
 		m_bHasSaferHeader = false;
+	}
 
 	if (m_bHasSaferHeader)
 		m_pPackageFile->Phase2Open(m_safeHeader.m_offset);

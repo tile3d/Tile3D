@@ -65,64 +65,35 @@ bool TFile::Open(const char* fullPath, int flags)
 	else
 		strcat(szOpenFlag, "b");
 
-	//读取library 文件夹下是否有分离文件
-	char temp[MAX_PATH];
-	TString strpath(temp);
-	strpath.Replace('\\', '/');
-	strpath.ToLower();
-	char pathfile[MAX_PATH];
-	//判断是否为空
-	if (*TFileDir::GetInstance()->GetLibraryDir() != '\0')
-	{
-		TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetLibraryDir(), (const char*)strpath);
-		m_pFile = fopen(pathfile, szOpenFlag);
-		if (NULL == m_pFile)
-		{
-			//读取app bundle 是否有分离文件
-			TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetBaseDir(), (const char*)strpath);
-			m_pFile = fopen(pathfile, szOpenFlag);
-			if (NULL == m_pFile)
-				return false;
-		}
-	}
-	else
-	{
-		//读取app bundle 是否有分离文件
-		TFileDir::GetInstance()->GetFullPathNoBase(pathfile, TFileDir::GetInstance()->GetBaseDir(), (const char*)strpath);
-		m_pFile = fopen(pathfile, szOpenFlag);
-		if (NULL == m_pFile)
-		{
-			return false;
-		}
-	}
+	m_pFile = fopen(m_fullPathFileName, szOpenFlag);
+	if (NULL == m_pFile)
+		return false;
 
-	strncpy(m_fullPathFileName, pathfile, MAX_PATH);
-	int dwFOURCC;
-
+	int magic;
 	if (m_flags & TFILE_CREATENEW)	//	Create new file
 	{
 		m_flags = flags;
 		if (m_flags & TFILE_TEXT)
 		{
-			dwFOURCC = 0x54584f4d;
+			magic = 0x54584f4d;
 			if (!(m_flags & TFILE_NOHEAD))
-				fwrite(&dwFOURCC, 4, 1, m_pFile);
+				fwrite(&magic, 4, 1, m_pFile);
 		}
 		else
 		{
-			dwFOURCC = 0x42584f4d;
+			magic = 0x42584f4d;
 			if (!(m_flags & TFILE_NOHEAD))
-				fwrite(&dwFOURCC, 4, 1, m_pFile);
+				fwrite(&magic, 4, 1, m_pFile);
 		}
 	}
 	else	//	Open a normal file
 	{
 		m_flags = flags & (~(TFILE_BINARY | TFILE_TEXT));
 
-		fread(&dwFOURCC, 4, 1, m_pFile);
-		if (dwFOURCC == 0x42584f4d)
+		fread(&magic, 4, 1, m_pFile);
+		if (magic == 0x42584f4d)
 			m_flags |= TFILE_BINARY;
-		else if (dwFOURCC == 0x54584f4d)
+		else if (magic == 0x54584f4d)
 			m_flags |= TFILE_TEXT;
 		else
 		{
@@ -132,11 +103,6 @@ bool TFile::Open(const char* fullPath, int flags)
 			fseek(m_pFile, 0, SEEK_SET);
 		}
 	}
-
-	//	int idFile = _fileno(m_pFile);
-	//	struct _stat fileStat;
-	//	_fstat(idFile, &fileStat);
-	//	m_dwTimeStamp = (int)fileStat.st_mtime;
 
 	m_timestamp = TFileDir::GetInstance()->GetFileTimeStamp(m_fullPathFileName);
 	m_hasOpen = true;
@@ -168,13 +134,7 @@ bool TFile::OpenWithAbsFullPath(const char* fullPath, int flags)
 		strcat(szOpenFlag, "b");
 
 
-	//读取library 文件夹下是否有分离文件
-	TString strpath(fullPath);
-	strpath.Replace('\\', '/');
-	//strpath.MakeLower();
-	//判断是否为空
-
-	m_pFile = fopen((const char*)strpath, szOpenFlag);
+	m_pFile = fopen((const char*)fullPath, szOpenFlag);
 	if (NULL == m_pFile)
 	{
 		return false;

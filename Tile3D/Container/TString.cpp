@@ -170,9 +170,9 @@ const TString& TString::operator += (char ch)
 	return *this;
 }
 
-const TString& TString::operator += (const char* szStr)
+const TString& TString::operator += (const char* str)
 {
-	int iLen2 = SafeStrLen(szStr);
+	int iLen2 = SafeStrLen(str);
 	if (!iLen2)
 		return *this;
 
@@ -181,19 +181,19 @@ const TString& TString::operator += (const char* szStr)
 	if (pData->m_refcount > 1)
 	{
 		pData->m_refcount--;
-		m_pStr = AllocThenCopy(m_pStr, szStr, pData->m_len, iLen2);
+		m_pStr = AllocThenCopy(m_pStr, str, pData->m_len, iLen2);
 		return *this;
 	}
 
 	int iLen = pData->m_len + iLen2;
 	if (iLen <= pData->m_len)
 	{
-		StringCopy(m_pStr + pData->m_len, szStr, iLen2);
+		StringCopy(m_pStr + pData->m_len, str, iLen2);
 		pData->m_len = iLen;
 	}
 	else
 	{
-		m_pStr = AllocThenCopy(m_pStr, szStr, pData->m_len, iLen2);
+		m_pStr = AllocThenCopy(m_pStr, str, pData->m_len, iLen2);
 		FreeBuffer(pData);
 	}
 

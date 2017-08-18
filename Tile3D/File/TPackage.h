@@ -12,7 +12,7 @@
 //	#define AFPCK_VERSION	0x00010002	//	Add compression
 //  #define AFPCK_VERSION	0x00010003	//	The final release version on June 2002
 //	#define AFPCK_VERSION	0x00020001	//	The version for element before Oct 2005
-#define PCK_VERSION		0x00020002	//	The version with safe header
+#define PCK_VERSION		0x00020003	//	The version with safe header
 #define PCK_COPYRIGHT_TAG "Angelica File Package, Perfect World Co. Ltd. 2002~2008. All Rights Reserved. "
 #define PCK_MAX_FILE_SIZE	0x7fffff00U
 
@@ -127,6 +127,13 @@ public:
 		int64 m_offset;		//	offset of real entries
 	};
 
+	struct SafeFileHeaderOld
+	{
+		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
+		int m_offset;		//	offset of real entries
+		int m_tag2;			// 0x56a089b7
+	};
+
 public:
 	TPackage();
 	virtual ~TPackage();
@@ -172,9 +179,9 @@ public:
 	virtual void CloseSharedFile(int fileHandle);
 
 	//	Get current cached file total size
-	int GetCachedFileSize() const { return m_cacheSize; }
+	int GetCachedFileSize() const { return m_cacheCount; }
 	//	Get current shared file total size
-	int GetSharedFileSize() const { return m_sharedSize; }
+	int GetSharedFileSize() const { return m_sharedCount; }
 
 	int GetFileNumber() const { return m_fileEntries.Size(); }
 	PackageHeader * GetFileHeader() { return &m_header; }
@@ -253,14 +260,16 @@ private:
 	int m_maskPasswd;
 	int	m_checkMask;
 
+
 	PackageHeader	m_header;
 	PackageDir	m_directory;	//	the ROOT of directory tree. 
 	TPackageFile * m_pPackageFile;
 	char	m_pckFileName[MAX_PATH];
 	char	m_folder[MAX_PATH];
 
-	int m_cacheSize;
-	int m_sharedSize;
+	int m_totalCount;
+	int m_cacheCount;
+	int m_sharedCount;
 
 	bool m_bHasSaferHeader;
 	SafeFileHeader m_safeHeader;

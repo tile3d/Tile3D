@@ -52,38 +52,6 @@ bool TPackageMan::OpenFilePackage(const char* pckFile, const char* folder, int f
 	return true;
 }
 
-bool TPackageMan::OpenFilePackageInGame(const char* pckFile, int flags)
-{
-	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
-
-	TPackage * pPackage = new TPackage();
-	if (!pPackage->Open(pckFile, encrypt))
-	{
-		delete pPackage;
-		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackageInGame(), Can not open package [%s]", pckFile);
-		return false;
-	}
-
-	m_packages.Add(pPackage);
-	return true;
-}
-
-
-bool TPackageMan::OpenFilePackageInGame(const char* pckFile, const char* folder, int flags)
-{
-	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
-
-	TPackage * pPackage = new TPackage();
-	if (!pPackage->Open(pckFile, folder, encrypt, true))
-	{
-		delete pPackage;
-		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackageInGame(), Can not open package [%s]", pckFile);
-		return false;
-	}
-
-	m_packages.Add(pPackage);
-	return true;
-}
 
 TPackage* TPackageMan::GetPackage(const char* path)
 {

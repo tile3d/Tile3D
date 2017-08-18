@@ -12,7 +12,6 @@ public:
 
 	virtual bool Open(const char* fullPath, int flags);
 	virtual bool Open(const char* folderName, const char* fileName, int flags);
-	virtual bool OpenWithAbsFullPath(const char* fullPath, int flags);
 	virtual bool Close();
 
 	virtual bool Read(void* pBuffer, int bufferLength, int * pReadLength);

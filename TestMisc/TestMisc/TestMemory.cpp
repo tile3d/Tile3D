@@ -32,7 +32,7 @@ TBar *  test_bar()
 	return pBar;
 }
 
-int main()
+int TestMemory()
 {
 	Foo * pFoo = new Foo();
 	pFoo->x = 3;

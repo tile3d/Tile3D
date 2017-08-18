@@ -10,7 +10,7 @@
 
 
 
-bool TFileDir::Initialize(const char* baseDir, const char* documentDir, const char* libraryDir, const char* tempDir)
+bool TFileDir::Init(const char* baseDir, const char* documentDir, const char* libraryDir, const char* tempDir)
 {
 	strncpy(m_baseDir, baseDir, MAX_PATH);
 	RemoveLastDirSlash(m_baseDir);
@@ -43,7 +43,7 @@ void TFileDir::GetFullPath(char * fullPath, const char * folderName, const char 
 
 void TFileDir::GetFullPath(char * fullPath, const char* fileName)
 {
-	GetFullPath(fullPath, m_baseDir, fileName);
+	GetFullPathNoBase(fullPath, m_baseDir, fileName);
 }
 
 void TFileDir::GetFullPath(TString& fullPath, const char* folderName, const char* fileName)

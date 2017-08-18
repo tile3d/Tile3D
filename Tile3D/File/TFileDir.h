@@ -11,7 +11,7 @@ public:
 		return &fs;
 	}
 
-	bool Initialize(const char* pszBaseDir, const char* pszDocumentDir, const char* pszLibraryDir, const char* pszTempDir);
+	bool Init(const char* pszBaseDir, const char* pszDocumentDir, const char* pszLibraryDir, const char* pszTempDir);
 
 	
 	const char * GetBaseDir() { return m_baseDir; }	
