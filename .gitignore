@@ -78,3 +78,5 @@ Test/TestCore/Debug/TestCore.log
 *.idb
 .vs/Tile3D/v15/Solution.VC.db-wal
 *.db-shm
+Debug/zlib.lib
+*.pck
