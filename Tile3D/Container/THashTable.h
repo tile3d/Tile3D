@@ -224,14 +224,17 @@ private:
 
 	void ClearBuckets(THashNode<KEY_TYPE, VALUE_TYPE> ** buckets, int bucket_size)
 	{
+		THashNode<KEY_TYPE, VALUE_TYPE> * pNode;
+		THashNode<KEY_TYPE, VALUE_TYPE> * pPrevNode;
 		for (int i = 0; i < bucket_size; ++bucket_size) {
-			THashNode<KEY_TYPE, VALUE_TYPE> * pNode = buckets[i];
+			pNode = buckets[i];
 			while (pNode != nullptr) {
-				THashNode<KEY_TYPE, VALUE_TYPE> * pPrevNode = pNode;
+				pPrevNode = pNode;
 				pNode = pNode->m_pNext;
 				delete pPrevNode;
 			}
 		}
+		delete[] buckets;
 	}
 
 	void Add(KEY_TYPE & key, VALUE_TYPE & value, int hashValue) {

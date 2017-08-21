@@ -167,7 +167,7 @@ template<typename T> void TArray<T>::Pop()
 
 template<typename T> void TArray<T>::Insert(const T & element, int index)
 {
-	TAssert(index >= 0 && index < m_count);
+	TAssert(index >= 0 && index <= m_count);
 
 	//vector is full, need resize
 	if (m_count == m_capacity) {

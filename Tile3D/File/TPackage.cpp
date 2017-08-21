@@ -360,7 +360,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 
 	if (version == PCK_VERSION)
 	{
-		int i, numFile;
+		int numFile;
 
 		// Now read file number;
 		m_pPackageFile->Seek(offset - (sizeof(int) + sizeof(int)), SEEK_SET);
@@ -397,7 +397,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 		m_fileEntries.Reserve(numFile);
 		m_fileEntryCaches.Reserve(numFile);
 		m_totalCount = numFile;
-		for (i = 0; i < numFile; i++)
+		for (int i = 0; i < numFile; i++)
 		{
 			FileEntry* pEntry = new FileEntry;
 			pEntry->m_accessCnt = 0;
@@ -631,14 +631,14 @@ TPackage::PackageDir * TPackage::GetDirEntry(const char * path)
 bool TPackage::InsertFileToDir(const char * filename, int index)
 {
 	char findName[MAX_PATH];
-	int len, i;
+	int len;
 	char *name, *tok;
 
 	strncpy(findName, filename, MAX_PATH);
 	TSysFile::StrToLower(findName);
 	name = findName;
 	len = strlen(findName);
-	for (i = 0; i<len; i++)
+	for (int i = 0; i<len; i++)
 	{
 		if (findName[i] == '/')
 			findName[i] = '\\';
