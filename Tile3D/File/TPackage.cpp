@@ -461,8 +461,8 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 			//		of FileEntry uses '\' instead of '/', at least in memory.
 			TFileDir::GetInstance()->NormalizeFileName(pEntry->m_fileName);
 
-			m_fileEntries[i] = pEntry;
-			m_fileEntryCaches[i] = pEntryCache;
+			m_fileEntries.Add(pEntry);
+			m_fileEntryCaches.Add(pEntryCache);
 		}
 
 		ResortEntries();
