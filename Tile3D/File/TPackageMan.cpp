@@ -1,4 +1,6 @@
-#include "Util/TLog.h"
+#include <Util/TLog.h>
+#include <Sys/TSysFile.h>
+#include <Core/TMemory.h>
 #include "TPackageMan.h"
 #include "TPackage.h"
 #include "TFileDir.h"
@@ -58,7 +60,7 @@ TPackage* TPackageMan::GetPackage(const char* path)
 	//	Normalize file name
 	char lowPath[MAX_PATH];
 	strncpy(lowPath, path, MAX_PATH);
-	_strlwr(lowPath);
+	TSysFile::StrToLower(lowPath);
 	TFileDir::GetInstance()->NormalizeFileName(lowPath);
 
 	//	Check other packages through file path

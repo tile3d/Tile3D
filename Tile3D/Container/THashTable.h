@@ -79,6 +79,9 @@ public:
 		ClearBuckets(m_buckets, m_bucketSize);
 	}
 
+	void Clear() {
+		ClearBuckets(m_buckets, m_bucketSize);
+	}
 
 	bool Put(KEY_TYPE & key, VALUE_TYPE & value) {
 		if (m_count >= m_bucketSize * 2) {

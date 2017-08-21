@@ -20,9 +20,20 @@
 //
 //TBD
 //1) Resolve the pck file size problem(2G problem), Support single large pck file (for example 8G) 
-//2) Cache implementation, open method not to open the content
-//3) Use the same memory allocation and deallocation method (new vs TMemory::Alloc)
-//4) Possiblly share file not implemented now
+//2) Use the same memory allocation and deallocation method (new vs TMemory::Alloc)
+//3) share file not used now, investigate if can open it
+//
+
+
+//
+//
+//Package format
+//[SafeHeader][File Content][File Content][...][FileEntry][FileEntry][....][PackageHeader][NumFiles][Version]
+//
+//Suppport operations
+//1) Append: append the file content in the end of file content
+//2) Remove: remove the entry from the file entry list, file content not modified(memory fragment)
+//3) Replace:add the file content in the end of file content
 //
 class TPackage
 {
@@ -76,6 +87,32 @@ public:
 		void SetIndex(int index) { m_index = index; }
 	};
 
+	//SafePackageHeader info in the file beginning
+	struct SafePackageHeader
+	{
+		int	m_tag;			//	tag of safe header, current it is 0x4DCA23EF
+		int64 m_offset;		//	offset of real entries
+	};
+
+	//old package info(only support 2G single file)
+	struct SafePackageHeaderOld
+	{
+		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
+		int m_offset;		//	offset of real entries
+		int m_tag2;			// 0x56a089b7
+	};
+
+	//PackageHeader info in the file end
+	struct PackageHeader
+	{
+		int	m_guardByte0;			//	0xabcdefab
+		int	m_version;				//	Composed by two word version, major part and minor part;
+		int64 m_entryOffset;			//	The entry list offset from the beginning;
+		int	m_flags;				//	package flags. the highest bit means the encrypt state;
+		char m_description[252];		//	Description
+		int	m_guardByte1;				//	0xffeeffee
+	};
+
 	struct FileEntry
 	{
 		char	m_fileName[MAX_PATH];	//	The file name of this entry; this may contain a path;
@@ -89,17 +126,6 @@ public:
 	{
 		int m_compressedLength;
 		char * m_pEntryCompressed;
-	};
-
-
-	struct PackageHeader
-	{
-		int	m_guardByte0;			//	0xabcdefab
-		int	m_version;				//	Composed by two word version, major part and minor part;
-		int64 m_entryOffset;			//	The entry list offset from the beginning;
-		int	m_flags;				//	package flags. the highest bit means the encrypt state;
-		char m_description[252];		//	Description
-		int	m_guardByte1;				//	0xffeeffee
 	};
 
 	//	Share read file item
@@ -121,27 +147,17 @@ public:
 		int	m_fileID;		//	File ID
 	};
 
-	struct SafeFileHeader
-	{	
-		int	m_tag;			//	tag of safe header, current it is 0x4DCA23EF
-		int64 m_offset;		//	offset of real entries
-	};
 
-	struct SafeFileHeaderOld
-	{
-		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
-		int m_offset;		//	offset of real entries
-		int m_tag2;			// 0x56a089b7
-	};
 
 public:
 	TPackage();
 	virtual ~TPackage();
-	virtual bool Close();
+
 
 	bool Open(const char* pckPath, bool bEncrypt);
 	bool Open(const char* pckPath, const char* folder, bool bEncrypt, bool bShortName);
 	bool Create(const char* pckPath, const char *folder, bool bEncrypt);
+	bool Close();
 
 	// Find a file entry
 	bool GetFileEntry(const char* szFileName, FileEntry* pFileEntry, int* pIndex);
@@ -272,7 +288,7 @@ private:
 	int m_sharedCount;
 
 	bool m_bHasSaferHeader;
-	SafeFileHeader m_safeHeader;
+	SafePackageHeader m_safeHeader;
 
 	TArray<FileEntry*>	m_fileEntries;
 	TArray<FileEntryCache*> m_fileEntryCaches;

@@ -83,7 +83,7 @@
       <SDLCheck>true</SDLCheck>
       <EnablePREfast>true</EnablePREfast>
       <BrowseInformation>true</BrowseInformation>
-      <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;_CRT_SECURE_NO_WARNINGS;PLATFORM_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;PLATFORM_WIN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>

@@ -35,3 +35,13 @@ void operator delete[](void * p)
 {
 	TMemory::Free(p);
 }
+
+void * operator new(size_t size, void * p)
+{
+	return TMemory::Realloc(p, size);
+}
+
+void * operator new[](size_t size, void * p)
+{
+	return TMemory::Realloc(p, size);
+}

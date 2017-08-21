@@ -30,6 +30,7 @@
 // 12) Forbid the user to use malloc and free (TBD)
 // 13) Realloc problem, how to guarantee the realloced memory is not overrite the exist memory(TBD)
 //
+
 class TMemory
 {
 public:
@@ -38,11 +39,15 @@ public:
 	static void * Realloc(void * p, size_t size);
 };
 
-void * operator new (size_t size);
+void * operator new (size_t size) throw();
 void operator delete(void * p);
 
-void * operator new[](size_t size);
+void * operator new[](size_t size) throw();
 void operator delete[](void * p);
 
+void * operator new(size_t size, void *p) throw();
+//void operator delete(void * p1, void * p2) {}
 
 
+void * operator new[](size_t size, void *p) throw();
+//void operator delete[](void * p1, void * p2) {}

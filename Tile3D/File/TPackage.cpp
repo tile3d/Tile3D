@@ -2,12 +2,12 @@
 #include "TPackage.h"
 #include "TPackageFile.h"
 #include "TPackageMan.h"
-#include "Core/TMemory.h"
 #include "Util/TLog.h"
 #include "Util/TAssert.h"
 #include "Sys/TSysFile.h"
 #include "zlib/zlib.h"
 #include "TScriptFile.h"
+#include "Core/TMemory.h"
 
 int TPackage::PackageDir::SearchItemIndex(const char * name, int * pos)
 {
@@ -168,6 +168,100 @@ TPackage::~TPackage()
 
 bool TPackage::Close()
 {
+	if (m_bChanged)
+	{
+		int64 fileSize = m_header.m_entryOffset;
+		int entrySize = 0;
+		if (!SaveEntries(&entrySize))
+			return false;
+		fileSize += entrySize;
+
+		// Write file header here;
+		m_header.m_entryOffset ^= GetMaskPasswd();
+		m_pPackageFile->Write(&m_header, sizeof(PackageHeader), 1);
+		m_header.m_entryOffset ^= GetMaskPasswd();
+		fileSize += sizeof(PackageHeader);
+
+		int numFile = m_fileEntries.Size();
+		m_pPackageFile->Write(&numFile, sizeof(int), 1);
+		fileSize += sizeof(int);
+		m_pPackageFile->Write(&m_header.m_version, sizeof(int), 1);
+		fileSize += sizeof(int);
+
+		m_pPackageFile->SetPackageFileSize(fileSize);
+
+		SaveSafeHeader();
+		m_bChanged = false;
+	}
+
+	if (m_pPackageFile)
+	{
+		m_pPackageFile->Close();
+		delete m_pPackageFile;
+		m_pPackageFile = NULL;
+	}
+
+	//	Release entries
+	for (int i = 0; i < m_fileEntries.Size(); i++)
+	{
+		if (m_fileEntries[i])
+		{
+			delete m_fileEntries[i];
+			m_fileEntries[i] = NULL;
+		}
+	}
+
+	//	Release entries cache
+	for (int i = 0; i < m_fileEntryCaches.Size(); i++)
+	{
+		FileEntryCache* pCache = m_fileEntryCaches[i];
+		if (pCache)
+		{
+			if (pCache->m_pEntryCompressed)
+			{
+				delete pCache->m_pEntryCompressed;
+				pCache->m_pEntryCompressed = nullptr;
+			}
+
+			delete pCache;
+		}
+
+		m_fileEntryCaches[i] = nullptr;
+	}
+
+	m_fileEntries.Clear();
+	m_fileEntryCaches.Clear();
+
+	//	Release all shared files
+	int unClosed = 0;
+	THashNode<int, SharedFile*> * pHead = m_sharedFiles.GetHead();
+	THashNode<int, SharedFile*> * pNode = pHead;
+	THashNode<int, SharedFile*> * pPrevNode;
+	while (pNode) {
+		SharedFile* pFileItem = pNode->m_value;
+		if (pFileItem->m_refCnt > 0) {
+			unClosed++;
+		}
+		delete pFileItem->m_pFileData;
+		delete pFileItem;
+		pPrevNode = pNode;
+		pNode = pNode->m_pNext;
+		delete pPrevNode;
+	}
+	if (unClosed)
+		TLog::Log(LOG_INFO, "FILE", "TPackage::Close(), %d file in package weren't closed !", unClosed);
+
+	//	Release cache file list
+	THashNode<int, CacheFilename*> * pHead2 = m_cachedFiles.GetHead();
+	THashNode<int, CacheFilename*> * pNode2 = pHead2;
+	THashNode<int, CacheFilename*> * pPrevNode2;
+	while (pNode2) {
+		CacheFilename* pFile = pNode2->m_value;
+		delete pFile;
+		pPrevNode2 = pNode2;
+		pNode2 = pNode2->m_pNext;
+		delete pPrevNode2;
+	}
 	return true;
 }
 
@@ -327,7 +421,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 			}
 
 			pEntryCache->m_compressedLength = nCompressedSize;
-			pEntryCache->m_pEntryCompressed = (char*)TMemory::Alloc(nCompressedSize);
+			pEntryCache->m_pEntryCompressed = new char[nCompressedSize];
 
 			m_pPackageFile->Read(pEntryCache->m_pEntryCompressed, nCompressedSize, 1);
 			unsigned long entrySize = sizeof(FileEntry);
@@ -337,7 +431,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 
 				// maybe the original package FileEntry has not been compressed
 				unsigned long compressedSize = sizeof(FileEntry);
-				unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry));
+				unsigned char * pBuffer = new unsigned char[sizeof(FileEntry)];
 				int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 				if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 				{
@@ -345,9 +439,9 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 					memcpy(pBuffer, pEntry, sizeof(FileEntry));
 				}
 				pEntryCache->m_compressedLength = compressedSize;
-				pEntryCache->m_pEntryCompressed = (char *)TMemory::Realloc(pEntryCache->m_pEntryCompressed, compressedSize);
+				pEntryCache->m_pEntryCompressed = (char *)new (pEntryCache->m_pEntryCompressed) char[compressedSize];
 				memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
-				TMemory::Free(pBuffer);
+				delete[] pBuffer;
 			}
 			else
 			{
@@ -434,7 +528,7 @@ bool TPackage::Create(const char* pckPath, const char *folder, bool bEncrypt)
 	// Init header;
 	memset(&m_header, 0, sizeof(PackageHeader));
 	m_header.m_guardByte0 = m_guardByte0;
-	m_header.m_entryOffset = sizeof(SafeFileHeader);
+	m_header.m_entryOffset = sizeof(SafePackageHeader);
 	m_header.m_version = PCK_VERSION;
 	m_header.m_flags = bEncrypt ? PCK_FLAG_ENCRYPT : 0;
 	m_header.m_guardByte1 = m_guardByte1;
@@ -662,7 +756,7 @@ bool TPackage::AppendFile(const char* fileName, unsigned char* pFileBuffer, unsi
 	if (bCompress)
 	{
 		//	Compress the file
-		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileLength);
+		unsigned char* pBuffer = new unsigned char[fileLength];
 		if (!pBuffer)
 			return false;
 
@@ -676,7 +770,7 @@ bool TPackage::AppendFile(const char* fileName, unsigned char* pFileBuffer, unsi
 		{
 			if (!AppendFileCompressed(fileName, pBuffer, fileLength, compressedLength))
 			{
-				TMemory::Free(pBuffer);
+				delete[] pBuffer;
 				return false;
 			}
 		}
@@ -684,12 +778,12 @@ bool TPackage::AppendFile(const char* fileName, unsigned char* pFileBuffer, unsi
 		{
 			if (!AppendFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
 			{
-				TMemory::Free(pBuffer);
+				delete[] pBuffer;
 				return false;
 			}
 		}
 
-		TMemory::Free(pBuffer);
+		delete[] pBuffer;
 	}
 	else
 	{
@@ -733,7 +827,7 @@ bool TPackage::AppendFileCompressed(const char* fileName, unsigned char* pCompre
 
 	FileEntryCache* pEntryCache = new FileEntryCache();
 	unsigned long compressedSize = sizeof(FileEntry);
-	unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry)); 
+	unsigned char * pBuffer = new unsigned char[sizeof(FileEntry)]; 
 	int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 	{
@@ -788,9 +882,9 @@ bool TPackage::RemoveFile(const char* fileName)
 	FileEntryCache* pEntryCache = m_fileEntryCaches[nIndex];
 	if (pEntryCache)
 	{
-		if (pEntryCache->m_pEntryCompressed)
-			TMemory::Free(pEntryCache->m_pEntryCompressed);
-
+		if (pEntryCache->m_pEntryCompressed) {
+			delete[] pEntryCache->m_pEntryCompressed;
+		}
 		delete pEntryCache;
 		m_fileEntryCaches[nIndex] = NULL;
 	}
@@ -810,7 +904,7 @@ bool TPackage::ReplaceFile(const char* fileName, unsigned char* pFileBuffer, uns
 	if (bCompress)
 	{
 		//	Try to compress the file
-		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileLength);
+		unsigned char* pBuffer = new unsigned char[fileLength];
 		if (!pBuffer)
 			return false;
 
@@ -824,7 +918,7 @@ bool TPackage::ReplaceFile(const char* fileName, unsigned char* pFileBuffer, uns
 		{
 			if (!ReplaceFileCompressed(fileName, pBuffer, fileLength, compressedLength))
 			{
-				TMemory::Free(pBuffer);
+				delete[] pBuffer;
 				return false;
 			}
 		}
@@ -832,12 +926,12 @@ bool TPackage::ReplaceFile(const char* fileName, unsigned char* pFileBuffer, uns
 		{
 			if (!ReplaceFileCompressed(fileName, pFileBuffer, fileLength, fileLength))
 			{
-				TMemory::Free(pBuffer);
+				delete[] pBuffer;
 				return false;
 			}
 		}
 
-		TMemory::Free(pBuffer);
+		delete[] pBuffer;
 	}
 	else
 	{
@@ -885,7 +979,7 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, unsigned char* pComp
 
 	FileEntryCache* pEntryCache = m_fileEntryCaches[nIndex];
 	unsigned long compressedSize = sizeof(FileEntry);
-	unsigned char * pBuffer = (unsigned char *)TMemory::Alloc(sizeof(FileEntry));
+	unsigned char * pBuffer = new unsigned char[sizeof(FileEntry)];
 	int nRet = Compress((unsigned char*)pEntry, sizeof(FileEntry), pBuffer, &compressedSize);
 	if (nRet != 0 || compressedSize >= sizeof(FileEntry))
 	{
@@ -893,9 +987,9 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, unsigned char* pComp
 		memcpy(pBuffer, pEntry, sizeof(FileEntry));
 	}
 	pEntryCache->m_compressedLength = compressedSize;
-	pEntryCache->m_pEntryCompressed = (char *)TMemory::Realloc(pEntryCache->m_pEntryCompressed, compressedSize);
+	pEntryCache->m_pEntryCompressed = (char *)new(pEntryCache->m_pEntryCompressed)char[compressedSize];
 	memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
-	TMemory::Free(pBuffer);
+	delete[] pBuffer;
 
 	m_pPackageFile->Seek(m_header.m_entryOffset, SEEK_SET);
 
@@ -936,7 +1030,7 @@ bool TPackage::ReadFile(FileEntry & fileEntry, unsigned char* pFileBuffer, unsig
 	if (fileEntry.m_length > fileEntry.m_compressedLength)
 	{
 		unsigned long fileLength = fileEntry.m_length;
-		unsigned char* pBuffer = (unsigned char*)TMemory::Alloc(fileEntry.m_compressedLength);
+		unsigned char* pBuffer = new unsigned char[fileEntry.m_compressedLength];
 		if (!pBuffer)
 			return false;
 
@@ -956,15 +1050,14 @@ bool TPackage::ReadFile(FileEntry & fileEntry, unsigned char* pFileBuffer, unsig
 				fclose(fp);
 			}
 
-			TMemory::Free(pBuffer);
+			delete[] pBuffer;
 			return false;
 		}
 
 		//uncompress(pFileBuffer, &dwFileLength, m_pBuffer, fileEntry.dwCompressedLength);
 
 		*pBufferLen = fileLength;
-
-		TMemory::Free(pBuffer);
+		delete[] pBuffer;
 	}
 	else
 	{
@@ -1013,12 +1106,12 @@ bool TPackage::ReadCompressedFile(FileEntry& fileEntry, unsigned char* pCompress
 
 void* Zlib_User_Alloc(void* opaque, unsigned int items, unsigned int size)
 {
-	return TMemory::Alloc(size * items);
+	return new char[size*items];
 }
 
 void Zlib_User_Free(void* opaque, void* ptr)
 {
-	TMemory::Free(ptr);
+	delete[] ptr;
 }
 
 
@@ -1172,8 +1265,8 @@ bool TPackage::LoadSafeHeader()
 {
 	m_pPackageFile->Seek(0, SEEK_SET);
 
-	SafeFileHeaderOld oldFileHeader;
-	m_pPackageFile->Read(&oldFileHeader, sizeof(SafeFileHeaderOld), 1);
+	SafePackageHeaderOld oldFileHeader;
+	m_pPackageFile->Read(&oldFileHeader, sizeof(SafePackageHeaderOld), 1);
 
 	if (oldFileHeader.m_tag1 == 0x4dca23ef && oldFileHeader.m_tag2 == 0x56a089b7) {
 		m_safeHeader.m_tag = oldFileHeader.m_tag1;
@@ -1215,7 +1308,7 @@ bool TPackage::SaveSafeHeader()
 		m_safeHeader.m_offset = m_pPackageFile->Tell();
 
 		m_pPackageFile->Seek(0, SEEK_SET);
-		m_pPackageFile->Write(&m_safeHeader, sizeof(SafeFileHeader), 1);
+		m_pPackageFile->Write(&m_safeHeader, sizeof(SafePackageHeader), 1);
 		m_pPackageFile->Seek(0, SEEK_SET);
 	}
 
@@ -1379,7 +1472,7 @@ void TPackage::ClearFileCache()
 		SharedFile* pFileItem = pNode->m_value;
 		if (!pFileItem->m_refCnt == 0)
 		{
-			TMemory::Free(pFileItem->m_pFileData);
+			delete pFileItem->m_pFileData;
 			delete pFileItem;
 			THashNode<int, SharedFile*> * pSave = pNode;
 			pNode = m_sharedFiles.GetNext(pNode);
@@ -1407,7 +1500,7 @@ unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppF
 
 	TAssert(m_fileEntries[entryIndex]);
 	//	Allocate file data buffer
-	unsigned char*  pFileData = (unsigned char*)TMemory::Alloc(FileEntry.m_length);
+	unsigned char*  pFileData = new unsigned char[FileEntry.m_length];
 	if (!pFileData)
 	{
 		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Not enough memory");
@@ -1418,7 +1511,7 @@ unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppF
 	unsigned long dwFileLen = FileEntry.m_length;
 	if (!ReadFile(FileEntry, pFileData, &dwFileLen))
 	{
-		TMemory::Free(pFileData);
+		delete[] pFileData;
 		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Failed to read file data [%s]", fileName);
 		return false;
 	}
@@ -1427,7 +1520,7 @@ unsigned long TPackage::OpenSharedFile(const char* fileName, unsigned char** ppF
 	SharedFile* pFileItem = new SharedFile;
 	if (!pFileItem)
 	{
-		TMemory::Free(pFileData);
+		delete[] pFileData;
 		TLog::Log(LOG_ERR, "FILE", "TPackage::OpenSharedFile, Not enough memory");
 		return false;
 	}
@@ -1455,7 +1548,7 @@ void TPackage::CloseSharedFile(int fileHandle)
 	TAssert(pFileItem && pFileItem->m_refCnt > 0);
 
 	//	No cache file, release it
-	TMemory::Free(pFileItem->m_pFileData);
+	delete pFileItem->m_pFileData;
 	delete pFileItem;
 }
 

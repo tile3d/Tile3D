@@ -112,7 +112,10 @@ public:
 
 	//Clear the Array
 	void Clear() {
-		delete[] m_data;
+		if (m_data != nullptr) {
+			delete[] m_data;
+		}
+
 		m_data = nullptr;
 		m_count = 0;
 		m_capacity = 0;

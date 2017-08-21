@@ -37,6 +37,9 @@ public:
 		return m_ht.GetNext(pNode);
 	}
 
+	void Clear() {
+		return m_ht.Clear();
+	}
 private:
 	/** Hidden copy constructor. */
 	THashMap(const THashMap&) = delete;
