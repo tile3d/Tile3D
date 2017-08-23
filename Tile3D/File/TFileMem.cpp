@@ -1,9 +1,9 @@
 #include "TFileMem.h"
 #include <Container/TString.h>
-#include <Core/TMemory.h>
 #include <Util/TAssert.h>
 #include <Util/TLog.h>
 #include <string.h>
+#include <Core/TMemory.h>
 
 TFileMem::TFileMem() : TFile()
 {
@@ -19,7 +19,7 @@ TFileMem::~TFileMem()
 {
 	if (m_pBuf)
 	{
-		TMemory::Free(m_pBuf);
+		delete[] m_pBuf;
 	}
 }
 
@@ -99,22 +99,19 @@ bool TFileMem::ExtendFileBeforeWrite(int writeSize)
 		appendSize = m_growBy;
 
 	//	Extend memory file buffer
-	unsigned char* pNewBuf;
 	if (!m_pBuf) {
-		pNewBuf = (unsigned char*)TMemory::Alloc(m_bufLen + appendSize);
+		m_pBuf = new unsigned char[m_bufLen + appendSize];
 	}
 	else {
-		pNewBuf = (unsigned char*)TMemory::Realloc(m_pBuf, m_bufLen + appendSize);
+		m_pBuf = new(m_pBuf) unsigned char[m_bufLen + appendSize];
 	}
 
-	if (!pNewBuf)
+	if (!m_pBuf)
 	{
 		//	Not enough memory to extend file
 		TLog::Log(LOG_ERR, "FILE", "TFileMem::ExtendFileBeforeWrite, Not enough memory");
 		return false;
 	}
-
-	m_pBuf = pNewBuf;
 	m_bufLen += appendSize;
 	return true;
 }

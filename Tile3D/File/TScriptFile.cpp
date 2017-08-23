@@ -31,7 +31,7 @@ bool TScriptFile::Open(TFile *pFile)
 		return true;
 	}
 
-	char* pBuf = (char*)TMemory::Alloc(fileLen);
+	char* pBuf = new char[fileLen];
 	if (!pBuf)
 	{
 		TLog::Log(LOG_ERR, "FILE", "TScriptFile::Open, Not enough memory");
@@ -42,7 +42,7 @@ bool TScriptFile::Open(TFile *pFile)
 	int readNum;
 	if (!pFile->Read(pBuf, fileLen, &readNum) || readNum != fileLen)
 	{
-		TMemory::Free(pBuf);
+		delete[] pBuf;
 		TLog::Log(LOG_ERR, "FILE", "TScriptFile::Open, Failed to read file content");
 		return false;
 	}
@@ -78,7 +78,7 @@ bool TScriptFile::Open(const char* szFile)
 void TScriptFile::Close()
 {
 	if (m_script.pStart) {
-		TMemory::Free(m_script.pStart);
+		delete[] m_script.pStart;
 	}
 
 	memset(&m_script, 0, sizeof(m_script));

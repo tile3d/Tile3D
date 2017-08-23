@@ -1,6 +1,8 @@
 #include <File/TPackageMan.h>
+#include <File/TPackage.h>
 #include "File/TFileDir.h"
 #include <Util/TLog.h>
+#include <Util/TTime.h>
 #include <stdio.h>
 
 int main()
@@ -9,19 +11,33 @@ int main()
 		printf("init log file failed\n");
 	}
 
-	/*
-	if (!TFileDir::GetInstance()->Init("D:\\engine\\Tile3D\\TestMisc\\TestMisc", "", "", "")) {
-
-	}
-	*/
-
 	if (!TFileDir::GetInstance()->Init("E:\\Program Files (x86)\\ÖïÏÉ3¡¤Ò»ÄîÇ¬À¤\\element", "", "", "")) {
-
+		printf("fail to init the directory\n");
 	}
 
+/*
+	char *pck_list[] = { "building.pck", "configs.pck", "facedata.pck", "gfx.pck", "grasses.pck", "models.pck",
+		"interfaces.pck", "litmodels.pck", "sfx.pck", "shaders.pck", "surfaces.pck", "textures.pck" };
+*/
 
-	if (!TPackageMan::GetInstance()->OpenFilePackage("gfx.pck", 0)) {
-		printf("open failed\n");
+	char *pck_list[] = {  "models.pck", "litmodels.pck" };
+
+	TTime tt;
+	tt.Start();
+	int64 totalSize = 0;
+	for (int i = 0; i < sizeof(pck_list) / sizeof(char*); ++i) {
+		TPackage * pPackage = TPackageMan::GetInstance()->OpenFilePackage(pck_list[i], 0);
+		if (pPackage == nullptr) {
+			printf("open failed, package_file=%s\n", pck_list[i]);
+			continue;
+		}
+
+		int64 packageSize = pPackage->GetPackageFileSize();
+		totalSize += packageSize;
+		printf("open successfully, package_file=%s, package_size=%lld\n", pck_list[i], packageSize);
 	}
+	tt.Stop();
+	printf("Total cost time=%d\n", tt.GetCostTime());
 	return 0;
 }
+

@@ -31,11 +31,12 @@ void * operator new[] (size_t size)
 	return TMemory::Alloc(size);
 }
 
+/*
 void operator delete[](void * p)
 {
 	TMemory::Free(p);
 }
-
+*/
 /*
 void * operator new(size_t size, void * p)
 {

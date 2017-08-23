@@ -332,7 +332,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 		if (!m_pPackageFile->Open(fullPckPath, "rb"))
 		{
 			delete m_pPackageFile;
-			m_pPackageFile = NULL;
+			m_pPackageFile = nullptr;
 
 			TLog::Log(LOG_ERR, "FILE", "TPackage::Open, Can not open file [%s]", fullPckPath);
 			return false;
@@ -342,7 +342,10 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 
 	strncpy(m_pckFileName, pckPath, MAX_PATH);
 
-	LoadSafeHeader();
+	if (!LoadSafeHeader()) {
+		delete m_pPackageFile;
+		return false;
+	}
 
 	int64 offset;
 	m_pPackageFile->Seek(0, SEEK_END);
@@ -439,7 +442,7 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 					memcpy(pBuffer, pEntry, sizeof(FileEntry));
 				}
 				pEntryCache->m_compressedLength = compressedSize;
-				pEntryCache->m_pEntryCompressed = (char *)new (pEntryCache->m_pEntryCompressed) char[compressedSize];
+				pEntryCache->m_pEntryCompressed = new (pEntryCache->m_pEntryCompressed) char[compressedSize];
 				memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
 				delete[] pBuffer;
 			}
@@ -987,7 +990,7 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, unsigned char* pComp
 		memcpy(pBuffer, pEntry, sizeof(FileEntry));
 	}
 	pEntryCache->m_compressedLength = compressedSize;
-	pEntryCache->m_pEntryCompressed = (char *)new(pEntryCache->m_pEntryCompressed)char[compressedSize];
+	pEntryCache->m_pEntryCompressed = new(pEntryCache->m_pEntryCompressed)char[compressedSize];
 	memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
 	delete[] pBuffer;
 
@@ -1277,6 +1280,8 @@ bool TPackage::LoadSafeHeader()
 	else if(oldFileHeader.m_tag1 == 0x4dca23ef && oldFileHeader.m_tag2 <= 1){
 		m_safeHeader.m_tag = oldFileHeader.m_tag1;
 		m_safeHeader.m_offset = ((int64)oldFileHeader.m_tag2 << 32) + oldFileHeader.m_offset;
+
+		if (m_safeHeader.m_offset < 0) return false;
 		m_bHasSaferHeader = true;
 	}
 	else {

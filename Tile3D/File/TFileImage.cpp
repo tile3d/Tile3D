@@ -69,7 +69,7 @@ bool TFileImage::InitWithSepFile(const char * fullName)
 
 	fseek(pFile, 0, SEEK_SET);
 
-	if (!(m_pFileImage = (unsigned char*)TMemory::Alloc(m_fileLength)))
+	if (!(m_pFileImage = new unsigned char[m_fileLength]))
 	{
 		TLog::Log(LOG_ERR, "FILE", "TFileImage::InitWithSepFile():Init Not enough memory! FileName : %s, FileLength : %d", fullName, m_fileLength);
 		return false;
@@ -144,8 +144,8 @@ bool TFileImage::Release()
 	{
 		if (m_pFileImage)
 		{
-			TMemory::Free(m_pFileImage);
-			m_pFileImage = NULL;
+			delete[] m_pFileImage;
+			m_pFileImage = nullptr;
 		}
 	}
 	else
@@ -347,19 +347,19 @@ bool TFileImage::ReadString(TString& str)
 	//	Read string data
 	if (length)
 	{
-		char* buf = (char*)TMemory::Alloc(length + 1);
+		char* buf = new char[length + 1];
 		if (!buf)
 			return false;
 
 		if (!ReadImage((unsigned char*)buf, length, &readSize))
 		{
-			TMemory::Free(buf);
+			delete[] buf;
 			return false;
 		}
 		buf[length] = '\0';
 		str = buf;
 
-		TMemory::Free(buf);
+		delete[] buf;
 	}
 	else
 		str = "";

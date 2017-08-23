@@ -20,8 +20,9 @@
 //
 //TBD
 //1) Resolve the pck file size problem(2G problem), Support single large pck file (for example 8G) 
-//2) Use the same memory allocation and deallocation method (new vs TMemory::Alloc)
+//2) Use the same memory allocation and deallocation method (new vs TMemory::Alloc) [DONE]
 //3) share file not used now, investigate if can open it
+//4) implement the unpack logic(consider multithread)
 //
 
 

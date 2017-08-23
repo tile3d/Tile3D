@@ -25,10 +25,9 @@ public:
 		CloseAllPackages();
 	}
 
-	bool CreateFilePackage(const char * pckFile, const char * folder, int flags);
-
-	bool OpenFilePackage(const char * pckFile, int flags);
-	bool OpenFilePackage(const char * pckFile, const char * folder, int flags);
+	TPackage* CreateFilePackage(const char * pckFile, const char * folder, int flags);
+	TPackage* OpenFilePackage(const char * pckFile, int flags);
+	TPackage* OpenFilePackage(const char * pckFile, const char * folder, int flags);
 
 
 	int GetPackageNum() { return m_packages.Size(); }
@@ -43,5 +42,6 @@ public:
 private:
 	TArray<TPackage*> m_packages;
 };
+
 
 

@@ -192,6 +192,12 @@
     <ClInclude Include="Container\TPair.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Util\TCounter.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\TTime.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -286,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="File\TScriptFile.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\TTime.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -45,7 +45,7 @@ void operator delete(void * p);
 void * operator new[](size_t size) throw();
 void operator delete[](void * p);
 
-//void * operator new(size_t size, void *p) throw();
+void * operator new(size_t size, void *p) throw();
 //void operator delete(void * p1, void * p2) {}
 
 

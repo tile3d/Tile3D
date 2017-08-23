@@ -5,7 +5,7 @@
 #include "TPackage.h"
 #include "TFileDir.h"
 
-bool TPackageMan::CreateFilePackage(const char* pckFile, const char* folder, int flags)
+TPackage* TPackageMan::CreateFilePackage(const char* pckFile, const char* folder, int flags)
 {
 	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
 
@@ -14,15 +14,15 @@ bool TPackageMan::CreateFilePackage(const char* pckFile, const char* folder, int
 	{
 		delete pPackage;
 		TLog::Log(LOG_ERR, "FILE", "AFilePackMan::CreateFilePackage(), Can not open package [%s]", pckFile);
-		return false;
+		return nullptr;
 	}
 
 	m_packages.Add(pPackage);
-	return true;
+	return pPackage;
 }
 
 
-bool TPackageMan::OpenFilePackage(const char * pckFile, int flags)
+TPackage* TPackageMan::OpenFilePackage(const char * pckFile, int flags)
 {
 	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
 
@@ -31,14 +31,14 @@ bool TPackageMan::OpenFilePackage(const char * pckFile, int flags)
 	{
 		delete pPackage;
 		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackage(), Can not open package [%s]", pckFile);
-		return false;
+		return nullptr;
 	}
 
 	m_packages.Add(pPackage);
-	return true;
+	return pPackage;
 }
 
-bool TPackageMan::OpenFilePackage(const char* pckFile, const char* folder, int flags)
+TPackage* TPackageMan::OpenFilePackage(const char* pckFile, const char* folder, int flags)
 {
 	bool encrypt = (flags & OPEN_ENCRYPT) ? true : false;
 
@@ -47,11 +47,11 @@ bool TPackageMan::OpenFilePackage(const char* pckFile, const char* folder, int f
 	{
 		delete pPackage;
 		TLog::Log(LOG_ERR, "FILE", "TPackageMan::OpenFilePackage(), Can not open package [%s]", pckFile);
-		return false;
+		return nullptr;
 	}
 
 	m_packages.Add(pPackage);
-	return true;
+	return pPackage;
 }
 
 
