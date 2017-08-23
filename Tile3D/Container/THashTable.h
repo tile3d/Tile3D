@@ -226,7 +226,7 @@ private:
 	{
 		THashNode<KEY_TYPE, VALUE_TYPE> * pNode;
 		THashNode<KEY_TYPE, VALUE_TYPE> * pPrevNode;
-		for (int i = 0; i < bucket_size; ++bucket_size) {
+		for (int i = 0; i < bucket_size; ++i) {
 			pNode = buckets[i];
 			while (pNode != nullptr) {
 				pPrevNode = pNode;
