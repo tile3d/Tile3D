@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TRBTree.h"
+
 template <typename KEY, typename VALUE> class TTreeMap
 {
 public:	
@@ -7,7 +9,7 @@ public:
 		return tm.Insert(key, value);
 	}
 
-	TRBTreeNode * Find(const KEY & key) {
+	TRBTreeNode<KEY, VALUE> * Find(const KEY & key) {
 		return tm.Find(key);
 	}
 
@@ -15,7 +17,7 @@ public:
 		return tm.Remove(key);
 	}
 
-	void Remove(TRBTreeNode * pNode) {
+	void Remove(TRBTreeNode<KEY, VALUE> * pNode) {
 		return tm.Remove(pNode);
 	}
 
@@ -31,6 +33,6 @@ public:
 		return tm.Clear();
 	}
 private:
-	TTreeMap<KEY, VALUE> tm;
+	TRBTree<KEY, VALUE> tm;
 };
 

@@ -89,12 +89,12 @@ template<typename KEY, typename VALUE> class TRBTree
 {
 public:
 	TRBTree() {
-		m_head = new TRBTreeNode();
+		m_head = new TRBTreeNode<KEY, VALUE>();
 
 		m_head->m_color = COLOR_RED;
 		m_head->m_parent = nullptr;
-		m_head->m_left = &this->m_head;
-		m_head->m_right = &this->m_head;
+		m_head->m_left = this->m_head;
+		m_head->m_right = this->m_head;
 
 		m_count = 0;
 	}
@@ -106,24 +106,24 @@ public:
 		}
 	}
 
-	TRBTreeNode * GetRoot() { return m_head.m_parent; }
-	TRBTreeNode * GetLeftMost() { return m_head.m_left; }
-	TRBTreeNode * GetRightMost() { return m_head.m_right; }
+	TRBTreeNode<KEY, VALUE> * GetRoot() { return m_head.m_parent; }
+	TRBTreeNode<KEY, VALUE> * GetLeftMost() { return m_head.m_left; }
+	TRBTreeNode<KEY, VALUE> * GetRightMost() { return m_head.m_right; }
 
-	TRBTreeNode * GetLeft(TRBTreeNode * pNode) {
+	TRBTreeNode<KEY, VALUE> * GetLeft(TRBTreeNode<KEY, VALUE> * pNode) {
 		return pNode->m_left;
 	}
 
-	TRBTreeNode * GetRight(TRBTreeNode * pNode) {
+	TRBTreeNode<KEY, VALUE> * GetRight(TRBTreeNode<KEY, VALUE> * pNode) {
 		return pNode->m_right;
 	}
 
 	bool InsertUnique(const KEY & key, const VALUE & value);
 
-	TRBTreeNode * Find(const KEY & key);
+	TRBTreeNode<KEY, VALUE>  * Find(const KEY & key);
 
 	bool Remove(const KEY & key);
-	void Remove(TRBTreeNode * pNode);
+	bool Remove(TRBTreeNode<KEY, VALUE> * pNode);
 
 	bool IsEmpty() const { return m_count == 0; }
 
@@ -139,43 +139,43 @@ public:
 		}
 	}
 	
-	void Clear(TRBTreeNode * pNode) {
+	void Clear(TRBTreeNode<KEY, VALUE>  * pNode) {
 		while (pNode != nullptr) {
 			Clear(pNode->m_right);
-			TRBTreeNode * pNext = pNode->m_left;
+			TRBTreeNode<KEY, VALUE> * pNext = pNode->m_left;
 			delete pNode;
 			pNode = pNext;
 		}
 	}
 
 private:
-	TRBTreeNode * CreateNode(const KEY & key, const VALUE & value);
-	void LeftRotate(TRBTreeNode * pNode);
-	void RightRotate(TRBTreeNode * pNode);
+	TRBTreeNode<KEY, VALUE> * CreateNode(const KEY & key, const VALUE & value);
+	void LeftRotate(TRBTreeNode<KEY, VALUE> * pNode);
+	void RightRotate(TRBTreeNode<KEY, VALUE> * pNode);
 	
-	void Insert(TRBTreeNode * x, TRBTreeNode * y, const KEY & key, const VALUE & value);
+	void Insert(TRBTreeNode<KEY, VALUE> * x, TRBTreeNode<KEY, VALUE> * y, const KEY & key, const VALUE & value);
 
-	void RemoveNode(TRBTreeNode * pNode);
-	void Rebalance(TRBTreeNode * pNode);
+	bool RemoveNode(TRBTreeNode<KEY, VALUE> * pNode);
+	void Rebalance(TRBTreeNode<KEY, VALUE> * pNode);
 
 
 private:
-	TRBTreeNode *  m_head;
+	TRBTreeNode<KEY, VALUE> *  m_head;
 	int	m_count;
 };
 
-template<typename KEY, typename VALUE> bool TRBTree::CreateNode(const KEY & key, const VALUE & value)
+template<typename KEY, typename VALUE> TRBTreeNode<KEY, VALUE>* TRBTree<KEY, VALUE>::CreateNode(const KEY & key, const VALUE & value)
 {
-	TRBTreeNode * pNode = new TRBTreeNode();
+	TRBTreeNode<KEY, VALUE> * pNode = new TRBTreeNode();
 	pNode->m_key = key;
 	pNode->m_value = value;
 	return pNode;
 }
 
 
-template<typename KEY, typename VALUE> bool TRBTree::LeftRotate(TRBTreeNode * pNode)
+template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::LeftRotate(TRBTreeNode<KEY, VALUE> * pNode)
 {
-	TRBTreeNode * pNode2 = pNode->m_right;
+	TRBTreeNode<KEY, VALUE> * pNode2 = pNode->m_right;
 	pNode->m_right = pNode->m_left;
 
 	if (pNode2->m_left != nullptr) {
@@ -198,9 +198,9 @@ template<typename KEY, typename VALUE> bool TRBTree::LeftRotate(TRBTreeNode * pN
 	pNode->m_parent = pNode2;
 }
 
-template<typename KEY, typename VALUE> bool TRBTree::RightRotate(TRBTreeNode * pNode)
+template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::RightRotate(TRBTreeNode<KEY, VALUE> * pNode)
 {
-	TRBTreeNode * pNode2 = pNode->m_left;
+	TRBTreeNode<KEY, VALUE> * pNode2 = pNode->m_left;
 	pNode->m_left = pNode2->m_right;
 
 	if (pNode2->m_right != nullptr) {
@@ -223,10 +223,10 @@ template<typename KEY, typename VALUE> bool TRBTree::RightRotate(TRBTreeNode * p
 	pNode->m_parent = pNode;
 }
 
-template<typename KEY, typename VALUE> bool TRBTree::InsertUnique(const KEY & key, const VALUE & value) 
+template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::InsertUnique(const KEY & key, const VALUE & value)
 {
-	TRBTreeNode* y = m_head;
-	TRBTreeNode* x = GetRoot();
+	TRBTreeNode<KEY, VALUE>* y = m_head;
+	TRBTreeNode<KEY, VALUE>* x = GetRoot();
 
 	bool comp = true;
 	while (x != 0) {
@@ -235,7 +235,7 @@ template<typename KEY, typename VALUE> bool TRBTree::InsertUnique(const KEY & ke
 		x = comp ? x->m_left : x->m_right;
 	}
 
-	TRBTreeNode * j = y;
+	TRBTreeNode<KEY, VALUE> * j = y;
 	if (comp) {
 		if (y == GetLeftMost()) {
 			Insert(x, y, key, value);
@@ -254,9 +254,9 @@ template<typename KEY, typename VALUE> bool TRBTree::InsertUnique(const KEY & ke
 	return false;
 }
 
-template<typename KEY, typename VALUE> void TRBTree::Insert(TRBTreeNode * x, TRBTreeNode * y, const KEY & key, const VALUE & value)
+template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::Insert(TRBTreeNode<KEY, VALUE> * x, TRBTreeNode<KEY, VALUE> * y, const KEY & key, const VALUE & value)
 {
-	TRBTreeNode * z;
+	TRBTreeNode<KEY, VALUE> * z;
 	if (y = m_header || x != nullptr || key < y->m_key) {
 		z = CreateNode(key, value);
 		y->m_left = z;
@@ -286,15 +286,15 @@ template<typename KEY, typename VALUE> void TRBTree::Insert(TRBTreeNode * x, TRB
 }
 
 
-template<typename KEY, typename VALUE> void TRBTree::Rebalance(TRBTreeNode * pNode)
+template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::Rebalance(TRBTreeNode<KEY, VALUE> * pNode)
 {
 	pNode->m_color = COLOR_RED;
 
-	TRBTreeNode * pRoot = GetRoot();
+	TRBTreeNode<KEY, VALUE> * pRoot = GetRoot();
 
 	while (pNode != pRoot && pNode->m_parent->m_color == COLOR_RED) {
 		if (pNode->m_parent = pNode->m_parent->m_parent->m_left) {
-			TRBTreeNode * pNode2 = pNode->m_parent->m_parent->m_right;
+			TRBTreeNode<KEY, VALUE> * pNode2 = pNode->m_parent->m_parent->m_right;
 			if (pNode2 && pNode2->m_color == COLOR_RED) {
 				pNode->m_parent->m_color = COLOR_BLACK;
 				pNode->m_color = COLOR_BLACK;
@@ -312,7 +312,7 @@ template<typename KEY, typename VALUE> void TRBTree::Rebalance(TRBTreeNode * pNo
 			}
 		}
 		else {
-			TRBTreeNode * pNode2 = pNode->m_parent->m_parent->m_left;
+			TRBTreeNode<KEY, VALUE> * pNode2 = pNode->m_parent->m_parent->m_left;
 			if (pNode2 && pNode2->m_color == COLOR_RED) {
 				pNode->m_parent->m_color = COLOR_BLACK;
 				pNode2->m_color = COLOR_BLACK;
@@ -333,9 +333,9 @@ template<typename KEY, typename VALUE> void TRBTree::Rebalance(TRBTreeNode * pNo
 	pRoot->m_color = COLOR_BLOACK;
 }
 
-template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Find(const KEY & key)
+template<typename KEY, typename VALUE> TRBTreeNode<KEY, VALUE> * TRBTree<KEY, VALUE>::Find(const KEY & key)
 {
-	TRBTreeNode * pNode = GetRoot();
+	TRBTreeNode<KEY, VALUE> * pNode = GetRoot();
 	while (pNode != nullptr) {
 		if (pNode->m_key < key) {
 			pNode = pNode->m_left;
@@ -350,25 +350,27 @@ template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Find(const KEY & k
 	return nullptr;
 }
 
-template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Remove(const KEY & key)
+template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::Remove(const KEY & key)
 {
-
+	TRBTreeNode<KEY, VALUE> * pNode = Find(key);
+	if (pNode == nullptr) return false;
+	return RemoveNode(pNode);
 }
 
-template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::Remove(TRBTreeNode * z)
+template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::Remove(TRBTreeNode<KEY, VALUE> * z)
 {
-	RemoveNode(z);
+	return RemoveNode(z);
 }
 
-template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::RemoveNode(TRBTreeNode * z)
+template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::RemoveNode(TRBTreeNode<KEY, VALUE> * z)
 {
-	TRBTreeNode * pRoot = GetRoot();
-	TRBTreeNode * pLeftMost = GetLeftMost();
-	TRBTreeNode * pRightMost = GetRightMost();
+	TRBTreeNode<KEY, VALUE> * pRoot = GetRoot();
+	TRBTreeNode<KEY, VALUE> * pLeftMost = GetLeftMost();
+	TRBTreeNode<KEY, VALUE> * pRightMost = GetRightMost();
 
-	TRBTreeNode * y = z;
-	TRBTreeNode * x = nullptr;
-	TRBTreeNode * x_parent = nullptr
+	TRBTreeNode<KEY, VALUE> * y = z;
+	TRBTreeNode<KEY, VALUE> * x = nullptr;
+	TRBTreeNode<KEY, VALUE> * x_parent = nullptr
 
 	if (y->m_left == nullptr) {
 		x = y->m_right;
@@ -448,14 +450,14 @@ template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::RemoveNode(TRBTree
 	if (y->m_color != COLOR_RED) {
 		while (x != pRoot && (x == nullptr || x->m_color == COLOR_BLACK)) {
 			if (x == x->m_parent->m_left) {
-				TRBTreeNode * w = x_parent->m_right;
+				TRBTreeNode<KEY, VALUE> * w = x_parent->m_right;
 				if (w->m_color == COLOR_RED) {
 					w->color = COLOR_BLACK;
 					x_parent->m_color = COLOR_RED;
 					LeftRotate(x_parent);
 					w = x_parent->m_right;
 				}
-				if ((w->m_left == 0 || w->m_left->m_color == COLOR_BLACK) && (w->m_right == 0 || w->m_right->m_color == COLOR_BLACK) {
+				if ((w->m_left == 0 || w->m_left->m_color == COLOR_BLACK) && (w->m_right == 0 || w->m_right->m_color == COLOR_BLACK)) {
 					w->m_color = COLOR_RED;
 					x = x_parent;
 					x_parent = x_parent->m_parent;
@@ -477,7 +479,7 @@ template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::RemoveNode(TRBTree
 				}
 			}
 			else {
-				TRBTreeNode * w = x_parent->m_left;
+				TRBTreeNode<KEY, VALUE> * w = x_parent->m_left;
 				if (w->m_color == COLOR_RED) {
 					w->m_color = COLOR_BLACK;
 					x_parent->m_color = COLOR_RED;
@@ -511,7 +513,7 @@ template<typename KEY, typename VALUE> TRBTreeNode * TRBTree::RemoveNode(TRBTree
 			x->m_color = COLOR_BLACK;
 		}
 	}
-	return y;
+	return true;
 }
 
 

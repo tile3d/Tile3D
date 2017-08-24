@@ -1,3 +1,7 @@
+#pragma once
+
+#include "TRBTree.h"
+
 template <typename KEY> class TTreeSet
 {
 public:
