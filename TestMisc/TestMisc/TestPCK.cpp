@@ -20,7 +20,7 @@ int main()
 		"interfaces.pck", "litmodels.pck", "sfx.pck", "shaders.pck", "surfaces.pck", "textures.pck" };
 */
 
-	char *pck_list[] = {  "models.pck", "litmodels.pck" };
+	char *pck_list[] = {  "models.pkx", "litmodels.pck" };
 
 	TTime tt;
 	tt.Start();

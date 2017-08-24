@@ -16,6 +16,7 @@ void * TMemory::Realloc(void * p, size_t size)
 	return TMemMan::GetInstance()->Realloc(p, size);
 }
 
+
 void * operator new (size_t size)
 {
 	return TMemory::Alloc(size);

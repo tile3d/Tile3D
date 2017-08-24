@@ -37,6 +37,9 @@ public:
 	static void * Alloc(size_t size);
 	static void Free(void * p);
 	static void * Realloc(void * p, size_t size);
+
+public:
+	static int GetAllocSize();
 };
 
 void * operator new (size_t size) throw();
