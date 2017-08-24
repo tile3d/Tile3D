@@ -99,7 +99,7 @@ public:
 	struct SafePackageHeaderOld
 	{
 		int	m_tag1;			//	tag of safe header, current it is 0x4DCA23EF
-		int m_offset;		//	offset of real entries
+		uint m_offset;		//	offset of real entries
 		int m_tag2;			// 0x56a089b7
 	};
 

@@ -11,16 +11,22 @@ int main()
 		printf("init log file failed\n");
 	}
 
+/*
 	if (!TFileDir::GetInstance()->Init("E:\\Program Files (x86)\\÷Ôœ…3°§“ªƒÓ«¨¿§\\element", "", "", "")) {
 		printf("fail to init the directory\n");
 	}
+*/
+	if (!TFileDir::GetInstance()->Init("F:\\PGP\\÷Ôœ…3\\element", "", "", "")) {
+		printf("fail to init the directory\n");
+	}
+
 
 /*
 	char *pck_list[] = { "building.pck", "configs.pck", "facedata.pck", "gfx.pck", "grasses.pck", "models.pck",
 		"interfaces.pck", "litmodels.pck", "sfx.pck", "shaders.pck", "surfaces.pck", "textures.pck" };
 */
 
-	char *pck_list[] = {  "models.pkx", "litmodels.pck" };
+	char *pck_list[] = {  "models.pck" };
 
 	TTime tt;
 	tt.Start();
