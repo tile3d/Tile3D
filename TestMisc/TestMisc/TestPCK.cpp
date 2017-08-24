@@ -21,12 +21,9 @@ int main()
 	}
 
 
-/*
+
 	char *pck_list[] = { "building.pck", "configs.pck", "facedata.pck", "gfx.pck", "grasses.pck", "models.pck",
 		"interfaces.pck", "litmodels.pck", "sfx.pck", "shaders.pck", "surfaces.pck", "textures.pck" };
-*/
-
-	char *pck_list[] = {  "models.pck" };
 
 	TTime tt;
 	tt.Start();
