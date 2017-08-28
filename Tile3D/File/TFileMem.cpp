@@ -103,7 +103,8 @@ bool TFileMem::ExtendFileBeforeWrite(int writeSize)
 		m_pBuf = new unsigned char[m_bufLen + appendSize];
 	}
 	else {
-		m_pBuf = new(m_pBuf) unsigned char[m_bufLen + appendSize];
+		delete[] m_pBuf;
+		m_pBuf = new unsigned char[m_bufLen + appendSize];
 	}
 
 	if (!m_pBuf)

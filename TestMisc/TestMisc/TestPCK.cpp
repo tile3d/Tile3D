@@ -5,7 +5,7 @@
 #include <Util/TTime.h>
 #include <stdio.h>
 
-int main()
+int TestPackage()
 {
 	if (!TLog::Init("game.log", LOG_DEBUG, false)) {
 		printf("init log file failed\n");

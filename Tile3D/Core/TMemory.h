@@ -29,8 +29,9 @@
 // 11) Impelement the memory leak stacktrace on Linux platform using libunwind(TBD)
 // 12) Forbid the user to use malloc and free (TBD)
 // 13) Realloc problem, how to guarantee the realloced memory is not overrite the exist memory(TBD)
+// 14) Forbid the user to use placement, or user use the user-defined placement new
 //
-
+//
 class TMemory
 {
 public:
@@ -48,9 +49,7 @@ void operator delete(void * p);
 void * operator new[](size_t size) throw();
 void operator delete[](void * p);
 
-void * operator new(size_t size, void *p) throw();
+//void * operator new(size_t size, void *p) throw();
 //void operator delete(void * p1, void * p2) {}
-
-
 //void * operator new[](size_t size, void *p) throw();
 //void operator delete[](void * p1, void * p2) {}

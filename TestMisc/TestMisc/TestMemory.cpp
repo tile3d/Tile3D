@@ -1,52 +1,45 @@
-#include <Core/TMemory.h>
-#include <Core/TObject.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <new>
+#include <Core/TMemory.h>
 
-class Foo
+class TestCtor
 {
+
 public:
+	TestCtor()
+	{
+		printf("enter TestCtor ctor\n");
+		x = 1;
+		y = 2;
+	}
+
+
+	~TestCtor()
+	{
+		printf("enter TestCtor dtor\n");
+		x = 3;
+		y = 4;
+	}
+private:
 	int x;
 	int y;
-	char name[20];
+
 };
 
-class TBar : public TObject
+
+int main()
 {
-public:
-	TBar() {
-		bar_id = 0;
-		printf("TBar ctor\n");
-	}
+	TestCtor * p1 = new TestCtor;
+	delete p1;
 
-	~TBar() {
-		printf("TBar dtor\n");
-	}
+	TestCtor * p2 = new TestCtor[5];
+	delete[] p2;
 
-private:
-	int bar_id;
-};
+	char * p3 = new char[32];
+	p3 = new(p3) char[64];
 
-TBar *  test_bar()
-{
-	TBar * pBar = new TBar();
-	return pBar;
-}
-
-int TestMemory()
-{
-	Foo * pFoo = new Foo();
-	pFoo->x = 3;
-	pFoo->y = 4;
-//	delete pFoo;
-
-	Foo ** pFoo2 = new Foo*[1024];
-//	delete[] pFoo2;
-
-	TBar * pBar = test_bar();
-//	delete pBar;
-
-	TBar * pBar2 = new TBar[36]();
-//	delete[] pBar2;
+	*(p3 + 33) = 'a';
+	delete[] p3;
 	return 0;
 }
-

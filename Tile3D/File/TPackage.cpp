@@ -442,7 +442,8 @@ bool TPackage::Open(const char* pckPath, const char* folder, bool bEncrypt, bool
 					memcpy(pBuffer, pEntry, sizeof(FileEntry));
 				}
 				pEntryCache->m_compressedLength = compressedSize;
-				pEntryCache->m_pEntryCompressed = new (pEntryCache->m_pEntryCompressed) char[compressedSize];
+				delete[] pEntryCache->m_pEntryCompressed;
+				pEntryCache->m_pEntryCompressed = new char[compressedSize];
 				memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
 				delete[] pBuffer;
 			}
@@ -990,7 +991,9 @@ bool TPackage::ReplaceFileCompressed(const char * fileName, unsigned char* pComp
 		memcpy(pBuffer, pEntry, sizeof(FileEntry));
 	}
 	pEntryCache->m_compressedLength = compressedSize;
-	pEntryCache->m_pEntryCompressed = new(pEntryCache->m_pEntryCompressed)char[compressedSize];
+
+	delete[] pEntryCache->m_pEntryCompressed;
+	pEntryCache->m_pEntryCompressed = new char[compressedSize];
 	memcpy(pEntryCache->m_pEntryCompressed, pBuffer, compressedSize);
 	delete[] pBuffer;
 

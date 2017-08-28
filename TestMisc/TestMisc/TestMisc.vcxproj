@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TestMemoryLeak.cpp" />
     <ClCompile Include="TestMemory.cpp" />
     <ClCompile Include="TestPCK.cpp" />
   </ItemGroup>
