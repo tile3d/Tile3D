@@ -34,6 +34,12 @@
     <Filter Include="Sys\IOS">
       <UniqueIdentifier>{8458b3d2-ea42-49cb-9fbc-b0f95cad26d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{37333d14-3451-4e10-bb8f-e2a022b80b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Model">
+      <UniqueIdentifier>{7eeaf4a9-35ed-4c9e-b4c4-ba94b34dc9cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -198,6 +204,15 @@
     <ClInclude Include="Util\TTime.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Model\TSkinModel.h">
+      <Filter>Render\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Model\TSkeleton.h">
+      <Filter>Render\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Model\TSkinModelMan.h">
+      <Filter>Render\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -295,6 +310,15 @@
     </ClCompile>
     <ClCompile Include="Util\TTime.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Model\TSkinModel.cpp">
+      <Filter>Render\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Model\TSkeleton.cpp">
+      <Filter>Render\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Model\TSkinModelMan.cpp">
+      <Filter>Render\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
