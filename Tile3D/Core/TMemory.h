@@ -39,8 +39,9 @@ public:
 	static void Free(void * p);
 	static void * Realloc(void * p, size_t size);
 
-public:
 	static int GetAllocSize();
+	static int GetAllocRawSize();
+	static void ExportMemoryInfo(const char * file);
 };
 
 void * operator new (size_t size) throw();

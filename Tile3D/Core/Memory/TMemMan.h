@@ -5,6 +5,10 @@
 #include <Core/Lock/TAtomicInt.h>
 #include <Core/Lock/TMutexLock.h>
 
+
+//TBD
+//1) Change AllocSize from int to int64
+//
 class TMemMan
 {
 
@@ -48,6 +52,7 @@ public:
 
 	void GarbageCollect();
 
+	void ExportMemoryInfo(const char * file);
 public:
 	void * Malloc(size_t size);
 	void * Realloc(void * pMem, size_t size);

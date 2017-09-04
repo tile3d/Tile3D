@@ -3,6 +3,7 @@
 #include "File/TFileDir.h"
 #include <Util/TLog.h>
 #include <Util/TTime.h>
+#include <Core/TMemory.h>
 #include <stdio.h>
 
 int TestPackage()
@@ -11,15 +12,16 @@ int TestPackage()
 		printf("init log file failed\n");
 	}
 
-/*
+
 	if (!TFileDir::GetInstance()->Init("E:\\Program Files (x86)\\÷Ôœ…3°§“ªƒÓ«¨¿§\\element", "", "", "")) {
 		printf("fail to init the directory\n");
 	}
-*/
+
+/*
 	if (!TFileDir::GetInstance()->Init("F:\\PGP\\÷Ôœ…3\\element", "", "", "")) {
 		printf("fail to init the directory\n");
 	}
-
+*/
 
 
 	char *pck_list[] = { "building.pck", "configs.pck", "facedata.pck", "gfx.pck", "grasses.pck", "models.pck",
@@ -41,6 +43,12 @@ int TestPackage()
 	}
 	tt.Stop();
 	printf("Total cost time=%d\n", tt.GetCostTime());
+
+	int alloc_size = TMemory::GetAllocSize();
+	int raw_size = TMemory::GetAllocRawSize();
+	printf("Alloc size=%d, raw size=%d\n", alloc_size, raw_size);
+
+	TMemory::ExportMemoryInfo("memory.log");
 	return 0;
 }
 

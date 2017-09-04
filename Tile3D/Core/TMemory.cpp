@@ -17,6 +17,21 @@ void * TMemory::Realloc(void * p, size_t size)
 }
 
 
+int TMemory::GetAllocSize()
+{
+	return TMemMan::GetInstance()->GetAllocSize();
+}
+
+int TMemory::GetAllocRawSize()
+{
+	return TMemMan::GetInstance()->GetAllocRawSize();
+}
+
+void TMemory::ExportMemoryInfo(const char * file)
+{
+	return TMemMan::GetInstance()->ExportMemoryInfo(file);
+}
+
 void * operator new (size_t size)
 {
 	return TMemory::Alloc(size);

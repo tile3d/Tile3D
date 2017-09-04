@@ -290,53 +290,53 @@ void TMemDump::TouchToLogAddressSymbol(void* pAddress)
 	}
 }
 
-void TMemDump::ExportMemLog(const char* szPath)
+void TMemDump::ExportMemLog(const char* file)
 {
-	FILE* pFile = fopen(szPath, "wt");
+	FILE* pFile = fopen(file, "wt");
 	if (!pFile)
 		return;
 
 	int nSize = 0;
-	char szBuf[256];
-	memset(szBuf, 0, 256);
+	char buf[256];
+	memset(buf, 0, 256);
 
-	nSize = sprintf_s(szBuf, 256, "////////////////////MemLog//////////////////////\n");
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "////////////////////MemLog//////////////////////\n");
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "PeakSize=\t%d\n", TMemMan::GetInstance()->GetPeakSize());
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "PeakSize=\t%d\n", TMemMan::GetInstance()->GetPeakSize());
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "AllocCounter=\t%d\n", TMemMan::GetInstance()->GetID());
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "AllocCounter=\t%d\n", TMemMan::GetInstance()->GetID());
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "CurSize=\t%d\n", TMemMan::GetInstance()->GetAllocSize());
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "CurSize=\t%d\n", TMemMan::GetInstance()->GetAllocSize());
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "RawSize=\t%d\n", TMemMan::GetInstance()->GetAllocRawSize());
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "RawSize=\t%d\n", TMemMan::GetInstance()->GetAllocRawSize());
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "\n");
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "\n");
+	fwrite(buf, sizeof(char), nSize, pFile);
 
 
 	////////////////////MemLarge////////////////////
 	TMemLarge* pMemLarge = TMemMan::GetInstance()->GetMemLarge();
-	nSize = sprintf_s(szBuf, 256, "////////////////////MemLarge////////////////////\n");
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "////////////////////MemLarge////////////////////\n");
+	fwrite(buf, sizeof(char), nSize, pFile);
 
 	int iLMemAllocSize = pMemLarge->GetAllocSize();
 	int iLMemBlkCnt = pMemLarge->GetBlockCnt();
-	nSize = sprintf_s(szBuf, 256, "LargeTotalBlkSize= %-20d, LargeTotalBlkCount= %-12d\n", iLMemAllocSize, iLMemBlkCnt);
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "LargeTotalBlkSize= %-20d, LargeTotalBlkCount= %-12d\n", iLMemAllocSize, iLMemBlkCnt);
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "\n");
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "\n");
+	fwrite(buf, sizeof(char), nSize, pFile);
 
 
 	////////////////////MemSmall////////////////////
 	TMemSmall* pMemSmall = TMemMan::GetInstance()->GetMemSmall();
-	nSize = sprintf_s(szBuf, 256, "////////////////////MemSmall////////////////////\n");
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "////////////////////MemSmall////////////////////\n");
+	fwrite(buf, sizeof(char), nSize, pFile);
 
 	int iSMemAllocSize = 0;
 	int iSMemBlkCnt = 0;
@@ -357,15 +357,15 @@ void TMemDump::ExportMemLog(const char* szPath)
 		iSMemAllocFreeSize += iBlkSize * iBlkFree;
 		iSMemBlkCntFree += iBlkFree;
 
-		nSize = sprintf_s(szBuf, 256, "PoolSlotNum= %-8d, PoolSlotBlkCount= %-8d, PoolSlotDataSize= %-4d, BlkSize= %-4d, BlkCount= %-12d, BlkTotalSize= %-12d, BlkFree= %-12d\n", iPoolSlotNum, iPoolSlotBlkCount, iDataSize, iBlkSize, iBlkCount, iTotal, iBlkFree);
-		fwrite(szBuf, sizeof(char), nSize, pFile);
+		nSize = sprintf_s(buf, 256, "PoolSlotNum= %-8d, PoolSlotBlkCount= %-8d, PoolSlotDataSize= %-4d, BlkSize= %-4d, BlkCount= %-12d, BlkTotalSize= %-12d, BlkFree= %-12d\n", iPoolSlotNum, iPoolSlotBlkCount, iDataSize, iBlkSize, iBlkCount, iTotal, iBlkFree);
+		fwrite(buf, sizeof(char), nSize, pFile);
 	}
 
-	nSize = sprintf_s(szBuf, 256, "SmallTotalBlkSize= %-20d, SmallTotalBlkCount= %-12d\n", iSMemAllocSize, iSMemBlkCnt);
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "SmallTotalBlkSize= %-20d, SmallTotalBlkCount= %-12d\n", iSMemAllocSize, iSMemBlkCnt);
+	fwrite(buf, sizeof(char), nSize, pFile);
 
-	nSize = sprintf_s(szBuf, 256, "SmallFreeTotalBlkSize= %-20d, SmallFreeTotalBlkCount= %-12d\n", iSMemAllocFreeSize, iSMemBlkCntFree);
-	fwrite(szBuf, sizeof(char), nSize, pFile);
+	nSize = sprintf_s(buf, 256, "SmallFreeTotalBlkSize= %-20d, SmallFreeTotalBlkCount= %-12d\n", iSMemAllocFreeSize, iSMemBlkCntFree);
+	fwrite(buf, sizeof(char), nSize, pFile);
 
 	fclose(pFile);
 }

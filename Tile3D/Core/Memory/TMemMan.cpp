@@ -365,3 +365,7 @@ void* TMemMan::MallocAlignRelease(size_t size, int align)
 	return NULL;
 }
 
+void TMemMan::ExportMemoryInfo(const char * file)
+{
+	TMemDump::ExportMemLog(file);
+}
