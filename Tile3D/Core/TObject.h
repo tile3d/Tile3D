@@ -13,7 +13,6 @@
 #pragma once
 
 #include "TClassID.h"
-#include <Container/TString.h>
 
 //Design Goal
 //1) Support Reference Count?
@@ -33,8 +32,8 @@ public:
 	//Create and return a copy of this object
 	virtual TObject * Clone();
 
-	virtual int GetClassID() = 0;
-	virtual TString GetClassName() = 0;
+//	virtual int GetClassID() = 0;
+//	virtual TString GetClassName() = 0;
 
 	//Disable assigment ctor, use clone
 	TObject & operator=(TObject& obj) const = delete;

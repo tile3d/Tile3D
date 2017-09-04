@@ -65,7 +65,6 @@ bool TSkeleton::Load(TFile * pFile)
 	//Load the joints
 	if (header.m_jointNum > 0) {
 		int* ids = new int[header.m_jointNum];
-
 		if (!pFile->Read(ids, header.m_jointNum*sizeof(int), &count) || count != header.m_jointNum*sizeof(int)) {
 			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join ids, filename=%s", pFile->GetRelativeFileName());
 			delete[] ids;
@@ -81,11 +80,14 @@ bool TSkeleton::Load(TFile * pFile)
 				pJoint->Init(this);
 
 				if (pJoint->Load(pFile)) {
+					delete pJoint;
+					TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join from the filename=%s", pFile->GetRelativeFileName());
 					return false;
 				}
+				AddJoint(pJoint);
 			}
 		}
-
+		delete[] ids;
 	}
 
 	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, load the skelethon from file=%s", pFile->GetRelativeFileName());
@@ -97,6 +99,12 @@ int TSkeleton::AddBone(TBone* pBone)
 	if (pBone->GetParentIndex() < 0) {
 		m_rootBones.Add(index);
 	}
+	return index;
+}
+
+int TSkeleton::AddJoint(TJoint * pJoint)
+{
+	int index = m_joints.Add(pJoint);
 	return index;
 }
 

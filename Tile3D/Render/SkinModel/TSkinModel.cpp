@@ -6,7 +6,7 @@
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
 
-TSkinModel::TSkinModel() : TObject(CLASSID_SKINMODEL)
+TSkinModel::TSkinModel()
 {
 
 }
