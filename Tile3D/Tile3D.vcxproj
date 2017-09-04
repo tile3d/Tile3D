@@ -22,6 +22,7 @@
     <ProjectGuid>{7C92654C-CB90-4009-823F-5BF65AD2DCAC}</ProjectGuid>
     <RootNamespace>Tile3D</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Tile3D</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,6 +151,7 @@
     <ClInclude Include="Core\Memory\TMemPool.h" />
     <ClInclude Include="Core\Memory\TMemSmall.h" />
     <ClInclude Include="Core\Memory\TMemVec.h" />
+    <ClInclude Include="Core\TClassID.h" />
     <ClInclude Include="Core\TMemory.h" />
     <ClInclude Include="Core\TObject.h" />
     <ClInclude Include="File\TFile.h" />
@@ -173,9 +175,20 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
-    <ClInclude Include="Render\Model\TSkeleton.h" />
-    <ClInclude Include="Render\Model\TSkinModel.h" />
-    <ClInclude Include="Render\Model\TSkinModelMan.h" />
+    <ClInclude Include="Render\SkinModel\TAnimJoint.h" />
+    <ClInclude Include="Render\SkinModel\TAxisSprintJoint.h" />
+    <ClInclude Include="Render\SkinModel\TBone.h" />
+    <ClInclude Include="Render\SkinModel\TControllerJoint.h" />
+    <ClInclude Include="Render\SkinModel\THook.h" />
+    <ClInclude Include="Render\SkinModel\TJoint.h" />
+    <ClInclude Include="Render\SkinModel\TSkeleton.h" />
+    <ClInclude Include="Render\SkinModel\TSkeletonMan.h" />
+    <ClInclude Include="Render\SkinModel\TSkin.h" />
+    <ClInclude Include="Render\SkinModel\TSkinMan.h" />
+    <ClInclude Include="Render\SkinModel\TSkinMesh.h" />
+    <ClInclude Include="Render\SkinModel\TSkinModel.h" />
+    <ClInclude Include="Render\SkinModel\TSkinModelMan.h" />
+    <ClInclude Include="Render\SkinModel\TSprintJoint.h" />
     <ClInclude Include="Sys\Android\TSysFileAndroid.h" />
     <ClInclude Include="Sys\IOS\TSysFileIOS.h" />
     <ClInclude Include="Sys\TSysFile.h" />
@@ -214,9 +227,20 @@
     <ClCompile Include="Math\TRotator.cpp" />
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
-    <ClCompile Include="Render\Model\TSkeleton.cpp" />
-    <ClCompile Include="Render\Model\TSkinModel.cpp" />
-    <ClCompile Include="Render\Model\TSkinModelMan.cpp" />
+    <ClCompile Include="Render\SkinModel\TAnimJoint.cpp" />
+    <ClCompile Include="Render\SkinModel\TAxisSprintJoint.cpp" />
+    <ClCompile Include="Render\SkinModel\TBone.cpp" />
+    <ClCompile Include="Render\SkinModel\TControllerJoint.cpp" />
+    <ClCompile Include="Render\SkinModel\THook.cpp" />
+    <ClCompile Include="Render\SkinModel\TJoint.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkeleton.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkeletonMan.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkin.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinMan.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinMesh.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinModel.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinModelMan.cpp" />
+    <ClCompile Include="Render\SkinModel\TSprintJoint.cpp" />
     <ClCompile Include="Sys\Android\TSysFileAndroid.cpp" />
     <ClCompile Include="Sys\IOS\TSysFileIOS.cpp" />
     <ClCompile Include="Sys\Win\TSysFileWin.cpp" />

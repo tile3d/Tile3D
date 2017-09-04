@@ -5,7 +5,7 @@
 template <typename KEY> class TTreeSet
 {
 public:
-	bool Insert(KEY & key) {
+	bool Insert(const KEY & key) {
 		return tm.Insert(key, key);
 	}
 

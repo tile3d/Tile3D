@@ -11,7 +11,7 @@ template<typename KEY_TYPE, typename VALUE_TYPE> struct THashNode
 		m_pNext = nullptr;
 	}
 
-	THashNode(KEY_TYPE & key, VALUE_TYPE & value) {
+	THashNode(const KEY_TYPE & key, const VALUE_TYPE & value) {
 		m_key = key;
 		m_value = value;
 		m_pNext = nullptr;
@@ -83,7 +83,7 @@ public:
 		ClearBuckets(m_buckets, m_bucketSize);
 	}
 
-	bool Put(KEY_TYPE & key, VALUE_TYPE & value) {
+	bool Put(const KEY_TYPE & key, const VALUE_TYPE & value) {
 		if (m_count >= m_bucketSize * 2) {
 			Rehash(m_bucketSize * 2);
 		}
@@ -108,7 +108,7 @@ public:
 	}
 
 
-	bool Replace(KEY_TYPE & key, VALUE_TYPE & value) {
+	bool Replace(const KEY_TYPE & key, const VALUE_TYPE & value) {
 		if (m_count >= m_buckets * 2) {
 			ReHash(m_buckets * 2);
 		}
@@ -130,7 +130,7 @@ public:
 		Add(key, value, hashValue);
 	}
 
-	VALUE_TYPE * Find(KEY_TYPE & key) {
+	VALUE_TYPE * Find(const KEY_TYPE & key) {
 		int hashValue = GetHashIndex(key);
 		THashNode<KEY_TYPE, VALUE_TYPE> * pNode = m_buckets[hashValue];
 		while (pNode != nullptr) {
@@ -144,7 +144,7 @@ public:
 		return nullptr;
 	}
 
-	bool Remove(KEY_TYPE  &  key) {
+	bool Remove(const KEY_TYPE  &  key) {
 		int hashIndex = GetHashIndex(key);
 		THashNode<KEY_TYPE, VALUE_TYPE> * pBucket = m_buckets[hashIndex];
 		THashNode<KEY_TYPE, VALUE_TYPE> * pNode = pBucket;
@@ -199,7 +199,7 @@ public:
 	}
 
 private:
-	unsigned int GetHashIndex(KEY_TYPE & key) {
+	unsigned int GetHashIndex(const KEY_TYPE & key) {
 		return hashFunc(key) % m_bucketSize;
 	}
 
@@ -237,7 +237,7 @@ private:
 		delete[] buckets;
 	}
 
-	void Add(KEY_TYPE & key, VALUE_TYPE & value, int hashValue) {
+	void Add(const KEY_TYPE & key, const VALUE_TYPE & value, int hashValue) {
 		THashNode<KEY_TYPE, VALUE_TYPE> * pHead = m_buckets[hashValue];
 
 		//if not exist, add it to the bucket list

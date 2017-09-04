@@ -1,10 +1,12 @@
 #include "TSkinModel.h"
+#include "TSkeleton.h"
+#include "TSkeletonMan.h"
 #include <Util/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
 
-TSkinModel::TSkinModel()
+TSkinModel::TSkinModel() : TObject(CLASSID_SKINMODEL)
 {
 
 }
@@ -69,11 +71,27 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 		return false;
 	}
 
-	if (LoadSkeleton(bonFile)) {
+	if (BindSkeleton(bonFile)) {
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  failed to load the skeleton, skeleton file=%s", bonFile);
 		return false;
 	}
 
 
+
+
+}
+
+
+TSkeleton* TSkinModel::BindSkeleton(const char * skeletonFile)
+{
+	TSkeleton * pSkeleton = TSkeletonMan::GetInstance()->LoadSkeleton(skeletonFile);
+	if (pSkeleton == nullptr) {
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::BindSkeleton,  failed to load the skeleton, skeleton file=%s", skeletonFile);
+		return false;
+	}
+
+	m_pSkeleton = pSkeleton;
+	m_pSkeleton->SetSkinModel(this);
 
 
 }

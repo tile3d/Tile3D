@@ -37,7 +37,7 @@
     <Filter Include="Render">
       <UniqueIdentifier>{37333d14-3451-4e10-bb8f-e2a022b80b30}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\Model">
+    <Filter Include="Render\SkinModel">
       <UniqueIdentifier>{7eeaf4a9-35ed-4c9e-b4c4-ba94b34dc9cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -204,14 +204,50 @@
     <ClInclude Include="Util\TTime.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Model\TSkinModel.h">
-      <Filter>Render\Model</Filter>
+    <ClInclude Include="Render\SkinModel\TBone.h">
+      <Filter>Render\SkinModel</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Model\TSkeleton.h">
-      <Filter>Render\Model</Filter>
+    <ClInclude Include="Render\SkinModel\TJoint.h">
+      <Filter>Render\SkinModel</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Model\TSkinModelMan.h">
-      <Filter>Render\Model</Filter>
+    <ClInclude Include="Render\SkinModel\TSkin.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinMesh.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinModel.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinModelMan.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkeleton.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkeletonMan.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinMan.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\THook.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TControllerJoint.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TAnimJoint.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TAxisSprintJoint.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSprintJoint.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TClassID.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,14 +347,47 @@
     <ClCompile Include="Util\TTime.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Model\TSkinModel.cpp">
-      <Filter>Render\Model</Filter>
+    <ClCompile Include="Render\SkinModel\TBone.cpp">
+      <Filter>Render\SkinModel</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Model\TSkeleton.cpp">
-      <Filter>Render\Model</Filter>
+    <ClCompile Include="Render\SkinModel\TJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Model\TSkinModelMan.cpp">
-      <Filter>Render\Model</Filter>
+    <ClCompile Include="Render\SkinModel\TSkin.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinMesh.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinModel.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinModelMan.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkeleton.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkeletonMan.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinMan.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\THook.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TControllerJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TAnimJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TAxisSprintJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSprintJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

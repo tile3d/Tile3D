@@ -9,23 +9,23 @@ public:
 	THashMap() {}
 	~THashMap() {}
 
-	bool Put(KEY_TYPE & key, VALUE_TYPE & value) {
+	bool Put(const KEY_TYPE & key, const VALUE_TYPE & value) {
 		return m_ht.Put(key, value);
 	}
 
-	bool Put(TPair<KEY_TYPE, VALUE_TYPE>  & pair) {
+	bool Put(const TPair<KEY_TYPE, VALUE_TYPE>  & pair) {
 		return m_ht.Put(pair.m_key, pair.m_value);
 	}
 
-	bool Replace(KEY_TYPE & key, VALUE_TYPE & value) {
+	bool Replace(const KEY_TYPE & key, const VALUE_TYPE & value) {
 		return m_ht.Put(key, value);
 	}
 
-	VALUE_TYPE * Find(KEY_TYPE & key) {
+	VALUE_TYPE * Find(const KEY_TYPE & key) {
 		return m_ht.Find(key);
 	}
 
-	bool Remove(KEY_TYPE  &  key) {
+	bool Remove(const KEY_TYPE  &  key) {
 		return m_ht.Remove(key);
 	}
 

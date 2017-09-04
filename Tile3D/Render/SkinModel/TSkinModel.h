@@ -26,7 +26,14 @@ struct TSkinModelPhyfileHeader
 
 #pragma pack(pop)
 
+
+//TBD
+//1) skinmodel release logic
+//
+//
+//
 class TFile;
+class TSkeleton;
 class TSkinModel : public TObject
 {
 public:
@@ -48,6 +55,8 @@ public:
 	bool Load(const char * pFile, int skinFlag);
 	bool Load(TFile * pFile, int skinFlag);
 
+	TSkeleton* BindSkeleton(const char * skeletonFile);
+
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);
 
@@ -57,6 +66,8 @@ private:
 	TString m_phyFileName;	//Physique file name
 	int	m_modelID;			//Model ID
 	int m_version;			//File version
+
+	TSkeleton* m_pSkeleton;
 };
 
 

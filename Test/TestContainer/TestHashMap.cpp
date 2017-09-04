@@ -1,17 +1,17 @@
 #include "CppUnitTest.h"
-#include <Container/TTreeMap.h>
+#include <Container/THashMap.h>
 #include <time.h>
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace TestContainer
 {
-	TEST_CLASS(TestTreeMap)
+	TEST_CLASS(TestHashMap)
 	{
 	public:
-		TEST_METHOD(Map_Insert)
+		TEST_METHOD(HashMap_Ctor)
 		{
-			TTreeMap<int, int> tm;
-			tm.Insert(4, 5);
+			THashMap<int, int> tm;
+			tm.Put(2, 5);
 		}
 	};
 }

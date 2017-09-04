@@ -8,15 +8,15 @@ public:
 	THashSet() {}
 	~THashSet() {}
 
-	bool Put(KEY_TYPE & key) {
+	bool Put(const KEY_TYPE & key) {
 		return m_ht.Put(key, key);
 	}
 
-	VALUE_TYPE * Find(KEY_TYPE & key) {
+	VALUE_TYPE * Find(const KEY_TYPE & key) {
 		return m_ht.Find(key);
 	}
 
-	bool Remove(KEY_TYPE  &  key) {
+	bool Remove(const KEY_TYPE  &  key) {
 		return m_ht.Remove(key);
 	}
 

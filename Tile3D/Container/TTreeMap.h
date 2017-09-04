@@ -5,7 +5,7 @@
 template <typename KEY, typename VALUE> class TTreeMap
 {
 public:	
-	bool Insert(KEY & key, VALUE & value) {
+	bool Insert(const KEY & key, const VALUE & value) {
 		return tm.Insert(key, value);
 	}
 

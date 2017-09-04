@@ -77,7 +77,7 @@ public:
 	bool IsEmpty() { return m_count == 0; }
 
 	//Add the element at the tail
-	void Add(const T & element);
+	int Add(const T & element);
 
 	//Pop the element from the tail
 	void Pop();
@@ -148,7 +148,7 @@ private:
 	int m_capacity;
 };
 
-template<typename T> void TArray<T>::Add(const T & element)
+template<typename T> int TArray<T>::Add(const T & element)
 {
 	TAssert(m_count <= m_capacity);
 
@@ -156,7 +156,8 @@ template<typename T> void TArray<T>::Add(const T & element)
 	if (m_count == m_capacity) {
 		Resize();
 	}
-	m_data[m_count++] = element;
+	m_data[m_count] = element;
+	return m_count++;
 }
 
 template<typename T> void TArray<T>::Pop()

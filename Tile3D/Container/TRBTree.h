@@ -118,7 +118,7 @@ public:
 		return pNode->m_right;
 	}
 
-	bool InsertUnique(const KEY & key, const VALUE & value);
+	bool Insert(const KEY & key, const VALUE & value);
 
 	TRBTreeNode<KEY, VALUE>  * Find(const KEY & key);
 
@@ -223,7 +223,7 @@ template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::RightRotate(TRB
 	pNode->m_parent = pNode;
 }
 
-template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::InsertUnique(const KEY & key, const VALUE & value)
+template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::Insert(const KEY & key, const VALUE & value)
 {
 	TRBTreeNode<KEY, VALUE>* y = m_head;
 	TRBTreeNode<KEY, VALUE>* x = GetRoot();

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestArray.cpp" />
+    <ClCompile Include="TestHashMap.cpp" />
     <ClCompile Include="TestList.cpp" />
     <ClCompile Include="TestTreeMap.cpp" />
   </ItemGroup>
