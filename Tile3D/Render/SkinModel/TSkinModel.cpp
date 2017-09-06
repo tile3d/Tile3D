@@ -78,7 +78,7 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 
 
 
-
+	return true;
 }
 
 
@@ -93,5 +93,6 @@ TSkeleton* TSkinModel::BindSkeleton(const char * skeletonFile)
 	m_pSkeleton = pSkeleton;
 	m_pSkeleton->SetSkinModel(this);
 
-
+	return pSkeleton;
 }
+

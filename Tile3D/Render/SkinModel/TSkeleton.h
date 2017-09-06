@@ -2,6 +2,8 @@
 
 #include <Core/TObject.h>
 #include <Container/TString.h>
+#include <Container/TArray.h>
+
 
 #pragma pack(push, 1)
 struct TSkeletonFileHeader

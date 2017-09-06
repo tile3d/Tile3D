@@ -249,6 +249,15 @@
     <ClInclude Include="Core\TClassID.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkeletonTrack.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkeletonTrackData.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkeletonTrackMan.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -387,6 +396,15 @@
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSprintJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkeletonTrack.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkeletonTrackData.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkeletonTrackMan.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
   </ItemGroup>

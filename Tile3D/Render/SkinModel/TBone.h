@@ -2,6 +2,7 @@
 
 #include <Core/TObject.h>
 #include <Container/TArray.h>
+#include <Container/TString.h>
 #include <Math/TMatrix4.h>
 #include <Math/TQuaternion.h>
 

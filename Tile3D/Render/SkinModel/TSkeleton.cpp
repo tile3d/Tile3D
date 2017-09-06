@@ -6,7 +6,7 @@
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
 
-TSkeleton::TSkeleton() : TObject(CLASSID_SKELETON)
+TSkeleton::TSkeleton()
 {
 	m_version = 0;
 	m_animFPS = 0;
@@ -26,7 +26,7 @@ void TSkeleton::Release()
 
 bool TSkeleton::Save(TFile * pFile)
 {
-
+	return true;
 }
 
 bool TSkeleton::Load(TFile * pFile)
@@ -91,6 +91,7 @@ bool TSkeleton::Load(TFile * pFile)
 	}
 
 	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, load the skelethon from file=%s", pFile->GetRelativeFileName());
+	return true;
 }
 
 int TSkeleton::AddBone(TBone* pBone)
