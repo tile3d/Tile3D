@@ -12,6 +12,7 @@ TSkeletonTrack::TSkeletonTrack()
 	m_animEnd = 0;
 	m_animFPS = 0;
 	m_fileNameID = 0;
+	m_oldBonefile = false;
 }
 
 

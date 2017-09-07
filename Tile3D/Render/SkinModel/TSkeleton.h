@@ -23,8 +23,8 @@ struct TSkeletonFileHeader
 
 class TSkinModel;
 class TFile;
-class TBone;
-class TJoint;
+class TSkeletonBone;
+class TSkeletonJoint;
 class THook;
 class TSkeleton : public TObject
 {
@@ -42,8 +42,8 @@ public:
 	bool Load(TFile * pFile);
 	bool Save(TFile * pFile);
 
-	int AddBone(TBone* pBone);
-	int AddJoint(TJoint* pJoint);
+	int AddBone(TSkeletonBone* pBone);
+	int AddJoint(TSkeletonJoint* pJoint);
 
 	void SetSkinModel(TSkinModel * pSkinModel) {
 		m_pSkinModel = pSkinModel;
@@ -64,8 +64,8 @@ private:
 	TString m_filename;
 	TSkinModel * m_pSkinModel;
 
-	TArray<TBone*> m_bones;
-	TArray<TJoint*> m_joints;
+	TArray<TSkeletonBone*> m_bones;
+	TArray<TSkeletonJoint*> m_joints;
 	TArray<THook*> m_hooks;
 	TArray<int> m_rootBones;
 

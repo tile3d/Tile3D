@@ -1,10 +1,12 @@
-#include "TSkeleton.h"
-#include "TBone.h"
-#include "TJoint.h"
-#include "THook.h"
 #include <File/TFile.h>
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
+#include "TSkeleton.h"
+#include "TSkeletonBone.h"
+#include "TSkeletonJoint.h"
+#include "TSkeletonHook.h"
+#include "TSkeletonTrack.h"
+#include "TSkeletonTrackMan.h"
 
 TSkeleton::TSkeleton()
 {
@@ -51,11 +53,11 @@ bool TSkeleton::Load(TFile * pFile)
 
 	//Load the bones
 	for (int i = 0; i < header.m_boneNum; i++) {
-		TBone * pBone = new TBone();
+		TSkeletonBone * pBone = new TSkeletonBone();
 		pBone->Init(this);
 
 		if (!pBone->Load(pFile)) {
-			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the bone, filename=%s, boneindex=%d", pFile->GetRelativeFileName(), i);
+			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the bone, filename=%s, boneindex=%d", m_filename, i);
 			delete pBone;
 			return false;
 		}
@@ -66,35 +68,49 @@ bool TSkeleton::Load(TFile * pFile)
 	if (header.m_jointNum > 0) {
 		int* ids = new int[header.m_jointNum];
 		if (!pFile->Read(ids, header.m_jointNum*sizeof(int), &count) || count != header.m_jointNum*sizeof(int)) {
-			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join ids, filename=%s", pFile->GetRelativeFileName());
+			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join ids, filename=%s", m_filename);
 			delete[] ids;
 			return false;
 		}
 
+		//old version, load the skeleton track data from the bon file directly, new version store the track data under stck dir
+		TSkeletonTrack *pSkeletonTrack = nullptr;
 		if (header.m_version < 6) {
+			pSkeletonTrack = TSkeletonTrackMan::GetInstance()->LoadSkeletonTrack(m_skeletonID, m_filename, true);
+			if (pSkeletonTrack == nullptr) {
+				TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the skeleton track, old filename=%s", m_filename);
+				return false;
+			}
 
+			pSkeletonTrack->SetAnimFrameRange(header.m_animStart, header.m_animEnd);
+			pSkeletonTrack->SetAnimFPS(header.m_animFPS);
 		}
-		else {
-			for (int i = 0; i < header.m_jointNum; i++) {
-				TJoint * pJoint = TJoint::CreateJointByClassID(ids[i]);
-				pJoint->Init(this);
+		
+		for (int i = 0; i < header.m_jointNum; i++) {
+			TSkeletonJoint * pJoint = TSkeletonJoint::CreateJointByClassID(ids[i]);
+			pJoint->Init(this);
 
-				if (pJoint->Load(pFile)) {
-					delete pJoint;
-					TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join from the filename=%s", pFile->GetRelativeFileName());
-					return false;
-				}
-				AddJoint(pJoint);
+			if (pJoint->Load(pFile)) {
+				delete pJoint;
+				TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join from the filename=%s", m_filename);
+				return false;
+			}
+			AddJoint(pJoint);
+			if (header.m_version < 6) {
+				pSkeletonTrack->LoadBoneTrack(pFile, i);
 			}
 		}
+		
 		delete[] ids;
 	}
 
-	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, load the skelethon from file=%s", pFile->GetRelativeFileName());
+	//load the hooks
+
+	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, load the skelethon from file=%s", m_filename);
 	return true;
 }
 
-int TSkeleton::AddBone(TBone* pBone)
+int TSkeleton::AddBone(TSkeletonBone* pBone)
 {
 	int index = m_bones.Add(pBone);
 	if (pBone->GetParentIndex() < 0) {
@@ -103,7 +119,7 @@ int TSkeleton::AddBone(TBone* pBone)
 	return index;
 }
 
-int TSkeleton::AddJoint(TJoint * pJoint)
+int TSkeleton::AddJoint(TSkeletonJoint * pJoint)
 {
 	int index = m_joints.Add(pJoint);
 	return index;

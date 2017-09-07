@@ -34,6 +34,22 @@ public:
 	bool Save(const char* fileName);
 	bool Save(TFile * pFile);
 
+	void SetFileNameAndID(const char* fileName, int fileID) {
+		m_fileName = fileName;
+		m_fileNameID = fileID;
+	}
+
+	void SetBoneFile(bool oldBoneFile) { m_oldBonefile = oldBoneFile; }
+	const char * GetFileName() { return m_fileName; }
+
+	void SetAnimFrameRange(int start, int end) {
+		m_animStart = start;
+		m_animEnd = end;
+	}
+
+	void SetAnimFPS(int fps) {
+		m_animFPS = fps;
+	}
 
 private:
 	int m_version;
@@ -41,6 +57,7 @@ private:
 	int m_animEnd;
 	int m_animFPS;
 	int m_fileNameID;
+	bool m_oldBonefile;
 	TString m_fileName;
 	THashMap<int, TSkeletonTrackBone*> m_boneTracks;
 };

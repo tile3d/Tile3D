@@ -1,15 +1,15 @@
-#include "TJoint.h"
-#include "TAnimJoint.h"
-#include "TControllerJoint.h"
-#include "TSprintJoint.h"
-#include "TAxisSprintJoint.h"
+#include "TSkeletonJoint.h"
+#include "TSkeletonAnimJoint.h"
+#include "TSkeletonControllerJoint.h"
+#include "TSkeletonSprintJoint.h"
+#include "TSkeletonAxisSprintJoint.h"
 #include <Util/TAssert.h>
 #include <File/TFile.h>
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
 
 
-TJoint::TJoint()
+TSkeletonJoint::TSkeletonJoint()
 {
 	m_jointID = 0;
 	m_jointType = 0;
@@ -20,31 +20,31 @@ TJoint::TJoint()
 }
 
 
-TJoint::~TJoint()
+TSkeletonJoint::~TSkeletonJoint()
 {
 	m_pSkeleton = nullptr;
 }
 
-TJoint* TJoint::CreateJointByClassID(int classID)
+TSkeletonJoint* TSkeletonJoint::CreateJointByClassID(int classID)
 {
-	TJoint * pJoint = nullptr;
+	TSkeletonJoint * pJoint = nullptr;
 
 	switch (classID) 
 	{
 	case CLASSID_ANIMJOINT:
-		pJoint = new TAnimJoint();
+		pJoint = new TSkeletonAnimJoint();
 	break;
 
 	case CLASSID_CONTROLLEDJOINT:
-		pJoint = new TControllerJoint();
+		pJoint = new TSkeletonControllerJoint();
 	break;
 	
 	case CLASSID_SPRINGJOINT:
-		pJoint = new TSprintJoint();
+		pJoint = new TSkeletonSprintJoint();
 	break;
 	
 	case CLASSID_AXISSPRINGJOINT:
-		pJoint = new TAxisSprintJoint();
+		pJoint = new TSkeletonAxisSprintJoint();
 	break;
 
 	default:
@@ -54,26 +54,26 @@ TJoint* TJoint::CreateJointByClassID(int classID)
 	return pJoint;
 }
 
-TJoint* TJoint::CreateJointByType(int type)
+TSkeletonJoint* TSkeletonJoint::CreateJointByType(int type)
 {
-	TJoint * pJoint = nullptr;
+	TSkeletonJoint * pJoint = nullptr;
 
 	switch (type)
 	{
-	case TJoint::TJOINT_TYPE_ANIM:
-		pJoint = new TAnimJoint();
+	case TSkeletonJoint::TJOINT_TYPE_ANIM:
+		pJoint = new TSkeletonAnimJoint();
 		break;
 
-	case TJoint::TJOINT_TYPE_CONTROL:
-		pJoint = new TControllerJoint();
+	case TSkeletonJoint::TJOINT_TYPE_CONTROL:
+		pJoint = new TSkeletonControllerJoint();
 		break;
 
-	case TJoint::TJOINT_TYPE_SPRING:
-		pJoint = new TSprintJoint();
+	case TSkeletonJoint::TJOINT_TYPE_SPRING:
+		pJoint = new TSkeletonSprintJoint();
 		break;
 
-	case TJoint::TJOINT_TYPE_AXISSPRING:
-		pJoint = new TAxisSprintJoint();
+	case TSkeletonJoint::TJOINT_TYPE_AXISSPRING:
+		pJoint = new TSkeletonAxisSprintJoint();
 		break;
 
 	default:
@@ -83,7 +83,7 @@ TJoint* TJoint::CreateJointByType(int type)
 	return pJoint;
 }
 
-bool TJoint::Load(TFile * pFile)
+bool TSkeletonJoint::Load(TFile * pFile)
 {
 	if (!pFile->ReadString(m_jointName)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TJoint::Load,  Failed to read the joint name, filename=%s", pFile->GetRelativeFileName());
@@ -105,7 +105,7 @@ bool TJoint::Load(TFile * pFile)
 	return true;
 }
 
-bool TJoint::Save(TFile * pFile)
+bool TSkeletonJoint::Save(TFile * pFile)
 {
 	if (!pFile->WriteString(m_jointName)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TJoint::Load,  Failed to write the joint name, filename=%s", pFile->GetRelativeFileName());

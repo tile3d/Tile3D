@@ -1,26 +1,26 @@
-#include "TBone.h"
+#include "TSkeletonBone.h"
 #include "TSkeleton.h"
 #include <File/TFile.h>
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
 
 //TBD: init the property
-TBone::TBone()
+TSkeletonBone::TSkeletonBone()
 {
 	m_pSkeleton = nullptr;
 }
 
-TBone::~TBone()
+TSkeletonBone::~TSkeletonBone()
 {
 	Release();
 }
 
-void TBone::Release()
+void TSkeletonBone::Release()
 {
 
 }
 
-bool TBone::Load(TFile * pFile)
+bool TSkeletonBone::Load(TFile * pFile)
 {
 	if (!pFile->ReadString(m_boneName)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TBone::Load, failed to read the bone name filename=%s, bonename=%s", pFile->GetRelativeFileName(), m_boneName);
@@ -52,7 +52,7 @@ bool TBone::Load(TFile * pFile)
 	return true;
 }
 
-bool TBone::Save(TFile * pFile)
+bool TSkeletonBone::Save(TFile * pFile)
 {
 	if (!pFile->WriteString(m_boneName)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TBone::Save, failed to write the bone name filename=%s, bonename=%s", pFile->GetRelativeFileName(), m_boneName);
@@ -81,7 +81,7 @@ bool TBone::Save(TFile * pFile)
 	return true;
 }
 
-void TBone::SetRelativeTM(const TMatrix4 & mat)
+void TSkeletonBone::SetRelativeTM(const TMatrix4 & mat)
 {
 	m_relativeMat = mat;
 	if (IsFlipped()) {

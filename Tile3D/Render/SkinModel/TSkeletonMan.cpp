@@ -6,6 +6,8 @@
 #include <File/TFile.h>
 #include <File/TFileImage.h>
 
+
+//TBD: if multithread initiaze this in the same time, how to handle?
 TSkeleton* TSkeletonMan::LoadSkeleton(const char * skeletonFile)
 {
 	TSkeleton * pSkeleton = FindSkeletonByFile(skeletonFile);
@@ -46,14 +48,12 @@ TSkeleton* TSkeletonMan::FindSkeletonByFile(const char * skeletonFile)
 TSkeleton* TSkeletonMan::FindSkeletonByID(int skeletonFileID)
 {
 	m_lock.Lock();
-
 	TSkeleton ** pSkeleton = m_skeletons.Find(skeletonFileID);
+	m_lock.Unlock();
 	if (pSkeleton == nullptr) {
-		m_lock.Unlock();
 		return nullptr;
 	}
 	return *pSkeleton;
-	m_lock.Unlock();
 }
 
 TSkeleton * TSkeletonMan::CreateSkeleton(TFile * pFile)
@@ -66,7 +66,9 @@ TSkeleton * TSkeletonMan::CreateSkeleton(TFile * pFile)
 		return nullptr;
 	}
 
+	m_lock.Lock();
 	m_skeletons.Put(pSkeleton->GetSkeletonID(), pSkeleton);
+	m_lock.Unlock();
 	return pSkeleton;
 }
 

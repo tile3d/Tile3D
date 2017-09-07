@@ -19,7 +19,7 @@ struct TBoneData
 
 class TFile;
 class TSkeleton;
-class TBone : public TObject
+class TSkeletonBone : public TObject
 {
 public:
 	enum TBONE_FLAGS
@@ -30,8 +30,8 @@ public:
 
 
 public:
-	TBone();
-	~TBone();
+	TSkeletonBone();
+	~TSkeletonBone();
 
 	void Release();
 	void Init(TSkeleton * pSkeleton) {

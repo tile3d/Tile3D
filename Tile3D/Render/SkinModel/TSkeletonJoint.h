@@ -13,7 +13,7 @@ struct TJointData
 
 class TSkeleton;
 class TFile;
-class TJoint : public TObject
+class TSkeletonJoint : public TObject
 {
 public:
 	enum TJOINT_TYPE
@@ -25,8 +25,8 @@ public:
 	};
 
 public:
-	TJoint();
-	~TJoint();
+	TSkeletonJoint();
+	~TSkeletonJoint();
 
 	void Init(TSkeleton * pSkeleton) {
 		m_pSkeleton = pSkeleton;
@@ -35,8 +35,8 @@ public:
 	virtual bool Load(TFile* pFile);
 	virtual bool Save(TFile* pFile);
 
-	static TJoint* CreateJointByClassID(int classID);
-	static TJoint* CreateJointByType(int type);
+	static TSkeletonJoint* CreateJointByClassID(int classID);
+	static TSkeletonJoint* CreateJointByType(int type);
 
 private:
 	TSkeleton * m_pSkeleton;

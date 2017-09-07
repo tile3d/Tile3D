@@ -7,7 +7,7 @@
 //Skeleton Cache(TBD)
 //1) need test the skeleton cache memory consumption
 //2) how to release the skeleton memory(skinmodel or skeletonman?)
-//
+//3) lock (how to lock)
 class TSkeleton;
 class TFile;
 class TSkeletonMan

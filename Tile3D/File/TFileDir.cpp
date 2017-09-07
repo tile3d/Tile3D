@@ -520,6 +520,9 @@ static const unsigned long CRC32Table[] =
 	0x2d02ef8dL
 };
 
+//how to guarnteen diferent filename have different filenames
+//if cannot guarantee this, we should check this for all the pck files?
+//
 int TFileDir::GetIDFromFileName(const char* fileName)
 {
 	TAssert(fileName);
