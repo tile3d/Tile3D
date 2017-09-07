@@ -19,7 +19,7 @@ struct TSkeletonTrackSegement
 	int m_endKey;
 };
 
-class TSkeletonTrackData
+template<typename T> class TSkeletonTrackData
 {
 public:
 	enum TRACKDATA_COMPRESS_ALGO
@@ -34,11 +34,17 @@ public:
 		m_segmentNum = 0;
 		m_segments = nullptr;
 		m_keyFrameIDs = nullptr;
+		m_keyFrames = nullptr;
 		m_trackLength = 0;
 		m_trackDataCompAlgorithm = TRACKDATA_COMPRESS_REMOVE_RAWDATA;
 	}
 
 	~TSkeletonTrackData() {
+		if (m_keyFrames) {
+			delete[] m_keyFrames;
+			m_keyFrames = nullptr;
+		}
+
 		if (m_segments) {
 			delete[] m_segments;
 			m_segments = nullptr;
@@ -50,7 +56,7 @@ public:
 		}
 	}
 
-	virtual bool LoadBoneTrackPos(TFile * pFile, int bone_id, int version) { return true; }
+	virtual bool LoadBoneTrackData(TFile * pFile, int bone_id, int version);
 
 public:
 	int m_frameRate;
@@ -60,6 +66,7 @@ public:
 	int m_trackEndKeyID;
 	int m_trackDataCompAlgorithm;
 
+	T * m_keyFrames;
 	TSkeletonTrackSegement * m_segments;
 	unsigned short * m_keyFrameIDs;
 
@@ -67,43 +74,24 @@ public:
 };
 
 
-class TSkeletonTrackDataPos : public TSkeletonTrackData
+class TSkeletonTrackDataPos : public TSkeletonTrackData<TVector3>
 {
 public:
 	TSkeletonTrackDataPos() {
-		m_keyFrames = nullptr;
 	}
 
 	~TSkeletonTrackDataPos() {
-		if (m_keyFrames) {
-			delete[] m_keyFrames;
-			m_keyFrames = nullptr;
-		}
 	}
 
-	virtual bool LoadBoneTrackPos(TFile * pFile, int bone_id, int version);
-
-public:
-	TVector3* m_keyFrames;
 };
 
-class TSkeletonTrackDataRot : public TSkeletonTrackData
+class TSkeletonTrackDataRot : public TSkeletonTrackData<TQuaternion>
 {
 public:
 	TSkeletonTrackDataRot() {
-		m_keyFrames = nullptr;
 	}
 
 	~TSkeletonTrackDataRot() {
-		if (m_keyFrames) {
-			delete[] m_keyFrames;
-			m_keyFrames = nullptr;
-		}
 	}
-
-	virtual bool LoadBoneTrackPos(TFile * pFile, int bone_id, int version);
-
-public:
-	TQuaternion* m_keyFrames;
 };
 

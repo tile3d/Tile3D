@@ -42,7 +42,7 @@ private:
 	int m_animFPS;
 	int m_fileNameID;
 	TString m_fileName;
-	THashMap<int, TSkeletonTrackBone> m_boneTracks;
+	THashMap<int, TSkeletonTrackBone*> m_boneTracks;
 };
 
 

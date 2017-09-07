@@ -2,7 +2,7 @@
 #include <File/TFileImage.h>
 #include <Util/TLog.h>
 
-bool TSkeletonTrackDataPos::LoadBoneTrackPos(TFile * pFile, int bone_id, int version)
+template<typename T> bool TSkeletonTrackData<T>::LoadBoneTrackData(TFile * pFile, int bone_id, int version)
 {
 	TSkeletonTrackDataHeader data;
 	int count;
@@ -12,7 +12,7 @@ bool TSkeletonTrackDataPos::LoadBoneTrackPos(TFile * pFile, int bone_id, int ver
 	}
 	m_frameRate = data.m_frameRate;
 	m_keyNum = data.m_keyNum;
-	m_keyFrames = new TVector3[data.m_keyNum];
+	m_keyFrames = new T[data.m_keyNum];
 	m_segmentNum = data.m_segmentNum;
 	if (data.m_segmentNum > 0) {
 		m_segments = new TSkeletonTrackSegement[data.m_segmentNum];

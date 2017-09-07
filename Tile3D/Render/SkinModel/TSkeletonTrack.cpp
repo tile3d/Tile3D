@@ -90,17 +90,21 @@ bool TSkeletonTrack::Load(TFile * pFile)
 bool TSkeletonTrack::LoadBoneTrack(TFile * pFile, int bone_id)
 {
 	TSkeletonTrackDataPos * pPosTrack = new TSkeletonTrackDataPos;
-	if (!pPosTrack->LoadBoneTrackPos(pFile, bone_id, m_version)) {
+	if (!pPosTrack->LoadBoneTrackData(pFile, bone_id, m_version)) {
 		delete pPosTrack;
 		return false;
 	}
 
 	TSkeletonTrackDataRot * pRotTrack = new TSkeletonTrackDataRot;
-	if (!pRotTrack->LoadBoneTrackPos(pFile, bone_id, m_version)) {
+	if (!pRotTrack->LoadBoneTrackData(pFile, bone_id, m_version)) {
 		delete pRotTrack;
 		return false;
 	}
-	
+
+	TSkeletonTrackBone* pTrackBone = new TSkeletonTrackBone;
+	pTrackBone->m_pPosTrack = pPosTrack;
+	pTrackBone->m_pRotTrack = pRotTrack;
+	m_boneTracks.Put(bone_id, pTrackBone);
 	return true;
 }
 
