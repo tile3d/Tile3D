@@ -213,9 +213,12 @@ public:
 	void Clear();
 	//	Set matrix to identity matrix
 	void Identity();
+	bool IsIdentity() const;
+
 	//	Transpose matrix
 	void Transpose();
 
+	
 	//	Get transpose matrix of this matrix
 	TMatrix4 GetTranspose() const;
 	//	Inverse matrix (used only by transform matrix)

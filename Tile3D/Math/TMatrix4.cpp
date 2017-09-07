@@ -140,6 +140,13 @@ void TMatrix4::Identity()
 	m_mat[0][0] = m_mat[1][1] = m_mat[2][2] = m_mat[3][3] = 1.0f;
 }
 
+bool TMatrix4::IsIdentity() const
+{
+	TMatrix4 mat;
+	mat.Identity();
+	return *this == mat;
+}
+
 //	Transpose matrix
 void TMatrix4::Transpose()
 {

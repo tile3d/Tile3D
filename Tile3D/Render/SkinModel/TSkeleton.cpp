@@ -1,18 +1,20 @@
-#include <File/TFile.h>
-#include <File/TFileDir.h>
-#include <Util/TLog.h>
 #include "TSkeleton.h"
 #include "TSkeletonBone.h"
 #include "TSkeletonJoint.h"
 #include "TSkeletonHook.h"
 #include "TSkeletonTrack.h"
 #include "TSkeletonTrackMan.h"
+#include <File/TFile.h>
+#include <File/TFileDir.h>
+#include <Util/TLog.h>
+#include <Util/TAssert.h>
 
 TSkeleton::TSkeleton()
 {
 	m_version = 0;
 	m_animFPS = 0;
 	m_skeletonID = 0;
+	m_refBone = 0;
 	m_pSkinModel = nullptr;
 }
 
@@ -105,8 +107,17 @@ bool TSkeleton::Load(TFile * pFile)
 	}
 
 	//load the hooks
+	for (int i = 0; i < header.m_hookNum; i++) {
+		TSkeletonHook * pHook = new TSkeletonHook(this);
+		if (pHook->Load(pFile)) {
+			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the hooks, filename=%s", m_filename);
+			return false;
+		}
+		AddHook(pHook);
+	}
 
-	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, load the skelethon from file=%s", m_filename);
+	FindRefBone();
+	TLog::Log(LOG_DEBUG, "SkinModel", "TSkeleton::Load, sucessfully load the skelethon from file=%s", m_filename);
 	return true;
 }
 
@@ -121,9 +132,41 @@ int TSkeleton::AddBone(TSkeletonBone* pBone)
 
 int TSkeleton::AddJoint(TSkeletonJoint * pJoint)
 {
-	int index = m_joints.Add(pJoint);
-	return index;
+	return m_joints.Add(pJoint);
 }
 
+int TSkeleton::AddHook(TSkeletonHook * pHook)
+{
+	return m_hooks.Add(pHook);
+}
 
+//	Find a reference bone which be used to translate bound boxes or mesh centers
+bool TSkeleton::FindRefBone()
+{
+	TAssert(m_rootBones.Size());
 
+	//	Find a root boot
+	for (int i = 0; i < m_rootBones.Size(); i++)
+	{
+		int boneIndex = m_rootBones[i];
+		TSkeletonBone* pBone = m_bones[boneIndex];
+
+		if (!pBone->GetBoneInitTM().IsIdentity())
+		{
+			m_refBone = boneIndex;
+			return true;
+		}
+
+		for (int j = 0; j < pBone->GetChildNum(); j++)
+		{
+			TSkeletonBone* pChild = pBone->GetChildPtr(j);
+			if (pChild->GetBoneInitTM().IsIdentity())
+			{
+				m_refBone = pBone->GetChild(j);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

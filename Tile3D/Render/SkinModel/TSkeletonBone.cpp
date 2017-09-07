@@ -96,3 +96,7 @@ void TSkeletonBone::SetRelativeTM(const TMatrix4 & mat)
 	}
 }
 
+TSkeletonBone* TSkeletonBone::GetChildPtr(int index)
+{
+	return m_pSkeleton->GetBone(GetChild(index));
+}

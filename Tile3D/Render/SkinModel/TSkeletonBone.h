@@ -47,6 +47,12 @@ public:
 	bool IsFlipped() { return (m_flags & TBONE_FLAGS_FLIPPED) ? true : false; }
 
 	int GetParentIndex() { return m_parentIndex; }
+	const TMatrix4& GetBoneInitTM() { return m_boneInitMat; }
+
+	int GetChildNum() { return m_childrens.Size(); }
+	int GetChild(int index) { return m_childrens[index]; }
+	TSkeletonBone* GetChildPtr(int index);
+
 private:
 	int m_boneID;
 	char m_flags;

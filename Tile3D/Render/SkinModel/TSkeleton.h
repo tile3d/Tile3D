@@ -25,7 +25,7 @@ class TSkinModel;
 class TFile;
 class TSkeletonBone;
 class TSkeletonJoint;
-class THook;
+class TSkeletonHook;
 class TSkeleton : public TObject
 {
 public:
@@ -44,13 +44,19 @@ public:
 
 	int AddBone(TSkeletonBone* pBone);
 	int AddJoint(TSkeletonJoint* pJoint);
+	int AddHook(TSkeletonHook* pHook);
+
+	TSkeletonBone* GetBone(int index) { return m_bones[index]; }
+	TSkeletonJoint* GetJoint(int index) { return m_joints[index]; }
+	TSkeletonHook* GetHook(int index) { return m_hooks[index]; }
 
 	void SetSkinModel(TSkinModel * pSkinModel) {
 		m_pSkinModel = pSkinModel;
 	}
 
 	int GetSkeletonID() const { return m_skeletonID; }
-	
+	bool FindRefBone();
+
 	TSkeleton * Clone();
 
 
@@ -61,14 +67,17 @@ private:
 	int m_version;
 	int m_animFPS;
 	int m_skeletonID;
+	int m_refBone;				//	Reference bone
+
 	TString m_filename;
 	TSkinModel * m_pSkinModel;
 
 	TArray<TSkeletonBone*> m_bones;
 	TArray<TSkeletonJoint*> m_joints;
-	TArray<THook*> m_hooks;
+	TArray<TSkeletonHook*> m_hooks;
+
 	TArray<int> m_rootBones;
-
-
 };
+
+
 
