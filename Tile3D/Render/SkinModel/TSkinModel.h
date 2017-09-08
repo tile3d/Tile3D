@@ -34,6 +34,7 @@ struct TSkinModelPhyfileHeader
 //
 class TFile;
 class TSkeleton;
+class TSkin;
 class TSkinModel : public TObject
 {
 public:
@@ -45,6 +46,12 @@ public:
 		SKINPHY_VERSION = 1
 	};
 
+	enum SKIN_LOAD_FLAG
+	{
+		SKIN_LOAD_DEFAULT,	//Load Skin By Skin Manager
+		SKIN_LOAD_NOSKIN,	//Don't load skin
+		SKIN_LOAD_UNIQUESKIN,	//Load a unique skin
+	};
 
 	TSkinModel();
 	virtual ~TSkinModel();
@@ -55,7 +62,8 @@ public:
 	bool Load(const char * pFile, int skinFlag);
 	bool Load(TFile * pFile, int skinFlag);
 
-	TSkeleton* BindSkeleton(const char * skeletonFile);
+	TSkeleton* LoadSkeleton(const char * skeletonFile);
+	TSkin * LoadSkin(const char* skinFile, bool autoFree);
 
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);

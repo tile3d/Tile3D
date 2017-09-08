@@ -1,6 +1,7 @@
 #include "TSkinModel.h"
 #include "TSkeleton.h"
 #include "TSkeletonMan.h"
+#include "TSkinMan.h"
 #include <Util/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>
@@ -71,22 +72,50 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 		return false;
 	}
 
-	if (BindSkeleton(bonFile)) {
+	if (LoadSkeleton(bonFile)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  failed to load the skeleton, skeleton file=%s", bonFile);
 		return false;
 	}
 
+	TString skinFile;
+	for (int i = 0; i < header.m_numSkin; i++) {
+		pFile->ReadString(skinFile);
+		if (skinFlag == SKIN_LOAD_NOSKIN) {
+			continue;
+		}
 
+		if (skinFile.GetLength() > 0) {
+			if (filePath.GetLength() > 0) {
+				skinFile = filePath + "\\" + bonFile;
+			}
+		}
+
+		if (skinFile.GetLength() <= 0) {
+			TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  Invalid skin file [%s].", pFile->GetFileName());
+			return false;
+		}
+
+		if (skinFlag == SKIN_LOAD_DEFAULT) {
+			if (!LoadSkin(skinFile, false)) {
+				TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  fail to load the skin file [%s].", skinFile);
+			}
+		}
+		else if (skinFlag == SKIN_LOAD_UNIQUESKIN) {
+			if (!LoadSkin(skinFile, true)) {
+				TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  fail to load the unique skin file [%s].", skinFile);
+			}
+		}
+	}
 
 	return true;
 }
 
 
-TSkeleton* TSkinModel::BindSkeleton(const char * skeletonFile)
+TSkeleton* TSkinModel::LoadSkeleton(const char * skeletonFile)
 {
 	TSkeleton * pSkeleton = TSkeletonMan::GetInstance()->LoadSkeleton(skeletonFile);
 	if (pSkeleton == nullptr) {
-		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::BindSkeleton,  failed to load the skeleton, skeleton file=%s", skeletonFile);
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::LoadSkeleton,  failed to load the skeleton, skeleton file=%s", skeletonFile);
 		return false;
 	}
 
@@ -96,3 +125,14 @@ TSkeleton* TSkinModel::BindSkeleton(const char * skeletonFile)
 	return pSkeleton;
 }
 
+TSkin * TSkinModel::LoadSkin(const char* skinFile, bool autoFree)
+{
+	TSkin * pSkin = TSkinMan::GetInstance()->LoadSkin(skinFile, autoFree);
+	if (pSkin == nullptr) {
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::LoadSkin,  failed to load the skin, skin file=%s", skinFile);
+		return false;
+	}
+
+
+	return pSkeleton;
+}

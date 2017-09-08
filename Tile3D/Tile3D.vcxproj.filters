@@ -258,6 +258,9 @@
     <ClInclude Include="Render\SkinModel\TSkeletonSprintJoint.h">
       <Filter>Render\SkinModel</Filter>
     </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinMeshMan.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -405,6 +408,9 @@
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkeletonSprintJoint.cpp">
+      <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinMeshMan.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
   </ItemGroup>

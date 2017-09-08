@@ -189,6 +189,7 @@
     <ClInclude Include="Render\SkinModel\TSkin.h" />
     <ClInclude Include="Render\SkinModel\TSkinMan.h" />
     <ClInclude Include="Render\SkinModel\TSkinMesh.h" />
+    <ClInclude Include="Render\SkinModel\TSkinMeshMan.h" />
     <ClInclude Include="Render\SkinModel\TSkinModel.h" />
     <ClInclude Include="Render\SkinModel\TSkinModelMan.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonSprintJoint.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="Render\SkinModel\TSkin.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinMesh.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinMeshMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinModel.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinModelMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonSprintJoint.cpp" />
