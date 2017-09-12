@@ -28,6 +28,7 @@ struct TSkinHeader
 
 class TFile;
 class TSkinMesh;
+class TMaterial;
 class TSkin : public TObject
 {
 public:
@@ -58,5 +59,6 @@ private:
 	TArray<TString> m_boneNames;
 
 	TArray<TSkinMesh*> m_skinMeshs;
+	TArray<TMaterial*> m_materials;
 };
 

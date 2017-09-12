@@ -68,12 +68,19 @@ public:
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);
 
+	TSkinModel * Clone();
+
+	int GetSkinModelID() { return m_modelID; }
 private:
+	int	m_modelID;			//Model ID
+	int m_version;			//File version
+	int m_numSkin;			//skin num
+	int m_numAction;		//action num
+	int m_numHanger;		//hanger num
+	int m_numProp;			//prop num
 
 	TString m_fileName;		//Model file name
 	TString m_phyFileName;	//Physique file name
-	int	m_modelID;			//Model ID
-	int m_version;			//File version
 
 	TSkeleton* m_pSkeleton;
 };

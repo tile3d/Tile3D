@@ -40,6 +40,12 @@
     <Filter Include="Render\SkinModel">
       <UniqueIdentifier>{7eeaf4a9-35ed-4c9e-b4c4-ba94b34dc9cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Texture">
+      <UniqueIdentifier>{f4a0d5ec-2da4-47e9-8a09-1261c3308d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Material">
+      <UniqueIdentifier>{18894c14-a54b-4253-8e4f-dd00fbb4b6b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -261,6 +267,12 @@
     <ClInclude Include="Render\SkinModel\TSkinMeshMan.h">
       <Filter>Render\SkinModel</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Material\TMaterial.h">
+      <Filter>Render\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\TColor.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -412,6 +424,9 @@
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkinMeshMan.cpp">
       <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Material\TMaterial.cpp">
+      <Filter>Render\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

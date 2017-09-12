@@ -42,8 +42,10 @@ public:
 	~TSkinMesh();
 
 	void Release();
-	bool Load(TFile * pFile, TSkin* pSkin, int skinVersion);
+	bool Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum, int skinVersion);
 
+	TSkinMesh * Clone();
+	int GetSkinMeshID() { return m_skinMeshID; }
 private:
 	TString m_skinMeshName;
 
@@ -51,7 +53,8 @@ private:
 	int m_materialIndex;	//Material Index
 	int m_vertNums;			//vertex numbers
 	int m_indexNums;		//index numbers
-
+	int m_skinIndex;		//skin index
+	int m_skinMeshID;		//skin mesh ID
 	TSkinMeshVertex * m_verts;
 	TSkinMeshVertexTangent * m_tangentVerts;
 	unsigned short * m_indices;

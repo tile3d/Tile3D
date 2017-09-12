@@ -1,11 +1,20 @@
 #include "TSkinMesh.h"
 #include <File/TFile.h>
+#include <File/TFileDir.h>
 #include <Util/TLog.h>
 #include <Math/TVector3.h>
 
 TSkinMesh::TSkinMesh()
 {
-
+	m_textureIndex = 0;
+	m_materialIndex = 0;
+	m_vertNums = 0;
+	m_indexNums = 0;
+	m_skinIndex = 0;
+	m_skinMeshID = 0;
+	m_verts = nullptr;
+	m_tangentVerts = nullptr;
+	m_indices = nullptr;
 }
 
 TSkinMesh::~TSkinMesh()
@@ -32,7 +41,7 @@ void TSkinMesh::Release()
 }
 
 
-bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinVersion)
+bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum,  int skinVersion)
 {
 	if (!pFile->ReadString(m_skinMeshName)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinMesh::Load,  Failed to read the skinmesh name: [%s].", pFile->GetRelativeFileName());
@@ -51,6 +60,8 @@ bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinVersion)
 	m_materialIndex = header.m_materialIndex;
 	m_vertNums = header.m_vertNums;
 	m_indexNums = header.m_indexNums;
+	m_skinIndex = skinIndex;
+	m_skinMeshID = TFileDir::GetInstance()->GetIDFromFileName(pFile->GetRelativeFileName());
 
 	//create the vertex buffer
 	if (m_vertNums > 0) {

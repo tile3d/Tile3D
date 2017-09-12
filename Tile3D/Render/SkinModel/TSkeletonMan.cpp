@@ -62,7 +62,7 @@ TSkeleton * TSkeletonMan::CreateSkeleton(TFile * pFile)
 
 	if (!pSkeleton->Load(pFile)) {
 		delete pSkeleton;
-		TLog::Log(LOG_ERR, "SkinModel", "TSkeletonMan::CreateSkeleton,  Failed to create the skeleton: [%s].", pFile->GetRelativeFileName());
+		TLog::Log(LOG_ERR, "SkinModel", "TSkeletonMan::CreateSkeleton,  Failed to load the skeleton: [%s].", pFile->GetRelativeFileName());
 		return nullptr;
 	}
 

@@ -9,7 +9,13 @@
 
 TSkinModel::TSkinModel()
 {
-
+	m_modelID = 0;
+	m_version = 0;
+	m_numSkin = 0;
+	m_numAction = 0;
+	m_numHanger = 0;
+	m_numProp = 0;
+	m_pSkeleton = nullptr;
 }
 
 
@@ -18,6 +24,10 @@ TSkinModel::~TSkinModel()
 
 }
 
+TSkinModel* TSkinModel::Clone()
+{
+	return this;
+}
 
 bool TSkinModel::Load(const char * pFile, int skinFlag)
 {
@@ -57,6 +67,10 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 	m_fileName = pFile->GetRelativeFileName();
 	m_modelID = TFileDir::GetInstance()->GetIDFromFileName(m_fileName);
 	m_version = header.m_version;
+	m_numSkin = header.m_numSkin;
+	m_numAction = header.m_numAction;
+	m_numHanger = header.m_numHanger;
+	m_numProp = header.m_numProp;
 
 	TString bonFile, filePath;
 	TFileDir::GetInstance()->GetFilePath(pFile->GetRelativeFileName(), filePath);
@@ -72,11 +86,13 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 		return false;
 	}
 
+	//Load the skeleton
 	if (LoadSkeleton(bonFile)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  failed to load the skeleton, skeleton file=%s", bonFile);
 		return false;
 	}
 
+	//Load the skins
 	TString skinFile;
 	for (int i = 0; i < header.m_numSkin; i++) {
 		pFile->ReadString(skinFile);
@@ -127,12 +143,12 @@ TSkeleton* TSkinModel::LoadSkeleton(const char * skeletonFile)
 
 TSkin * TSkinModel::LoadSkin(const char* skinFile, bool autoFree)
 {
-	TSkin * pSkin = TSkinMan::GetInstance()->LoadSkin(skinFile, autoFree);
+	TSkin * pSkin = TSkinMan::GetInstance()->LoadSkin(skinFile);
 	if (pSkin == nullptr) {
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::LoadSkin,  failed to load the skin, skin file=%s", skinFile);
 		return false;
 	}
 
 
-	return pSkeleton;
+	return pSkin;
 }

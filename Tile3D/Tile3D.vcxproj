@@ -164,6 +164,7 @@
     <ClInclude Include="File\TPackageMan.h" />
     <ClInclude Include="File\TScriptFile.h" />
     <ClInclude Include="Math\TAABBBox.h" />
+    <ClInclude Include="Math\TColor.h" />
     <ClInclude Include="Math\TMathUtil.h" />
     <ClInclude Include="Math\TMatrix.h" />
     <ClInclude Include="Math\TMatrix3.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
+    <ClInclude Include="Render\Material\TMaterial.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAxisSprintJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAnimJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonBone.h" />
@@ -231,6 +233,7 @@
     <ClCompile Include="Math\TRotator.cpp" />
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
+    <ClCompile Include="Render\Material\TMaterial.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAxisSprintJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAnimJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonBone.cpp" />

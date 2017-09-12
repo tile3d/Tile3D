@@ -1,7 +1,9 @@
 #include "TSkin.h"
+#include "TSkinMeshMan.h"
 #include <File/TFile.h>
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
+#include <Render/Material/TMaterial.h>
 
 //TBD
 TSkin::TSkin()
@@ -33,12 +35,12 @@ bool TSkin::Load(TFile* pFile)
 	m_skinFileName = pFile->GetRelativeFileName();
 	m_skinID = TFileDir::GetInstance()->GetIDFromFileName(m_skinFileName);
 	m_minWeight = header.m_minWeight;
-	m_skinBoneNum = header.m_boneNum;
+	m_skinBoneNum = header.m_skinBoneNum;
 
 	//load the bone names
-	if (header.m_version >= 9 && header.m_boneNum > 0) {
-		m_boneNames.Reserve(header.m_boneNum);
-		for (int i = 0; i < header.m_boneNum; i++) {
+	if (header.m_version >= 9 && header.m_skinBoneNum > 0) {
+		m_boneNames.Reserve(header.m_skinBoneNum);
+		for (int i = 0; i < header.m_skinBoneNum; i++) {
 			TString boneName;
 			pFile->ReadString(boneName);
 			m_boneNames.Add(boneName);
@@ -51,26 +53,38 @@ bool TSkin::Load(TFile* pFile)
 	}
 
 	//load the materials
-	if (header.m_materialNum > 0) {
+	for (int i = 0;  i < header.m_materialNum; i++) {
+		TMaterial * pMaterial = new TMaterial;
+		if (!pMaterial->Load(pFile)) {
+			return false;
+		}
 
+		TColor c = pMaterial->GetAmbient();
+		pMaterial->SetAmbient(c.m_r, c.m_g, c.m_b, 0);
+
+		c = pMaterial->GetEmissive();
+		pMaterial->SetEmissive(c.m_r, c.m_g, c.m_b, 0);
+		m_materials.Add(pMaterial);
 	}
 
 
 	//load the skin meshes
-	if (header.m_skinMeshNum > 0) {
-		for (int i = 0; i < header.m_skinMeshNum; i++) {
-			TSkinMesh * pMesh = TSkinMeshMan::GetInstance()->LoadSkinMesh(pFile, this, TSKINMESH_CID_SKINMESH, i, header.m_skinMeshNum, header.m_version);
-			if (pMesh == nullptr) {
-				TLog::Log(LOG_ERR, "SkinModel", "TSkin::Load, fail to load the skin mesh, filename=%s, index=%d, total=%d", m_skinFileName, i, header.m_skinMeshNum);
-				return false;
-			}
+	for (int i = 0; i < header.m_skinMeshNum; i++) {
+		TSkinMesh * pMesh = TSkinMeshMan::GetInstance()->LoadSkinMesh(pFile, this,  i, header.m_skinMeshNum, header.m_version);
+		if (pMesh == nullptr) {
+			TLog::Log(LOG_ERR, "SkinModel", "TSkin::Load, fail to load the skin mesh, filename=%s, index=%d, total=%d", m_skinFileName, i, header.m_skinMeshNum);
+			return false;
 		}
+		m_skinMeshs.Add(pMesh);
 	}
+
+
+	return true;
 }
 
 bool TSkin::Save(TFile* pFile)
 {
-
+	return true;
 }
 
 TSkin* TSkin::Clone()

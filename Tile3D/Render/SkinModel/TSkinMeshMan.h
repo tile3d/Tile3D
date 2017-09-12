@@ -3,8 +3,9 @@
 #include <Container/THashMap.h>
 #include <Core/Lock/TMutexLock.h>
 
-class TSkinMesh;
 class TFile;
+class TSkin;
+class TSkinMesh;
 class TSkinMeshMan
 {
 public:
@@ -13,13 +14,14 @@ public:
 		return &skinmeshman;
 	}
 
-	TSkinMesh* LoadSkinMesh(const char * skinFile);
-	TSkinMesh* LoadSkinMesh(TFile * pFile);
+	TSkinMesh* LoadSkinMesh(const char * fileName, TSkin* pSkin, int skinIndex, int skinNum, int skinVersion);
+	TSkinMesh* LoadSkinMesh(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum, int skinVersion);
 
 private:
-	TSkinMesh* FindSkinByFile(const char * skinFile);
-	TSkinMesh* FindSkinByID(int skeletonFileID);
-	TSkinMesh * CreateSkin(TFile * pFile);
+	TSkinMesh* FindSkinMeshByFile(const char * skinFile);
+	TSkinMesh* FindSkinMeshByFile(TFile * skinFile);
+	TSkinMesh* FindSkinMeshByID(int skeletonFileID);
+	TSkinMesh * CreateSkinMesh(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum, int skinVersion);
 
 private:
 	THashMap<int, TSkinMesh*> m_skinMeshs;
