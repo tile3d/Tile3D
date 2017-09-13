@@ -40,6 +40,10 @@ void TSkinMesh::Release()
 	}
 }
 
+TSkinMesh * TSkinMesh::Clone()
+{
+	return this;
+}
 
 bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum,  int skinVersion)
 {

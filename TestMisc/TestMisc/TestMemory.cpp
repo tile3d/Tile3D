@@ -28,7 +28,7 @@ private:
 };
 
 
-int main()
+int main2()
 {
 	TestCtor * p1 = new TestCtor;
 	delete p1;

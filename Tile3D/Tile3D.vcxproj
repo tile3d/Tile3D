@@ -244,7 +244,6 @@
     <ClCompile Include="Render\SkinModel\TSkeleton.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonTrack.cpp" />
-    <ClCompile Include="Render\SkinModel\TSkeletonTrackData.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonTrackMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkin.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinMan.cpp" />

@@ -148,6 +148,7 @@
     <ClCompile Include="TestMemoryLeak.cpp" />
     <ClCompile Include="TestMemory.cpp" />
     <ClCompile Include="TestPCK.cpp" />
+    <ClCompile Include="TestSkinMeshLoad.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

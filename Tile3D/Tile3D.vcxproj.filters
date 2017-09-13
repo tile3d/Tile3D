@@ -398,9 +398,6 @@
     <ClCompile Include="Render\SkinModel\TSkeletonTrack.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
-    <ClCompile Include="Render\SkinModel\TSkeletonTrackData.cpp">
-      <Filter>Render\SkinModel</Filter>
-    </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkeletonTrackMan.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>

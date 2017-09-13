@@ -210,3 +210,9 @@ TSkin * TSkinModel::LoadSkin(const char* skinFile, bool autoFree)
 
 	return pSkin;
 }
+
+THanger * TSkinModel::LoadHanger(TFile * pFile)
+{
+	return nullptr;
+}
+

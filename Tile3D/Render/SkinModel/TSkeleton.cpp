@@ -28,6 +28,11 @@ void TSkeleton::Release()
 
 }
 
+TSkeleton* TSkeleton::Clone()
+{
+	return this;
+}
+
 bool TSkeleton::Save(TFile * pFile)
 {
 	return true;

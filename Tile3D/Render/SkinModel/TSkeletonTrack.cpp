@@ -128,3 +128,7 @@ bool TSkeletonTrack::Save(const char* fileName)
 	return true;
 }
 
+bool TSkeletonTrack::Save(TFile * pFile)
+{
+	return true;
+}
