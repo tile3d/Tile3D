@@ -2,6 +2,7 @@
 #include "TSkeleton.h"
 #include "TSkeletonMan.h"
 #include "TSkinMan.h"
+#include "TSkinModelAction.h"
 #include <Util/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>
@@ -111,18 +112,75 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 			return false;
 		}
 
+		TSkin * pSkin = nullptr;
 		if (skinFlag == SKIN_LOAD_DEFAULT) {
-			if (!LoadSkin(skinFile, false)) {
+			if ((pSkin = LoadSkin(skinFile, false)) == nullptr) {
 				TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  fail to load the skin file [%s].", skinFile);
 			}
 		}
 		else if (skinFlag == SKIN_LOAD_UNIQUESKIN) {
-			if (!LoadSkin(skinFile, true)) {
+			if ((pSkin = LoadSkin(skinFile, true)) == nullptr) {
 				TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  fail to load the unique skin file [%s].", skinFile);
 			}
 		}
+		m_skins.Add(pSkin);
 	}
 
+
+	//Load the physique
+	TString phyFile;
+	pFile->ReadString(phyFile);
+	m_phyFileName = phyFile;
+
+	//TBD
+	if (header.m_version < 8) {
+
+	}
+	else {
+		TString tckDirName;
+		pFile->ReadString(tckDirName);
+		m_tckDirName = tckDirName;
+	}
+
+	TString tckPathName;
+	if (m_tckDirName.GetLength() > 0 && filePath.GetLength() > 0) {
+		tckPathName.Format("%s\\%s", filePath, m_tckDirName);
+	}
+	else if (filePath.GetLength() > 0) {
+		tckPathName = filePath;
+	}
+	else {
+		tckPathName = m_tckDirName;
+	}
+
+	//Load all the action frame data
+	for (int i = 0; i < header.m_numAction; i++) {
+		TSkinModelAction * pAction = new TSkinModelAction;
+		if (pAction->Load(pFile, header.m_version, tckPathName)) {
+			delete pAction;
+			return false;
+		}
+
+		if (header.m_version < 7) {
+			pAction->SetTrackSetFileName(m_pSkeleton->GetFileName());
+		}
+		m_actions.Add(pAction);
+	}
+
+
+	//Load all the hangers
+	for (int i = 0; i < header.m_numHanger; i++) {
+		LoadHanger(pFile);
+	}
+
+	//Load all the propertry
+	TString propName;
+	TString propVal;
+	for (int i = 0; i < header.m_numProp; i++) {
+		pFile->ReadString(propName);
+		pFile->ReadString(propVal);
+		m_props.Put(propName, propVal);
+	}
 	return true;
 }
 

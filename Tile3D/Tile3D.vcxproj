@@ -193,6 +193,7 @@
     <ClInclude Include="Render\SkinModel\TSkinMesh.h" />
     <ClInclude Include="Render\SkinModel\TSkinMeshMan.h" />
     <ClInclude Include="Render\SkinModel\TSkinModel.h" />
+    <ClInclude Include="Render\SkinModel\TSkinModelAction.h" />
     <ClInclude Include="Render\SkinModel\TSkinModelMan.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonSprintJoint.h" />
     <ClInclude Include="Sys\Android\TSysFileAndroid.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="Render\SkinModel\TSkinMesh.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinMeshMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinModel.cpp" />
+    <ClCompile Include="Render\SkinModel\TSkinModelAction.cpp" />
     <ClCompile Include="Render\SkinModel\TSkinModelMan.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonSprintJoint.cpp" />
     <ClCompile Include="Sys\Android\TSysFileAndroid.cpp" />

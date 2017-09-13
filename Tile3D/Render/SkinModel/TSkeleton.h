@@ -55,6 +55,7 @@ public:
 	}
 
 	int GetSkeletonID() const { return m_skeletonID; }
+	TString & GetFileName() { return m_fileName; }
 	bool FindRefBone();
 
 	TSkeleton * Clone();
@@ -69,7 +70,7 @@ private:
 	int m_skeletonID;
 	int m_refBone;				//	Reference bone
 
-	TString m_filename;
+	TString m_fileName;
 	TSkinModel * m_pSkinModel;
 
 	TArray<TSkeletonBone*> m_bones;

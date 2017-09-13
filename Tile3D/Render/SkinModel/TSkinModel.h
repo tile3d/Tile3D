@@ -2,6 +2,8 @@
 
 #include <Core/TObject.h>
 #include <Container/TString.h>
+#include <Container/TArray.h>
+#include <Container/THashMap.h>
 
 #pragma pack(push, 1)
 struct TSkinModelHeader
@@ -35,6 +37,8 @@ struct TSkinModelPhyfileHeader
 class TFile;
 class TSkeleton;
 class TSkin;
+class TSkinModelAction;
+class THanger;
 class TSkinModel : public TObject
 {
 public:
@@ -64,6 +68,7 @@ public:
 
 	TSkeleton* LoadSkeleton(const char * skeletonFile);
 	TSkin * LoadSkin(const char* skinFile, bool autoFree);
+	THanger * LoadHanger(TFile * pFile);
 
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);
@@ -81,9 +86,15 @@ private:
 
 	TString m_fileName;		//Model file name
 	TString m_phyFileName;	//Physique file name
+	TString m_tckDirName;	//Track Data Directory name
 
 	TSkeleton* m_pSkeleton;
+	TArray<TSkin*> m_skins;
+	TArray<TSkinModelAction*> m_actions;
+	THashMap<TString, TString> m_props;
 };
+
+
 
 
 

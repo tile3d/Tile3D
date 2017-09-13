@@ -273,6 +273,9 @@
     <ClInclude Include="Math\TColor.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Render\SkinModel\TSkinModelAction.h">
+      <Filter>Render\SkinModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -427,6 +430,9 @@
     </ClCompile>
     <ClCompile Include="Render\Material\TMaterial.cpp">
       <Filter>Render\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\SkinModel\TSkinModelAction.cpp">
+      <Filter>Render\SkinModel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
