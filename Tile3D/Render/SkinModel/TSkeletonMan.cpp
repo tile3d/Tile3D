@@ -16,7 +16,7 @@ TSkeleton* TSkeletonMan::LoadSkeleton(const char * skeletonFile)
 	}
 
 	TFileImage fi;
-	if (fi.Open("", skeletonFile, TFile::TFILE_OPENEXIST| TFile::TFILE_BINARY| TFile::TFILE_TEMPMEMORY)) {
+	if (!fi.Open("", skeletonFile, TFile::TFILE_OPENEXIST| TFile::TFILE_BINARY| TFile::TFILE_TEMPMEMORY)) {
 		fi.Close();
 		TLog::Log(LOG_ERR, "SkinModel", "TSkeletonMan::LoadSkeleton,  Failed to load the skeleton: [%s].", skeletonFile);
 		return nullptr;

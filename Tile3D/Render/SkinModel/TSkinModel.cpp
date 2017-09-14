@@ -88,7 +88,7 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 	}
 
 	//Load the skeleton
-	if (LoadSkeleton(bonFile)) {
+	if (!LoadSkeleton(bonFile)) {
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::Load,  failed to load the skeleton, skeleton file=%s", bonFile);
 		return false;
 	}
@@ -103,7 +103,7 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 
 		if (skinFile.GetLength() > 0) {
 			if (filePath.GetLength() > 0) {
-				skinFile = filePath + "\\" + bonFile;
+				skinFile = filePath + "\\" + skinFile;
 			}
 		}
 
@@ -156,7 +156,7 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 	//Load all the action frame data
 	for (int i = 0; i < header.m_numAction; i++) {
 		TSkinModelAction * pAction = new TSkinModelAction;
-		if (pAction->Load(pFile, header.m_version, tckPathName)) {
+		if (!pAction->Load(pFile, header.m_version, tckPathName)) {
 			delete pAction;
 			return false;
 		}
@@ -168,7 +168,7 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 	}
 
 
-	//Load all the hangers
+	//Load all the hangers(TBD)
 	for (int i = 0; i < header.m_numHanger; i++) {
 		LoadHanger(pFile);
 	}

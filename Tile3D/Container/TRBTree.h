@@ -12,9 +12,9 @@ enum TRBTreeColor
 template<typename KEY, typename VALUE> struct TRBTreeNode
 {
 	TRBTreeColor m_color;
-	TRBTreeNode * m_parent;
-	TRBTreeNode * m_left;
-	TRBTreeNode * m_right;
+	TRBTreeNode<KEY, VALUE>  * m_parent;
+	TRBTreeNode<KEY, VALUE>  * m_left;
+	TRBTreeNode<KEY, VALUE>  * m_right;
 	KEY	m_key;
 	VALUE m_value;
 
@@ -26,7 +26,7 @@ template<typename KEY, typename VALUE> struct TRBTreeNode
 	}
 
 	TRBTreeNode * GetLeftMost() {
-		TRBTreeNode * pNode = this;
+		TRBTreeNode<KEY,VALUE> * pNode = this;
 		while (pNode->m_left != nullptr) {
 			pNode = pNode->m_left;
 		}
@@ -34,52 +34,56 @@ template<typename KEY, typename VALUE> struct TRBTreeNode
 	}
 
 	TRBTreeNode * GetRightMost() {
-		TRBTreeNode * pNode = this;
+		TRBTreeNode<KEY, VALUE>  * pNode = this;
 		while (pNode->m_right != nullptr) {
 			pNode = pNode->m_right;
 		}
 		return pNode;
 	}
 
-	void Increment() {
-		if (this->m_right != nullptr) {
-			this = this->m_right;
-			while (this->m_left != nullptr) {
-				this = this->m_left;
+	TRBTreeNode* Increment() {
+		TRBTreeNode<KEY, VALUE> * pNode = this;
+		if (pNode != nullptr) {
+			pNode = pNode->m_right;
+			while (pNode->m_left != nullptr) {
+				pNode = pNode->m_left;
 			}
 		}
 		else {
-			TBRTreeNode * y = this->m_parent;
-			while (this == y->m_right) {
-				this = y;
+			TRBTreeNode<KEY, VALUE>  * y = this->m_parent;
+			while (pNode == y->m_right) {
+				pNode = y;
 				y = y->m_parent;
 			}
-			if (this->m_right != y) {
-				this = y;
+			if (pNode->m_right != y) {
+				pNode = y;
 			}
 		}
+		return pNode;
 	}
 
 
-	void Decrement() {
-		if (this->m_color == COLOR_RED && this->m_parent->m_parent = this) {
-			this = this->m_right;
+	TRBTreeNode* Decrement() {
+		TRBTreeNode<KEY, VALUE> * pNode = this;
+		if (pNode->m_color == COLOR_RED && pNode->m_parent->m_parent == this) {
+			pNode = pNode->m_right;
 		}
-		else if (this->m_left != 0) {
-			TRBTreeNode * y = this->m_left;
+		else if (pNode->m_left != 0) {
+			TRBTreeNode<KEY, VALUE>  * y = pNode->m_left;
 			while (y->m_right != 0) {
 				y = y->m_right;
 			}
-			this = y;
+			pNode = y;
 		}
 		else {
-			TRBTreeNode *y = this->m_parent;
-			while (this == y->m_left) {
-				this = y;
+			TRBTreeNode<KEY, VALUE>  *y = pNode->m_parent;
+			while (pNode == y->m_left) {
+				pNode = y;
 				y = y->m_parent;
 			}
-			this = y;
+			pNode = y;
 		}
+		return pNode;
 	}
 
 
@@ -106,9 +110,9 @@ public:
 		}
 	}
 
-	TRBTreeNode<KEY, VALUE> * GetRoot() { return m_head.m_parent; }
-	TRBTreeNode<KEY, VALUE> * GetLeftMost() { return m_head.m_left; }
-	TRBTreeNode<KEY, VALUE> * GetRightMost() { return m_head.m_right; }
+	TRBTreeNode<KEY, VALUE> * GetRoot() { return m_head->m_parent; }
+	TRBTreeNode<KEY, VALUE> * GetLeftMost() { return m_head->m_left; }
+	TRBTreeNode<KEY, VALUE> * GetRightMost() { return m_head->m_right; }
 
 	TRBTreeNode<KEY, VALUE> * GetLeft(TRBTreeNode<KEY, VALUE> * pNode) {
 		return pNode->m_left;
@@ -166,7 +170,7 @@ private:
 
 template<typename KEY, typename VALUE> TRBTreeNode<KEY, VALUE>* TRBTree<KEY, VALUE>::CreateNode(const KEY & key, const VALUE & value)
 {
-	TRBTreeNode<KEY, VALUE> * pNode = new TRBTreeNode();
+	TRBTreeNode<KEY, VALUE> * pNode = new TRBTreeNode<KEY, VALUE>();
 	pNode->m_key = key;
 	pNode->m_value = value;
 	return pNode;
@@ -185,7 +189,7 @@ template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::LeftRotate(TRBT
 	pNode2->m_parent = pNode->m_parent;
 
 	if (pNode == GetRoot()) {
-		GetRoot() = pNode2;
+		m_head->m_parent = pNode2;
 	}
 	else if (pNode == pNode->m_parent->m_left) {
 		pNode->m_parent->m_left = pNode2;
@@ -210,7 +214,7 @@ template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::RightRotate(TRB
 	pNode2->m_parent = pNode->m_parent;
 	
 	if (pNode == GetRoot()) {
-		GetRoot() = pNode2;
+		m_head->m_parent = pNode2;
 	}
 	else if (pNode = pNode->m_parent->m_right) {
 		pNode->m_parent->m_right = pNode2;
@@ -242,7 +246,7 @@ template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::Insert(const KE
 			return true;
 		}
 		else {
-			j->Decrement();
+			j = j->Decrement();
 		}
 	}
 
@@ -257,23 +261,23 @@ template<typename KEY, typename VALUE> bool TRBTree<KEY, VALUE>::Insert(const KE
 template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::Insert(TRBTreeNode<KEY, VALUE> * x, TRBTreeNode<KEY, VALUE> * y, const KEY & key, const VALUE & value)
 {
 	TRBTreeNode<KEY, VALUE> * z;
-	if (y = m_header || x != nullptr || key < y->m_key) {
+	if (y == m_head || x != nullptr || key < y->m_key) {
 		z = CreateNode(key, value);
 		y->m_left = z;
 
-		if (y == m_header) {
-			GetRoot() = z;
-			GetRightMost() = z;
+		if (y == m_head) {
+			m_head->m_parent = z;
+			m_head->m_right = z;
 		}
 		else if (y = GetLeftMost()) {
-			GetLeftMost() = z;
+			m_head->m_left = z;
 		}
 	}
 	else {
 		z = CreateNode(key, value);
 		y->m_right = z;
 		if (y == GetRightMost()) {
-			GetRightMost() = z;
+			m_head->m_right = z;
 		}
 	}
 
@@ -330,7 +334,7 @@ template<typename KEY, typename VALUE> void TRBTree<KEY, VALUE>::Rebalance(TRBTr
 			}
 		}
 	}
-	pRoot->m_color = COLOR_BLOACK;
+	pRoot->m_color = COLOR_BLACK;
 }
 
 template<typename KEY, typename VALUE> TRBTreeNode<KEY, VALUE> * TRBTree<KEY, VALUE>::Find(const KEY & key)

@@ -11,7 +11,7 @@ bool LoadSkinModel(const char* fileName)
 
 int main()
 {
-	const char* filename = ".\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
+	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
 	if (!LoadSkinModel(filename)) {
 		printf("failed to load the skin model");
 		return -1;

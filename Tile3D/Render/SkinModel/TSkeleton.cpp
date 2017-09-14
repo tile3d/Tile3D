@@ -97,7 +97,7 @@ bool TSkeleton::Load(TFile * pFile)
 			TSkeletonJoint * pJoint = TSkeletonJoint::CreateJointByClassID(ids[i]);
 			pJoint->Init(this);
 
-			if (pJoint->Load(pFile)) {
+			if (!pJoint->Load(pFile)) {
 				delete pJoint;
 				TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the join from the filename=%s", m_fileName);
 				return false;
@@ -114,7 +114,7 @@ bool TSkeleton::Load(TFile * pFile)
 	//load the hooks
 	for (int i = 0; i < header.m_hookNum; i++) {
 		TSkeletonHook * pHook = new TSkeletonHook(this);
-		if (pHook->Load(pFile)) {
+		if (!pHook->Load(pFile)) {
 			TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load, failed to load the hooks, filename=%s", m_fileName);
 			return false;
 		}
@@ -165,7 +165,7 @@ bool TSkeleton::FindRefBone()
 		for (int j = 0; j < pBone->GetChildNum(); j++)
 		{
 			TSkeletonBone* pChild = pBone->GetChildPtr(j);
-			if (pChild->GetBoneInitTM().IsIdentity())
+			if (!pChild->GetBoneInitTM().IsIdentity())
 			{
 				m_refBone = pBone->GetChild(j);
 				return true;

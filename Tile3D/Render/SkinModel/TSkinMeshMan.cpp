@@ -14,7 +14,7 @@ TSkinMesh* TSkinMeshMan::LoadSkinMesh(const char * fileName, TSkin* pSkin, int s
 	}
 
 	TFileImage fi;
-	if (fi.Open("", fileName, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY)) {
+	if (!fi.Open("", fileName, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY)) {
 		fi.Close();
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinMeshMan::LoadSkinMesh,  Failed to load the skin mesh: [%s].", fileName);
 		return nullptr;

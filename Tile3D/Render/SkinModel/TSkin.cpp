@@ -8,7 +8,11 @@
 //TBD
 TSkin::TSkin()
 {
+	m_version = 0;
+	m_skinID = 0;
 
+	m_minWeight = 0;
+	m_skinBoneNum = 0;
 }
 
 TSkin::~TSkin()
@@ -49,7 +53,10 @@ bool TSkin::Load(TFile* pFile)
 
 	//load the textures
 	if (header.m_textureNum > 0) {
-
+		for (int i = 0; i < header.m_textureNum; i++) {
+			TString textureName;
+			pFile->ReadString(textureName);
+		}
 	}
 
 	//load the materials

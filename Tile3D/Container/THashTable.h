@@ -238,12 +238,10 @@ private:
 	}
 
 	void Add(const KEY_TYPE & key, const VALUE_TYPE & value, int hashValue) {
-		THashNode<KEY_TYPE, VALUE_TYPE> * pHead = m_buckets[hashValue];
-
 		//if not exist, add it to the bucket list
 		THashNode<KEY_TYPE, VALUE_TYPE> * pNewNode = new THashNode<KEY_TYPE, VALUE_TYPE>(key, value);
-		pNewNode->m_pNext = pHead->m_pNext;
-		pHead = pNewNode;
+		pNewNode->m_pNext = m_buckets[hashValue];
+		m_buckets[hashValue] = pNewNode;
 		++m_count;
 	}
 

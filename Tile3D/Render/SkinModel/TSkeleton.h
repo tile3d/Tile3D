@@ -31,7 +31,7 @@ class TSkeleton : public TObject
 public:
 	enum TSKELETON_CONST
 	{
-		TSKELETON_IDENTIFY = (('A' << 24) | ('S' << 16) | ('M' << 8) | 'E'),
+		TSKELETON_IDENTIFY = (('A' << 24) | ('S' << 16) | ('K' << 8) | 'E'),
 		TSKELETON_VERSION = 6
 	};
 

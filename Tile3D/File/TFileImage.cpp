@@ -45,7 +45,13 @@ bool TFileImage::Init(const char * fullName)
 		m_timestamp = 0;
 		return true;
 	}
-	return false;
+	else {
+		if (!InitWithSepFile(fullName)){
+			TLog::Log(LOG_ERR, "FILE", "TFileImage::Init(): Can not open file [%s] from disk!", fullName);
+			return false;
+		}
+	}
+	return true;
 }
 
 bool TFileImage::InitWithSepFile(const char * fullName)
@@ -77,6 +83,7 @@ bool TFileImage::InitWithSepFile(const char * fullName)
 	fread(m_pFileImage, m_fileLength, 1, pFile);
 
 	m_timestamp = TSysFile::GetFileTimeStamp(fullName);
+	fclose(pFile);
 	return true;
 }
 
