@@ -20,12 +20,17 @@ TSkeleton::TSkeleton()
 
 TSkeleton::~TSkeleton()
 {
-	Release();
-}
+	for (int i = 0; i < m_bones.Size(); i++) {
+		delete m_bones[i];
+	}
 
-void TSkeleton::Release()
-{
+	for (int i = 0; i < m_joints.Size(); i++) {
+		delete m_joints[i];
+	}
 
+	for (int i = 0; i < m_hooks.Size(); i++) {
+		delete m_hooks[i];
+	}
 }
 
 TSkeleton* TSkeleton::Clone()
@@ -37,6 +42,22 @@ bool TSkeleton::Save(TFile * pFile)
 {
 	return true;
 }
+
+bool TSkeleton::Load(const char * skeletonFile)
+{
+	TFileImage fi;
+	if (!fi.Open("", skeletonFile, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY)) {
+		fi.Close();
+		TLog::Log(LOG_ERR, "SkinModel", "TSkeleton::Load,  Failed to load the skeleton: [%s].", skeletonFile);
+		return false;
+	}
+	if (!Load(&fi)) {
+		return false;
+	}
+	fi.Close();
+	return true;
+}
+
 
 bool TSkeleton::Load(TFile * pFile)
 {

@@ -264,9 +264,6 @@
     <ClInclude Include="Render\SkinModel\TSkeletonSprintJoint.h">
       <Filter>Render\SkinModel</Filter>
     </ClInclude>
-    <ClInclude Include="Render\SkinModel\TSkinMeshMan.h">
-      <Filter>Render\SkinModel</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Material\TMaterial.h">
       <Filter>Render\Material</Filter>
     </ClInclude>
@@ -420,9 +417,6 @@
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkeletonSprintJoint.cpp">
-      <Filter>Render\SkinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\SkinModel\TSkinMeshMan.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
     <ClCompile Include="Render\Material\TMaterial.cpp">

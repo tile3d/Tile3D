@@ -1,7 +1,6 @@
 #include "TSkinModel.h"
 #include "TSkeleton.h"
-#include "TSkeletonMan.h"
-#include "TSkinMan.h"
+#include "TSkin.h"
 #include "TSkinModelAction.h"
 #include <Util/TLog.h>
 #include <File/TFile.h>
@@ -10,25 +9,52 @@
 
 TSkinModel::TSkinModel()
 {
+	Init();
+}
+
+void TSkinModel::Init()
+{
 	m_modelID = 0;
 	m_version = 0;
 	m_numSkin = 0;
 	m_numAction = 0;
 	m_numHanger = 0;
 	m_numProp = 0;
+	m_refcount = 1;
 	m_pSkeleton = nullptr;
-}
 
+}
 
 TSkinModel::~TSkinModel()
 {
+	if (m_pSkeleton) {
+		delete m_pSkeleton;
+	}
 
+	for (int i = 0; i < m_skins.Size(); i++) {
+		delete m_skins[i];
+	}
+
+	for (int i = 0; i < m_actions.Size(); i++) {
+		delete m_actions[i];
+	}
+
+}
+
+void TSkinModel::Release()
+{
+	--m_refcount;
+	if (m_refcount <= 0) {
+		delete this;
+	}
 }
 
 TSkinModel* TSkinModel::Clone()
 {
+	++m_refcount;
 	return this;
 }
+
 
 bool TSkinModel::Load(const char * pFile, int skinFlag)
 {
@@ -187,27 +213,26 @@ bool TSkinModel::Load(TFile * pFile, int skinFlag)
 
 TSkeleton* TSkinModel::LoadSkeleton(const char * skeletonFile)
 {
-	TSkeleton * pSkeleton = TSkeletonMan::GetInstance()->LoadSkeleton(skeletonFile);
-	if (pSkeleton == nullptr) {
+	TSkeleton * pSkeleton = new TSkeleton();
+	if (!pSkeleton->Load(skeletonFile)) {
+		delete pSkeleton;
 		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::LoadSkeleton,  failed to load the skeleton, skeleton file=%s", skeletonFile);
-		return false;
+		return nullptr;
 	}
 
 	m_pSkeleton = pSkeleton;
 	m_pSkeleton->SetSkinModel(this);
-
 	return pSkeleton;
 }
 
 TSkin * TSkinModel::LoadSkin(const char* skinFile, bool autoFree)
 {
-	TSkin * pSkin = TSkinMan::GetInstance()->LoadSkin(skinFile);
-	if (pSkin == nullptr) {
-		TLog::Log(LOG_ERR, "SkinModel", "TSkinModel::LoadSkin,  failed to load the skin, skin file=%s", skinFile);
-		return false;
+	TSkin * pSkin = new TSkin();
+	if (!pSkin->Load(skinFile)) {
+		delete pSkin;
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinMan::CreateSkin,  Failed to create the Skin: [%s].", skinFile);
+		return nullptr;
 	}
-
-
 	return pSkin;
 }
 

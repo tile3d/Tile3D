@@ -6,6 +6,7 @@
 
 class TFile;
 class TSkinModel;
+
 class TSkinModelMan : public TObject
 {
 public:
@@ -16,6 +17,8 @@ public:
 
 	TSkinModel * LoadSkinModel(const char * pFile, int skinFlag);
 	TSkinModel * LoadSkinModel(TFile * pFile, int skinFlag);
+	bool ReleaseSkinModel(int skinModelID);
+	bool ReleaseSkinModel(TSkinModel * pSkinModel);
 
 private:
 	TSkinModel* FindSkinModelByFile(const char * skinFile);

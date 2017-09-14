@@ -39,6 +39,7 @@ public:
 	TSkeleton();
 	~TSkeleton();
 
+	bool Load(const char * pFile);
 	bool Load(TFile * pFile);
 	bool Save(TFile * pFile);
 
@@ -60,9 +61,6 @@ public:
 
 	TSkeleton * Clone();
 
-
-private:
-	void Release();
 
 private:
 	int m_version;

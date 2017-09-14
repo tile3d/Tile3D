@@ -60,7 +60,9 @@ public:
 	TSkinModel();
 	virtual ~TSkinModel();
 
-	bool Init();
+	TSkinModel * Clone();
+
+	void Init();
 	void Release();
 
 	bool Load(const char * pFile, int skinFlag);
@@ -73,7 +75,7 @@ public:
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);
 
-	TSkinModel * Clone();
+
 
 	int GetSkinModelID() { return m_modelID; }
 private:
@@ -83,7 +85,7 @@ private:
 	int m_numAction;		//action num
 	int m_numHanger;		//hanger num
 	int m_numProp;			//prop num
-
+	int m_refcount;			//reference count
 	TString m_fileName;		//Model file name
 	TString m_phyFileName;	//Physique file name
 	TString m_tckDirName;	//Track Data Directory name

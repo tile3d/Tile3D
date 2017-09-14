@@ -1,6 +1,7 @@
 #include "TSkin.h"
-#include "TSkinMeshMan.h"
+#include "TSkinMesh.h"
 #include <File/TFile.h>
+#include <File/TFileImage.h>
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
 #include <Render/Material/TMaterial.h>
@@ -17,7 +18,28 @@ TSkin::TSkin()
 
 TSkin::~TSkin()
 {
+	for (int i = 0; i < m_skinMeshs.Size(); i++) {
+		delete m_skinMeshs[i];
+	}
 
+	for (int i = 0; i < m_materials.Size(); i++) {
+		delete m_materials[i];
+	}
+}
+
+bool TSkin::Load(const char * skinFile)
+{
+	TFileImage fi;
+	if (!fi.Open("", skinFile, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY)) {
+		fi.Close();
+		TLog::Log(LOG_ERR, "SkinModel", "TSkin::Load,  Failed to load the skin: [%s].", skinFile);
+		return false;
+	}
+	if (!Load(&fi)) {
+		return false;
+	}
+	fi.Close();
+	return true;
 }
 
 bool TSkin::Load(TFile* pFile)
@@ -77,14 +99,14 @@ bool TSkin::Load(TFile* pFile)
 
 	//load the skin meshes
 	for (int i = 0; i < header.m_skinMeshNum; i++) {
-		TSkinMesh * pMesh = TSkinMeshMan::GetInstance()->LoadSkinMesh(pFile, this,  i, header.m_skinMeshNum, header.m_version);
-		if (pMesh == nullptr) {
+		TSkinMesh * pSkinMesh = new TSkinMesh();
+		if (!pSkinMesh->Load(pFile, this, i, header.m_skinMeshNum, header.m_version)) {
+			delete pSkinMesh;
 			TLog::Log(LOG_ERR, "SkinModel", "TSkin::Load, fail to load the skin mesh, filename=%s, index=%d, total=%d", m_skinFileName, i, header.m_skinMeshNum);
 			return false;
 		}
-		m_skinMeshs.Add(pMesh);
+		m_skinMeshs.Add(pSkinMesh);
 	}
-
 
 	return true;
 }

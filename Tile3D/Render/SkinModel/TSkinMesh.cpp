@@ -34,10 +34,12 @@ void TSkinMesh::Release()
 		m_tangentVerts = nullptr;
 	}
 
+
 	if (m_indices != nullptr) {
 		delete[] m_indices;
 		m_indices = nullptr;
 	}
+
 }
 
 TSkinMesh * TSkinMesh::Clone()

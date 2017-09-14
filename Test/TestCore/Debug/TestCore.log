@@ -1,3 +1,2 @@
-﻿  TestMemory.cpp
-TMemory.obj : error LNK2005: "void __cdecl operator delete[](void *)" (??_V@YAXPAX@Z) already defined in MSVCRTD.lib(delete_array.obj)
-     Creating library D:\engine\Tile3D\Debug\TestCore.lib and object D:\engine\Tile3D\Debug\TestCore.exp
+﻿     Creating library D:\engine\Tile3D\Debug\TestCore.lib and object D:\engine\Tile3D\Debug\TestCore.exp
+  TestCore.vcxproj -> D:\engine\Tile3D\Debug\TestCore.dll

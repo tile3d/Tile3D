@@ -31,7 +31,20 @@ TSkinModel* TSkinModelMan::LoadSkinModel(TFile * pFile, int skinFlag)
 	return CreateSkinModel(pFile, skinFlag);
 }
 
-TSkinModel* TSkinModelMan::FindSkinModelByFile(const char * SkinModelFile)
+bool TSkinModelMan::ReleaseSkinModel(int skinModelID)
+{
+	TSkinModel * pSkinModel = FindSkinModelByID(skinModelID);
+	if (pSkinModel == nullptr) return false;
+	pSkinModel->Release();
+	return true;
+}
+
+bool TSkinModelMan::ReleaseSkinModel(TSkinModel * pSkinModel)
+{
+	return ReleaseSkinModel(pSkinModel->GetSkinModelID());
+}
+
+TSkinModel * TSkinModelMan::FindSkinModelByFile(const char * SkinModelFile)
 {
 	char relFile[MAX_PATH];
 	relFile[0] = '\0';
@@ -49,7 +62,7 @@ TSkinModel* TSkinModelMan::FindSkinModelByID(int SkinModelFileID)
 	if (pSkinModel == nullptr) {
 		return nullptr;
 	}
-	return *pSkinModel;
+	return (*pSkinModel);
 }
 
 TSkinModel * TSkinModelMan::CreateSkinModel(TFile * pFile, int skinFlag)

@@ -3,6 +3,11 @@
 #include "TFile.h"
 #include <Container/TString.h>
 
+
+
+//
+//Load all the file contents to the memory
+//
 class TPackage;
 class TFileImage : public TFile
 {

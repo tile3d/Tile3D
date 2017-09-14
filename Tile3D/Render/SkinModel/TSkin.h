@@ -42,6 +42,7 @@ public:
 	TSkin();
 	~TSkin();
 
+	bool Load(const char * skinFile);
 	bool Load(TFile * pFile);
 	bool Save(TFile * pFile);
 	TSkin * Clone();
