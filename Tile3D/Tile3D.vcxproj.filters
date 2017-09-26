@@ -46,6 +46,12 @@
     <Filter Include="Render\Material">
       <UniqueIdentifier>{18894c14-a54b-4253-8e4f-dd00fbb4b6b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{1341097f-d3a3-457b-a769-053caeb3bddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Windows">
+      <UniqueIdentifier>{d56c679c-376e-4ee4-a6a0-7d2240c73469}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -273,6 +279,21 @@
     <ClInclude Include="Render\SkinModel\TSkinModelAction.h">
       <Filter>Render\SkinModel</Filter>
     </ClInclude>
+    <ClInclude Include="Game\TApplication.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Windows\TApplicationWin.h">
+      <Filter>Game\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TGameSetting.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TDevice.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Windows\TDeviceWin.h">
+      <Filter>Game\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -424,6 +445,21 @@
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkinModelAction.cpp">
       <Filter>Render\SkinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TApplication.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Windows\TApplicationWin.cpp">
+      <Filter>Game\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TGameSetting.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TDevice.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Windows\TDeviceWin.cpp">
+      <Filter>Game\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

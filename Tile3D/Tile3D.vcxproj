@@ -163,6 +163,11 @@
     <ClInclude Include="File\TPackage.h" />
     <ClInclude Include="File\TPackageMan.h" />
     <ClInclude Include="File\TScriptFile.h" />
+    <ClInclude Include="Game\TApplication.h" />
+    <ClInclude Include="Game\TDevice.h" />
+    <ClInclude Include="Game\TGameSetting.h" />
+    <ClInclude Include="Game\Windows\TApplicationWin.h" />
+    <ClInclude Include="Game\Windows\TDeviceWin.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TColor.h" />
     <ClInclude Include="Math\TMathUtil.h" />
@@ -223,6 +228,11 @@
     <ClCompile Include="File\TPackage.cpp" />
     <ClCompile Include="File\TPackageMan.cpp" />
     <ClCompile Include="File\TScriptFile.cpp" />
+    <ClCompile Include="Game\TApplication.cpp" />
+    <ClCompile Include="Game\TDevice.cpp" />
+    <ClCompile Include="Game\TGameSetting.cpp" />
+    <ClCompile Include="Game\Windows\TApplicationWin.cpp" />
+    <ClCompile Include="Game\Windows\TDeviceWin.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />
