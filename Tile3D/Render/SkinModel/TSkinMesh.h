@@ -3,6 +3,8 @@
 #include <Core/TObject.h>
 #include <Container/TString.h>
 #include <Math/TVector4.h>
+#include <Render/TStream.h>
+
 
 struct TSkinMeshHeader
 {
@@ -35,6 +37,7 @@ struct TSkinMeshVertexTangent
 
 class TFile;
 class TSkin;
+class TStream;
 class TSkinMesh : public TObject
 {
 public:
@@ -46,17 +49,20 @@ public:
 
 	TSkinMesh * Clone();
 	int GetSkinMeshID() { return m_skinMeshID; }
-private:
-	TString m_skinMeshName;
+	void Render();
 
+private:
 	int m_textureIndex;		//Texture index
 	int m_materialIndex;	//Material Index
 	int m_vertNums;			//vertex numbers
 	int m_indexNums;		//index numbers
 	int m_skinIndex;		//skin index
 	int m_skinMeshID;		//skin mesh ID
+	TString m_skinMeshName;
+
 	TSkinMeshVertex * m_verts;
 	TSkinMeshVertexTangent * m_tangentVerts;
+	TStream * m_pStream;
 	unsigned short * m_indices;
 };
 

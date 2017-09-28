@@ -121,3 +121,10 @@ TSkin* TSkin::Clone()
 	return this;
 }
 
+void TSkin::Render()
+{
+	for (int i = 0; i < m_skinMeshs.Size(); ++i) {
+		TSkinMesh * pSkinMesh = m_skinMeshs[i];
+		pSkinMesh->Render();
+	}
+}

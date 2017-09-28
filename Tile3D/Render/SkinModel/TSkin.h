@@ -49,7 +49,7 @@ public:
 
 	int GetSkinID() const { return m_skinID; }
 
-
+	void Render();
 private:
 	int m_version;
 	int m_skinID;

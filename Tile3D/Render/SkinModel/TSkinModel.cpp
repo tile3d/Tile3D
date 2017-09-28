@@ -241,3 +241,10 @@ THanger * TSkinModel::LoadHanger(TFile * pFile)
 	return nullptr;
 }
 
+void TSkinModel::Render()
+{
+	for (int i = 0; i < m_skins.Size(); ++i) {
+		TSkin* pSkin = m_skins[i];
+		pSkin->Render();
+	}
+}

@@ -46,11 +46,8 @@
     <Filter Include="Render\Material">
       <UniqueIdentifier>{18894c14-a54b-4253-8e4f-dd00fbb4b6b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{1341097f-d3a3-457b-a769-053caeb3bddd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Windows">
-      <UniqueIdentifier>{d56c679c-376e-4ee4-a6a0-7d2240c73469}</UniqueIdentifier>
+    <Filter Include="Render\Windows">
+      <UniqueIdentifier>{b7e00773-f7ac-4912-b4ce-3cad27277dc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,20 +276,32 @@
     <ClInclude Include="Render\SkinModel\TSkinModelAction.h">
       <Filter>Render\SkinModel</Filter>
     </ClInclude>
-    <ClInclude Include="Game\TApplication.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="Render\TEngine.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Windows\TApplicationWin.h">
-      <Filter>Game\Windows</Filter>
+    <ClInclude Include="Render\TApplication.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Game\TGameSetting.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="Render\TDevice.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Game\TDevice.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="Render\TGameSetting.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Windows\TDeviceWin.h">
-      <Filter>Game\Windows</Filter>
+    <ClInclude Include="Render\Windows\TApplicationWin.h">
+      <Filter>Render\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TStream.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Windows\TD3D9Device.h">
+      <Filter>Render\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Windows\TD3D9Stream.h">
+      <Filter>Render\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TCamera.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -446,20 +455,32 @@
     <ClCompile Include="Render\SkinModel\TSkinModelAction.cpp">
       <Filter>Render\SkinModel</Filter>
     </ClCompile>
-    <ClCompile Include="Game\TApplication.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="Render\TApplication.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Windows\TApplicationWin.cpp">
-      <Filter>Game\Windows</Filter>
+    <ClCompile Include="Render\TDevice.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Game\TGameSetting.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="Render\TEngine.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Game\TDevice.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="Render\TGameSetting.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Windows\TDeviceWin.cpp">
-      <Filter>Game\Windows</Filter>
+    <ClCompile Include="Render\Windows\TApplicationWin.cpp">
+      <Filter>Render\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TStream.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Windows\TD3D9Device.cpp">
+      <Filter>Render\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Windows\TD3D9Stream.cpp">
+      <Filter>Render\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TCamera.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

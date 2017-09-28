@@ -75,7 +75,7 @@ public:
 	bool Save(TFile * pFile);
 	bool Save(const char * pFile);
 
-
+	void Render();
 
 	int GetSkinModelID() { return m_modelID; }
 private:

@@ -6,42 +6,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_LBUTTONDOWN:
+	case WM_PAINT:
 	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hWnd, &ps);
+		// TODO: Add any drawing code that uses hdc here...
+		EndPaint(hWnd, &ps);
 	}
 	break;
-
-	case WM_LBUTTONUP:
-	{
-	}
-	break;
-
-	case WM_RBUTTONDOWN:
-	{
-	}
-	break;
-
-	case WM_RBUTTONUP:
-	{
-	}
-	break;
-
-	case WM_SIZE:
-	{
-		return 0;
-		break;
-	}
-
-	case WM_CREATE:
-		break;
-
-	case WM_QUIT:
-	case WM_CLOSE:
 	case WM_DESTROY:
-		return 0;
+		PostQuitMessage(0);
 		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
-	return DefWindowProc(hWnd, message, wParam, lParam);
+	return 0;
 }
 
 bool TApplicationWin::Init()
@@ -102,11 +81,5 @@ bool TApplicationWin::InitWindow()
 	SetForegroundWindow(m_hwnd);
 	return true;
 }
-
-
-
-
-
-
 
 

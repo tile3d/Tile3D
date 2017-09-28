@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Game/TApplication.h>
+#include <Render/TApplication.h>
 #include <Windows.h>
 
 class TApplicationWin : public TApplication

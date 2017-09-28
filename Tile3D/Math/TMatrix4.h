@@ -254,6 +254,7 @@ public:
 	//Build the Perspective Matrix(left hand)
 	TMatrix4 & BuildPerspectiveMatrix(float fieldOfViewRadians, float aspectRatio, float near, float far);
 
+	float * GetPointer() const { return (float*)&(m_mat[0][0]); }
 protected:	
 	//	Calcualte determinant of a 3x3 matrix
 	float Det3(float a11, float a12, float a13, float a21, float a22, float a23,

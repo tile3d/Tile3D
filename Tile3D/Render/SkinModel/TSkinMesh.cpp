@@ -3,6 +3,7 @@
 #include <File/TFileDir.h>
 #include <Util/TLog.h>
 #include <Math/TVector3.h>
+#include <Render/TEngine.h>
 
 TSkinMesh::TSkinMesh()
 {
@@ -106,9 +107,21 @@ bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum,  i
 		}
 	}
 
+
+	TDevice * pDevice = TEngine::GetInstance()->GetDevice();
+	m_pStream = pDevice->CreateStream();
+
+	m_pStream->SetSkinMeshVertexBuffer(m_verts, m_vertNums);
+	m_pStream->SetSkinMeshIndexBuffer(m_indices, m_indexNums);
+
 	//TBD
 	//1) build the tangents
 	//2) build the mesh aabb
 	return true;
+}
+
+void TSkinMesh::Render()
+{
+	m_pStream->Render();
 }
 

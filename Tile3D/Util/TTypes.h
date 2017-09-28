@@ -21,7 +21,20 @@ typedef unsigned long ulong;
 typedef unsigned long long uint64;
 
 
+#define PI 3.14159265359f
 
 
-
-
+enum TRANSFORMATION_STATE
+{
+	TS_VIEW,
+	TS_WORLD,
+	TS_PROJECTION,
+	TS_TEXTURE0,
+	TS_TEXTURE1,
+	TS_TEXTURE2,
+	TS_TEXTURE3,
+	TS_TEXTURE4,
+	TS_TEXTURE5,
+	TS_TEXTURE6,
+	TS_TEXTURE7
+};
