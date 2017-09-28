@@ -303,6 +303,9 @@
     <ClInclude Include="Render\TCamera.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\TInput.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -480,6 +483,9 @@
       <Filter>Render\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Render\TCamera.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TInput.cpp">
       <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>

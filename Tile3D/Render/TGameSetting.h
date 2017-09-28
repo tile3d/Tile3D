@@ -1,5 +1,11 @@
 #pragma once
 
+
+//
+//1) display setting(width/height/dpi/)
+//2) rendering setting()
+//3) shortcut setting
+//
 class TGameSetting
 {
 public:

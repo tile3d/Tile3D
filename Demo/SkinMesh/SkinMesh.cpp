@@ -54,7 +54,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
   
 
-	TEngine::GetInstance()->Setup(pAppWin, pDeviceWin);
+	TEngine::GetInstance()->Init(pAppWin, pDeviceWin);
 	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
 	TSkinModel * pSkinModel = TSkinModelMan::GetInstance()->LoadSkinModel(filename, 0);
 	if (pSkinModel == nullptr) {

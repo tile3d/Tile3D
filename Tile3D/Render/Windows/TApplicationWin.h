@@ -11,7 +11,8 @@ public:
 		m_cmdShow = cmdShow;
 	}
 
-	bool Init();
+	virtual bool Init();
+	virtual void Close();
 
 	bool InitWindow();
 

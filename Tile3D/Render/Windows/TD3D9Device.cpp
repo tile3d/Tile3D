@@ -59,6 +59,11 @@ bool TD3D9Device::Init()
 	return true;
 }
 
+void TD3D9Device::Close()
+{
+
+}
+
 TStream* TD3D9Device::CreateStream()
 {
 	return new TD3D9Stream();
@@ -66,7 +71,7 @@ TStream* TD3D9Device::CreateStream()
 
 void TD3D9Device::Clear()
 {
-	m_d3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffeeeeee, 1.0f, 0);
+	m_d3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
 }
 
 void TD3D9Device::BeginRender()

@@ -4,7 +4,6 @@
 #include <Render/TStream.h>
 #include <Util/TTypes.h>
 #include "TApplicationWin.h"
-
 #include <d3d9.h>
 
 class TD3D9Stream;
@@ -20,6 +19,7 @@ public:
 	virtual TStream* CreateStream();
 
 	virtual bool Init();
+	virtual void Close();
 
 	virtual void Clear();
 	virtual void BeginRender();

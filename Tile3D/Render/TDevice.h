@@ -8,6 +8,7 @@ class TDevice
 {
 public:
 	virtual bool Init() { return true; }
+	virtual void Close() {}
 
 	virtual void Clear() {}
 	virtual void BeginRender(){}
@@ -22,6 +23,5 @@ public:
 	virtual bool OnLostDevice() { return true; }
 	virtual bool OnResetDevice() { return true; }
 	virtual bool IsLostDevice() { return false; }
-
 
 };

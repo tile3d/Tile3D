@@ -200,6 +200,7 @@
     <ClInclude Include="Render\TDevice.h" />
     <ClInclude Include="Render\TEngine.h" />
     <ClInclude Include="Render\TGameSetting.h" />
+    <ClInclude Include="Render\TInput.h" />
     <ClInclude Include="Render\TStream.h" />
     <ClInclude Include="Render\Windows\TApplicationWin.h" />
     <ClInclude Include="Render\Windows\TD3D9Device.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="Render\TDevice.cpp" />
     <ClCompile Include="Render\TEngine.cpp" />
     <ClCompile Include="Render\TGameSetting.cpp" />
+    <ClCompile Include="Render\TInput.cpp" />
     <ClCompile Include="Render\TStream.cpp" />
     <ClCompile Include="Render\Windows\TApplicationWin.cpp" />
     <ClCompile Include="Render\Windows\TD3D9Device.cpp" />

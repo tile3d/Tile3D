@@ -6,6 +6,7 @@ class TApplication
 {
 public:
 	virtual bool Init();
+	virtual void Close() {}
 
 	int GetWidth() { return m_gs.GetWidth(); }
 	int GetHeight() { return m_gs.GetHeight(); }

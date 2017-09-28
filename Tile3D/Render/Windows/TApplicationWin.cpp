@@ -1,24 +1,130 @@
 #include "TApplicationWin.h"
 #include <Util/TLog.h>
-
+#include <Render/TEngine.h>
+#include <Render/TInput.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	TInput * pInput = TEngine::GetInstance()->GetInput();
 	switch (message)
 	{
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
-		// TODO: Add any drawing code that uses hdc here...
-		EndPaint(hWnd, &ps);
-	}
-	break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
+		case WM_KEYDOWN:
+		{
+			if (wParam == VK_ESCAPE) {
+				TEngine::GetInstance()->ShutDown();
+				::DestroyWindow(hWnd);
+			}
+			else {
+				pInput->OnKeyDown(wParam);
+			}
+		}
 		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+	
+		case WM_LBUTTONDOWN:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			POINT m_ptMouseLast;
+			m_ptMouseLast.x = x;
+			m_ptMouseLast.y = y;
+
+			ClientToScreen(hWnd, &m_ptMouseLast);
+
+			pInput->OnMouseLButtonDown(wParam, m_ptMouseLast.x, m_ptMouseLast.y);
+		}
+		break;
+
+		case WM_LBUTTONUP:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			POINT m_ptMouseLast;
+			m_ptMouseLast.x = x;
+			m_ptMouseLast.y = y;
+
+			ClientToScreen(hWnd, &m_ptMouseLast);
+
+			pInput->OnMouseLButtonUp(wParam, m_ptMouseLast.x, m_ptMouseLast.y);
+		}
+		break;
+
+		case WM_RBUTTONDOWN:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			POINT m_ptMouseLast;
+			m_ptMouseLast.x = x;
+			m_ptMouseLast.y = y;
+
+			ClientToScreen(hWnd, &m_ptMouseLast);
+
+			pInput->OnMouseRButtonDown(wParam, m_ptMouseLast.x, m_ptMouseLast.y);
+		}
+		break;
+
+
+		case WM_RBUTTONUP:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			POINT m_ptMouseLast;
+			m_ptMouseLast.x = x;
+			m_ptMouseLast.y = y;
+
+			ClientToScreen(hWnd, &m_ptMouseLast);
+			pInput->OnMouseRButtonUp(wParam, m_ptMouseLast.x, m_ptMouseLast.y);
+		}
+		break;
+
+		case WM_MOUSEMOVE:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			POINT m_ptMouseLast;
+			m_ptMouseLast.x = x;
+			m_ptMouseLast.y = y;
+
+			ClientToScreen(hWnd, &m_ptMouseLast);
+			pInput->OnMouseMove(wParam, m_ptMouseLast.x, m_ptMouseLast.y);
+		}
+		break;
+
+		case WM_MOUSEWHEEL:
+		{
+			int x = LOWORD(lParam);
+			int y = HIWORD(lParam);
+
+			short delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+			pInput->OnMouseWheel(wParam, delta);
+		}
+		break;
+
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hdc = BeginPaint(hWnd, &ps);
+			// TODO: Add any drawing code that uses hdc here...
+			EndPaint(hWnd, &ps);
+		}
+		break;
+	
+		case WM_DESTROY:
+		{
+			TEngine::GetInstance()->ShutDown();
+			PostQuitMessage(0);
+		}
+		break;
+
+
+
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
 }
@@ -35,6 +141,11 @@ bool TApplicationWin::Init()
 	}
 	
 	return true;
+}
+
+void TApplicationWin::Close()
+{
+
 }
 
 bool TApplicationWin::InitWindow()
