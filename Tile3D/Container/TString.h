@@ -97,6 +97,8 @@ public:
 	//	Convert to lower case
 	void ToLower();
 
+	void Assign(unsigned char * buf, unsigned int buf_len);
+
 	//	Format string
 	TString& Format(const char* szFormat, ...);
 

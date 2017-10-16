@@ -266,6 +266,11 @@ void TString::ToLower()
 	strlwr(m_pStr);
 }
 
+void TString::Assign(unsigned char * buf, unsigned int buf_len)
+{
+	m_pStr = AllocThenCopy((char*)buf, (int)buf_len);
+}
+
 //	Format string
 TString& TString::Format(const char* szFormat, ...)
 {
