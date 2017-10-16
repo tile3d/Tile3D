@@ -2,8 +2,8 @@
 #include "TFileDir.h"
 #include <string.h>
 #include <algorithm>
-#include <Util/TLog.h>
-#include <Util/TAssert.h>
+#include <Common/TLog.h>
+#include <Common/TAssert.h>
 #include <Sys/TSysFile.h>
 
 TPackageFile::TPackageFile()

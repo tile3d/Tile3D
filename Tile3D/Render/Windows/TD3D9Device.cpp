@@ -1,6 +1,6 @@
 #include "TD3D9Device.h"
 #include "TD3D9Stream.h"
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 bool TD3D9Device::Init()
 {

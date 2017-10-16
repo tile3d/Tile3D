@@ -2,7 +2,7 @@
 #include "TD3D9Device.h"
 #include <Render/TEngine.h>
 #include <Render/SkinModel/TSkinMesh.h>
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 void TD3D9Stream::Render()
 {

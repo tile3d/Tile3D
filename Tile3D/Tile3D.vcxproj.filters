@@ -10,9 +10,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{40603d31-c94e-4f16-84a4-8faef36f959b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{ff6a9afb-0b4b-4836-99e9-75da7dff8825}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{b9cf2439-f15c-46e7-b53e-959d362f06df}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="Render\Windows">
       <UniqueIdentifier>{b7e00773-f7ac-4912-b4ce-3cad27277dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ff6a9afb-0b4b-4836-99e9-75da7dff8825}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,14 +102,8 @@
     <ClInclude Include="Math\TAABBBox.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Util\TAssert.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Container\TString.h">
       <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\TLog.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Core\Memory\TMemCommon.h">
       <Filter>Core\Memory</Filter>
@@ -143,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="File\TFile.h">
       <Filter>File</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\TTypes.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="File\TFileMem.h">
       <Filter>File</Filter>
@@ -206,12 +197,6 @@
     </ClInclude>
     <ClInclude Include="Container\TPair.h">
       <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\TCounter.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\TTime.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Render\SkinModel\TSkin.h">
       <Filter>Render\SkinModel</Filter>
@@ -306,11 +291,26 @@
     <ClInclude Include="Render\TInput.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Util\TOctets.h">
-      <Filter>Util</Filter>
+    <ClInclude Include="Common\TAssert.h">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Util\TOctetsStream.h">
-      <Filter>Util</Filter>
+    <ClInclude Include="Common\TCounter.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TLog.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TOctets.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TOctetsStream.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TTime.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TTypes.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -349,9 +349,6 @@
     </ClCompile>
     <ClCompile Include="Container\TString.cpp">
       <Filter>Container</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\TLog.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Core\TMemory.cpp">
       <Filter>Core</Filter>
@@ -406,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="File\TScriptFile.cpp">
       <Filter>File</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\TTime.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Render\SkinModel\TSkin.cpp">
       <Filter>Render\SkinModel</Filter>
@@ -494,11 +488,17 @@
     <ClCompile Include="Render\TInput.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Util\TOctets.cpp">
-      <Filter>Util</Filter>
+    <ClCompile Include="Common\TLog.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Util\TOctetsStream.cpp">
-      <Filter>Util</Filter>
+    <ClCompile Include="Common\TOctets.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TOctetsStream.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TTime.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

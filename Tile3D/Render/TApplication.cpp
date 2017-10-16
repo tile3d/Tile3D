@@ -1,5 +1,5 @@
 #include "TApplication.h"
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 
 bool TApplication::Init()

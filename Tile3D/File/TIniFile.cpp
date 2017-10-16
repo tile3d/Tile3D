@@ -1,5 +1,5 @@
-#include <Util/TLog.h>
-#include <Util/TAssert.h>
+#include <Common/TLog.h>
+#include <Common/TAssert.h>
 
 #include "TIniFile.h"
 #include "TFile.h"

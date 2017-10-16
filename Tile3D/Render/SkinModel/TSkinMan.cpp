@@ -2,7 +2,7 @@
 #include "TSkin.h"
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 TSkin* TSkinMan::LoadSkin(const char * skinFile)
 {

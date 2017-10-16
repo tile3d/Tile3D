@@ -3,7 +3,7 @@
 #include "TMemLarge.h"
 #include "TMemDump.h"
 #include <Core/Lock/TMutexLock.h>
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 #pragma warning (disable: 4996)
 #pragma warning (disable: 4073)

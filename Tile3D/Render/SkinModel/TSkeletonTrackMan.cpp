@@ -1,5 +1,5 @@
 #include "TSkeletonTrackMan.h"
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 
 TSkeletonTrack * TSkeletonTrackMan::LoadSkeletonTrack(int fileNameID, const char * fileName, bool oldBoneFile)
 {

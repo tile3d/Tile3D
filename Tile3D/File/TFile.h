@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdio.h>
-#include <Util/TTypes.h>
+#include <Common/TTypes.h>
 #include <Core/TObject.h>
 
 class TString;

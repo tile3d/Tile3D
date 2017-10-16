@@ -1,8 +1,8 @@
 #include "TSkinModelMan.h"
 #include "TSkinModel.h"
+#include <Common/TLog.h>
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
-#include <Util/TLog.h>
 
 TSkinModel* TSkinModelMan::LoadSkinModel(const char * SkinModelFile, int skinFlag)
 {

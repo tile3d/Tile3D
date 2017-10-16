@@ -2,7 +2,7 @@
 
 #include <Render/TDevice.h>
 #include <Render/TStream.h>
-#include <Util/TTypes.h>
+#include <Common/TTypes.h>
 #include "TApplicationWin.h"
 #include <d3d9.h>
 

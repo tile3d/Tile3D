@@ -3,10 +3,11 @@
 #include "TSkeletonControllerJoint.h"
 #include "TSkeletonSprintJoint.h"
 #include "TSkeletonAxisSprintJoint.h"
-#include <Util/TAssert.h>
+#include <Common/TAssert.h>
+#include <Common/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileDir.h>
-#include <Util/TLog.h>
+
 
 
 TSkeletonJoint::TSkeletonJoint()

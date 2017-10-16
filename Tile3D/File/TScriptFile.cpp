@@ -2,7 +2,7 @@
 #include <string.h>
 #include "TFile.h"
 #include "TFileImage.h"
-#include <Util/TLog.h>
+#include <Common/TLog.h>
 #include <Core/TMemory.h>
 
 TScriptFile::TScriptFile()

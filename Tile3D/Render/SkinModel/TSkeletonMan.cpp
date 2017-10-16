@@ -1,7 +1,7 @@
 #include "TSkeletonMan.h"
 #include "TSkeleton.h"
-#include <Util/TTypes.h>
-#include <Util/TLog.h>
+#include <Common/TTypes.h>
+#include <Common/TLog.h>
 #include <File/TFileDir.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>

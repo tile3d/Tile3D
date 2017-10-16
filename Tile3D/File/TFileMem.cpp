@@ -1,7 +1,7 @@
 #include "TFileMem.h"
 #include <Container/TString.h>
-#include <Util/TAssert.h>
-#include <Util/TLog.h>
+#include <Common/TAssert.h>
+#include <Common/TLog.h>
 #include <string.h>
 #include <Core/TMemory.h>
 
