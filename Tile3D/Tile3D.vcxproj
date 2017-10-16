@@ -212,6 +212,8 @@
     <ClInclude Include="Util\TAssert.h" />
     <ClInclude Include="Util\TCounter.h" />
     <ClInclude Include="Util\TLog.h" />
+    <ClInclude Include="Util\TOctets.h" />
+    <ClInclude Include="Util\TOctetsStream.h" />
     <ClInclude Include="Util\TTime.h" />
     <ClInclude Include="Util\TTypes.h" />
   </ItemGroup>
@@ -275,6 +277,8 @@
     <ClCompile Include="Sys\IOS\TSysFileIOS.cpp" />
     <ClCompile Include="Sys\Win\TSysFileWin.cpp" />
     <ClCompile Include="Util\TLog.cpp" />
+    <ClCompile Include="Util\TOctets.cpp" />
+    <ClCompile Include="Util\TOctetsStream.cpp" />
     <ClCompile Include="Util\TTime.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

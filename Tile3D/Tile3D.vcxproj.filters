@@ -306,6 +306,12 @@
     <ClInclude Include="Render\TInput.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Util\TOctets.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\TOctetsStream.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -487,6 +493,12 @@
     </ClCompile>
     <ClCompile Include="Render\TInput.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\TOctets.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\TOctetsStream.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
