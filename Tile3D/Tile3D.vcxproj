@@ -183,6 +183,9 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
+    <ClInclude Include="Net\TProtocol.h" />
+    <ClInclude Include="Net\TSession.h" />
+    <ClInclude Include="Net\TSocketAddr.h" />
     <ClInclude Include="Render\Material\TMaterial.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAxisSprintJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAnimJoint.h" />
@@ -249,6 +252,9 @@
     <ClCompile Include="Math\TRotator.cpp" />
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
+    <ClCompile Include="Net\TProtocol.cpp" />
+    <ClCompile Include="Net\TSession.cpp" />
+    <ClCompile Include="Net\TSocketAddr.cpp" />
     <ClCompile Include="Render\Material\TMaterial.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAxisSprintJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAnimJoint.cpp" />

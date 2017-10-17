@@ -49,6 +49,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{ff6a9afb-0b4b-4836-99e9-75da7dff8825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{279dc7be-d7e8-439e-90cd-2938440d4f8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -312,6 +315,15 @@
     <ClInclude Include="Common\TTypes.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="Net\TProtocol.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TSession.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TSocketAddr.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -499,6 +511,15 @@
     </ClCompile>
     <ClCompile Include="Common\TTime.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TProtocol.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TSession.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TSocketAddr.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
