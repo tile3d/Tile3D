@@ -1,6 +1,7 @@
 #include "TString.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <Sys/TSysFile.h>
 
 #pragma warning (disable: 4996)
 
@@ -244,8 +245,7 @@ void TString::ToUpper()
 		m_pStr = AllocThenCopy(m_pStr, iLen);
 	}
 
-	//tbd: need change to cross platform
-	strupr(m_pStr);
+	TSysFile::StrToUpper(m_pStr);
 }
 
 //	Convert to lower case
@@ -262,10 +262,10 @@ void TString::ToLower()
 		m_pStr = AllocThenCopy(m_pStr, iLen);
 	}
 
-	//tbd: need change to cross platform
-	strlwr(m_pStr);
+	TSysFile::StrToLower(m_pStr);
 }
 
+//TBD: reconsider the implementation
 void TString::Assign(unsigned char * buf, unsigned int buf_len)
 {
 	m_pStr = AllocThenCopy((char*)buf, (int)buf_len);

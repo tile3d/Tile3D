@@ -8,13 +8,69 @@
 class TOctetsStream
 {
 public:
+	enum {
+		MAXSPARE = 16384
+	};
+
 	TOctetsStream() {
 		m_pos = 0;
 		m_transpos = 0;
 	}
 
+	TOctetsStream(const TOctetsStream & os) {
+		m_octets = os.m_octets;
+		m_pos = 0;
+		m_transpos = 0;
+	}
+
+	//move ctor (TBD: if need set the m_octets to nullptr)
+	TOctetsStream(const TOctetsStream && os) {
+		m_octets = os.m_octets;
+		m_pos = 0;
+		m_transpos = 0;
+	}
+
+
+	TOctetsStream(const TOctets & o) : m_octets(o), m_pos(0), m_transpos(0) {
+	}
+
+
+	TOctetsStream& operator= (const TOctetsStream & rhs) {
+		if (this != &rhs) {
+			m_octets = rhs.m_octets;
+			m_pos = rhs.m_pos;
+			m_transpos = rhs.m_transpos;
+		}
+		return *this;
+	}
+
 	~TOctetsStream() {}
 
+public:
+
+	const TOctetsStream& Begin() const {
+		m_transpos = m_pos;
+		return *this;
+	}
+
+	const TOctetsStream& Rollback() const {
+		m_pos = m_transpos;
+		return *this;
+	}
+
+	const TOctetsStream& Commit() const {
+		if (m_pos > MAXSPARE) {
+			const_cast<TOctets&>(m_octets).Erase(m_octets.Begin(), m_octets.Begin() + m_pos);
+			m_pos = 0;
+		}
+		return *this;
+	}
+
+	void Clear() {
+		m_octets.Clear();
+		m_pos = 0;
+		m_transpos = 0;
+	}
 
 public:
 	class MarshalException {};
@@ -54,55 +110,16 @@ public:
 		return ByteOrder16(s);
 	}
 
-	unsigned short PopByte32() const {
+	unsigned int PopByte32() const {
 		unsigned int i;
 		Pop(i);
 		return ByteOrder32(i);
 	}
 
-	TOctetsStream& CompactUInt32(unsigned int x) {
-		if (x < 0x80) {
-			return Push((unsigned char)x);
-		}
-		else if (x < 0x8000) {
-			return Push(ByteOrder16(x | 0x8000));
-		}
-		else if (x < 0x20000000) {
-			return Push(ByteOrder32(x | 0xc0000000));
-		}
-		Push((unsigned char)0xe0);
-		return Push(ByteOrder32(x));
-	}
-
-	const TOctetsStream& UncompactUInt32(const unsigned int & x) const {
-		if (m_pos == m_octets.Size()) {
-			throw MarshalException();
-		}
-
-		switch (*((unsigned char*)m_octets.Begin() + m_pos) & 0xe0){
-			case 0xe0:
-			{
-				PopByte8();
-				const_cast<unsigned int&>(x) = PopByte32();
-				return *this;
-			}
-
-			case 0xc0:
-			{
-				const_cast<unsigned int&>(x) = PopByte32() & ~0xc0000000;
-				return *this;
-			}
-
-			case 0xa0:
-			case 0x80:
-			{
-				const_cast<unsigned int&>(x) = PopByte16() & ~0x8000;
-				return *this;
-			}
-
-			const_cast<unsigned int&>(x) = PopByte8();
-		}
-	}
+	TOctetsStream& CompactUInt32(unsigned int x);
+	const TOctetsStream& UncompactUInt32(const unsigned int & x) const;
+	TOctetsStream& CompactSInt32(int x);
+	const TOctetsStream& UncompactSInt32(const int & x) const;
 
 //marshal
 public:
@@ -256,6 +273,7 @@ public:
 			throw MarshalException();
 		}
 
+		//TBD
 		const_cast<TString&>(x).Assign(m_octets.Begin() + m_pos, len);
 		m_pos += len;
 		return *this;
@@ -316,5 +334,5 @@ private:
 private:
 	TOctets m_octets;
 	mutable unsigned int m_pos;
-	unsigned int m_transpos;
+	mutable unsigned int m_transpos;
 };

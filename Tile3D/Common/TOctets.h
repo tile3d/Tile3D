@@ -84,6 +84,15 @@ public:
 		m_count += buf_size;
 	}
 
+	void Erase(unsigned char* begin, unsigned char* end) {
+		if (begin < end) {
+			unsigned int offset = begin - m_data;
+			unsigned int len = (end - begin);
+			memcpy(begin, end, m_count-offset-len);
+			m_count -= len;
+		}
+	}
+
 	unsigned int Size() const { return m_count; }
 
 	unsigned char* Begin() { return m_data; }
