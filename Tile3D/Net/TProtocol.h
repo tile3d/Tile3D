@@ -21,7 +21,16 @@ public:
 	}
 
 
-	void Encode(const TOctetsStream& os) const;
+	void Encode(TOctetsStream& os) const
+	{
+		os.CompactUInt32(m_type);
+		Marshal(os);
+	}
+
+	void Decode(const TOctetsStream& os);
+
+	virtual void Marshal(TOctetsStream & os) const;
+	virtual void Unmarshal(TOctetsStream & os) const;
 
 
 private:
