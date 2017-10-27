@@ -35,7 +35,7 @@ public:
 		m_pSocketImp = imp;
 	}
 
-	bool Create();
+	bool Init();
 
 	bool Bind();
 
@@ -44,6 +44,9 @@ public:
 	TSocket* Accept();
 
 	bool Connect();
+
+	bool GetSockOpt(int option_name, int level, void * option_value, int* option_len);
+	bool SetSockOpt(int option_name, int level, void * option_value, int option_len);
 
 private:
 	bool m_bServer;

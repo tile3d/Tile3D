@@ -336,6 +336,12 @@
     <ClInclude Include="Net\TNet.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="Net\TTCPClient.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TTCPServer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -540,6 +546,9 @@
       <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="Net\TNet.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TTCPClient.cpp">
       <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>

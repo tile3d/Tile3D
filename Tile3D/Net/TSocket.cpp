@@ -24,7 +24,7 @@ TSocket::~TSocket() {
 }
 
 
-bool TSocket::Create()
+bool TSocket::Init()
 {
 #ifdef PLATFORM_WIN
 	m_pSocketImp = new TSocketImpWin(this);
@@ -57,5 +57,15 @@ TSocket* TSocket::Accept()
 bool TSocket::Connect()
 {
 	return m_pSocketImp->Connect();
+}
+
+bool TSocket::SetSockOpt(int option_name, int level, void * option_value, int option_len)
+{
+	return m_pSocketImp->SetSockOpt(option_name, level, option_value, option_len);
+}
+
+bool TSocket::GetSockOpt(int option_name, int level, void * option_value, int* option_len)
+{
+	return m_pSocketImp->GetSockOpt(option_name, level, option_value, option_len);
 }
 

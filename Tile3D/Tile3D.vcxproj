@@ -190,6 +190,8 @@
     <ClInclude Include="Net\TSocketAddr.h" />
     <ClInclude Include="Net\TSocketImp.h" />
     <ClInclude Include="Net\TSocketImpWin.h" />
+    <ClInclude Include="Net\TTCPClient.h" />
+    <ClInclude Include="Net\TTCPServer.h" />
     <ClInclude Include="Render\Material\TMaterial.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAxisSprintJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAnimJoint.h" />
@@ -262,6 +264,7 @@
     <ClCompile Include="Net\TSocket.cpp" />
     <ClCompile Include="Net\TSocketAddr.cpp" />
     <ClCompile Include="Net\TSocketImpWin.cpp" />
+    <ClCompile Include="Net\TTCPClient.cpp" />
     <ClCompile Include="Render\Material\TMaterial.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAxisSprintJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAnimJoint.cpp" />

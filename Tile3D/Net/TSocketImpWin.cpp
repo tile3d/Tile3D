@@ -100,3 +100,19 @@ bool TSocketImpWin::Connect()
 	return true;
 }
 
+bool TSocketImpWin::GetSockOpt(int option_name, int level, void * option_value, int* option_len)
+{
+	if (getsockopt(m_socket, level, option_name, (char*)option_value, option_len) == SOCKET_ERROR) {
+		return false;
+	}
+	return true;
+}
+
+bool TSocketImpWin::SetSockOpt(int option_name, int level, void * option_value, int option_len)
+{
+	if (setsockopt(m_socket, level, option_name, (char*)option_value, option_len) == SOCKET_ERROR) {
+		return false;
+	}
+	return true;
+}
+
