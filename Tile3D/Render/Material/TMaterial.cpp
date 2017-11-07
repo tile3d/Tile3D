@@ -1,6 +1,10 @@
 #include "TMaterial.h"
 #include <File/TFile.h>
 #include <string.h>
+#include <Common/TLog.h>
+#include <Render/TEngine.h>
+#include <Render/TDevice.h>
+#include <Render/Windows/TD3D9Device.h>
 
 TMaterial::TMaterial()
 {
@@ -67,3 +71,29 @@ bool TMaterial::Load(TFile * pFile)
 	return true;
 }
 
+
+void SetColor(D3DCOLORVALUE& color, TColor & tcolor)
+{
+	color.r = tcolor.m_r;
+	color.g = tcolor.m_g;
+	color.b = tcolor.m_b;
+	color.a = tcolor.m_a;
+
+}
+
+
+void TMaterial::Render()
+{
+	TD3D9Device * pDevice = (TD3D9Device*)TEngine::GetInstance()->GetDevice();
+	D3DMATERIAL9 mat;
+	SetColor(mat.Ambient, this->GetAmbient());
+	SetColor(mat.Diffuse, this->GetDiffuse());
+	SetColor(mat.Emissive, this->GetEmissive());
+	SetColor(mat.Specular, this->GetSpecular());
+	mat.Power = this->m_materialParam.m_power;
+
+	HRESULT hresult = pDevice->GetDirect3DDevice()->SetMaterial((D3DMATERIAL9 *)this);
+	if (hresult != S_OK) {
+		TLog::Log(LOG_ERR, "Texture", "TTexture::Render,  failed to set the texture");
+	}
+}

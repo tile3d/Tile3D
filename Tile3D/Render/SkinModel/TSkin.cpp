@@ -5,8 +5,12 @@
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
 #include <Render/Material/TMaterial.h>
+#include <Render/Texture/TTextureMan.h>
+#include <Render/Texture/TTexture.h>
+#include <Render/TEngine.h>
+#include <Render/TDevice.h>
 
-//TBD
+
 TSkin::TSkin()
 {
 	m_version = 0;
@@ -75,9 +79,32 @@ bool TSkin::Load(TFile* pFile)
 
 	//load the textures
 	if (header.m_textureNum > 0) {
+
+		TString relativePath, fileTitle;
+		TFileDir::GetInstance()->GetFilePath(m_skinFileName, relativePath);
+		TFileDir::GetInstance()->GetFileTitle(m_skinFileName, fileTitle);
+		int index = fileTitle.ReverseFind('.');
+		if (index >= 0) {
+			fileTitle.CutRight(fileTitle.GetLength() - index);
+		}
+
+		TString textureDir1 = relativePath + "\\Textures\\";
+		TString textureDir2 = relativePath + "\\Tex_" + fileTitle + "\\";
+		TString textureName;
+		TString texturePath;
 		for (int i = 0; i < header.m_textureNum; i++) {
-			TString textureName;
 			pFile->ReadString(textureName);
+			texturePath = textureDir1 + textureName;
+			TTexture * pTexture = TTextureMan::GetInstance()->LoadTexture(texturePath);
+			if (pTexture == nullptr) {
+				texturePath = textureDir2 + textureName;
+				pTexture = TTextureMan::GetInstance()->LoadTexture(texturePath);
+			}
+
+			TAssert(pTexture != nullptr);
+			if (pTexture) {
+				m_textures.Add(pTexture);
+			}
 		}
 	}
 
@@ -124,7 +151,14 @@ TSkin* TSkin::Clone()
 void TSkin::Render()
 {
 	for (int i = 0; i < m_skinMeshs.Size(); ++i) {
-		TSkinMesh * pSkinMesh = m_skinMeshs[i];
+		TMaterial* pMaterial = m_materials[0];
+		pMaterial->Render();
+
+		TTexture* pTexture = m_textures[i];
+		pTexture->Render(i);
+
+		TSkinMesh* pSkinMesh = m_skinMeshs[i];
 		pSkinMesh->Render();
 	}
 }
+

@@ -4,5 +4,5 @@
 
 bool TSession::SendProtocol(const TProtocol* proto)
 {
-
+	return true;
 }

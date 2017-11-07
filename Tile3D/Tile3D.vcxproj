@@ -86,6 +86,7 @@
       <EnablePREfast>true</EnablePREfast>
       <BrowseInformation>true</BrowseInformation>
       <PreprocessorDefinitions>DEBUG_VERSION;DEBUG_MEMORY;PLATFORM_WIN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Program Files (x86)\DXSDK\Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -215,6 +216,8 @@
     <ClInclude Include="Render\TCamera.h" />
     <ClInclude Include="Render\TDevice.h" />
     <ClInclude Include="Render\TEngine.h" />
+    <ClInclude Include="Render\Texture\TTexture.h" />
+    <ClInclude Include="Render\Texture\TTextureMan.h" />
     <ClInclude Include="Render\TGameSetting.h" />
     <ClInclude Include="Render\TInput.h" />
     <ClInclude Include="Render\TStream.h" />
@@ -287,6 +290,8 @@
     <ClCompile Include="Render\TCamera.cpp" />
     <ClCompile Include="Render\TDevice.cpp" />
     <ClCompile Include="Render\TEngine.cpp" />
+    <ClCompile Include="Render\Texture\TTexture.cpp" />
+    <ClCompile Include="Render\Texture\TTextureMan.cpp" />
     <ClCompile Include="Render\TGameSetting.cpp" />
     <ClCompile Include="Render\TInput.cpp" />
     <ClCompile Include="Render\TStream.cpp" />

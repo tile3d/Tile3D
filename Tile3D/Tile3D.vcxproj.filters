@@ -342,6 +342,12 @@
     <ClInclude Include="Net\TTCPServer.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Texture\TTexture.h">
+      <Filter>Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Texture\TTextureMan.h">
+      <Filter>Render\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -550,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="Net\TTCPClient.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Texture\TTexture.cpp">
+      <Filter>Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Texture\TTextureMan.cpp">
+      <Filter>Render\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

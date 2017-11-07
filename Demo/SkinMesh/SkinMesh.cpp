@@ -55,7 +55,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   
 
 	TEngine::GetInstance()->Init(pAppWin, pDeviceWin);
-	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
+//	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2015Ð¡»·\\2015Ð¡»·.smd";
+//	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
+	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016Áéºï\\2016Áéºï.smd";
+
 	TSkinModel * pSkinModel = TSkinModelMan::GetInstance()->LoadSkinModel(filename, 0);
 	if (pSkinModel == nullptr) {
 		printf("failed to load the skin model");

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Common/TTypes.h>
+#include "TSocket.h"
+
 class TSocket;
 class TProtocol;
 class TSession

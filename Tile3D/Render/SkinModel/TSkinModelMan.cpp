@@ -14,7 +14,7 @@ TSkinModel* TSkinModelMan::LoadSkinModel(const char * SkinModelFile, int skinFla
 	TFileImage fi;
 	if (!fi.Open("", SkinModelFile, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY)) {
 		fi.Close();
-		TLog::Log(LOG_ERR, "SkinModelModel", "TSkinModelMan::LoadSkinModel,  failed to load the SkinModel: [%s].", SkinModelFile);
+		TLog::Log(LOG_ERR, "SkinModel", "TSkinModelMan::LoadSkinModel,  failed to load the SkinModel: [%s].", SkinModelFile);
 		return nullptr;
 	}
 	TSkinModel* pNewSkinModel = CreateSkinModel(&fi, skinFlag);

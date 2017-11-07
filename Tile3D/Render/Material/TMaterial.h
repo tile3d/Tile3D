@@ -45,6 +45,8 @@ public:
 		m_materialParam.m_emissive.SetColor(r, g, b, a);
 	}
 
+	void Render();
+
 private:
 	TMaterialParam m_materialParam;
 	bool m_b2Sided;
