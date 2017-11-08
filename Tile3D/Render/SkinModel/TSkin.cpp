@@ -155,7 +155,7 @@ void TSkin::Render()
 		pMaterial->Render();
 
 		TTexture* pTexture = m_textures[i];
-		pTexture->Render(i);
+		pTexture->Render();
 
 		TSkinMesh* pSkinMesh = m_skinMeshs[i];
 		pSkinMesh->Render();

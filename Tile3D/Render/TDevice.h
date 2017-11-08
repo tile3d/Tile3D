@@ -4,6 +4,7 @@
 #include <Common/TTypes.h>
 
 class TStream;
+class TMaterial;
 class TDevice
 {
 public:
@@ -23,5 +24,7 @@ public:
 	virtual bool OnLostDevice() { return true; }
 	virtual bool OnResetDevice() { return true; }
 	virtual bool IsLostDevice() { return false; }
+
+	void SetMaterial(TMaterial* pMaterial) {}
 
 };

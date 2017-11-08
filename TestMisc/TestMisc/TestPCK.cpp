@@ -1,8 +1,8 @@
 #include <File/TPackageMan.h>
 #include <File/TPackage.h>
 #include "File/TFileDir.h"
-#include <Util/TLog.h>
-#include <Util/TTime.h>
+#include <Common/TLog.h>
+#include <Common/TTime.h>
 #include <Core/TMemory.h>
 #include <stdio.h>
 

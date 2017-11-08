@@ -28,6 +28,7 @@ public:
 	TColor& GetAmbient() { return m_materialParam.m_ambient; }
 	TColor& GetSpecular() { return m_materialParam.m_specular; }
 	TColor& GetEmissive() { return m_materialParam.m_emissive; }
+	float GetPower() { return  m_materialParam.m_power; }
 
 	void SetDiffuse(float r, float g, float b, float a) {
 		m_materialParam.m_diffuse.SetColor(r, g, b, a);

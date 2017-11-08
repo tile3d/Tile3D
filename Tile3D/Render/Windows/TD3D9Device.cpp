@@ -1,6 +1,7 @@
 #include "TD3D9Device.h"
 #include "TD3D9Stream.h"
 #include <Common/TLog.h>
+#include <Render/Material/TMaterial.h>
 
 bool TD3D9Device::Init()
 {
@@ -40,8 +41,10 @@ bool TD3D9Device::Init()
 		return false;
 	}
 
-	/*
 	m_d3dDevice->SetRenderState(D3DRS_LIGHTING, false);
+	m_d3dDevice->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, true);
+	m_d3dDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
+	/*
 	m_d3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_d3dDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 
@@ -107,3 +110,28 @@ void TD3D9Device::SetTransform(TRANSFORMATION_STATE state, const TMatrix4 & mat)
 	};
 }
 
+
+void SetColor(D3DCOLORVALUE& color, TColor & tcolor)
+{
+	color.r = tcolor.m_r;
+	color.g = tcolor.m_g;
+	color.b = tcolor.m_b;
+	color.a = tcolor.m_a;
+
+}
+
+void TD3D9Device::SetMaterial(TMaterial* pMaterial)
+{
+
+	D3DMATERIAL9 mat;
+	SetColor(mat.Ambient, pMaterial->GetAmbient());
+	SetColor(mat.Diffuse, pMaterial->GetDiffuse());
+	SetColor(mat.Emissive, pMaterial->GetEmissive());
+	SetColor(mat.Specular, pMaterial->GetSpecular());
+	mat.Power = pMaterial->GetPower();
+
+	HRESULT hresult = m_d3dDevice->SetMaterial((D3DMATERIAL9 *)this);
+	if (hresult != S_OK) {
+		TLog::Log(LOG_ERR, "Texture", "TTexture::Render,  failed to set the texture");
+	}
+}

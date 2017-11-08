@@ -21,5 +21,6 @@ bool TTCPClient::Setup()
 	}
 
 	m_pSession = new TSession(pSocket);
+	return true;
 }
 

@@ -17,7 +17,7 @@ public:
 
 	bool Load(TString & textureName);
 
-	void Render(int stage);
+	void Render();
 
 	IDirect3DTexture9* GetD3DTexture() {
 		return m_pDXTexture;

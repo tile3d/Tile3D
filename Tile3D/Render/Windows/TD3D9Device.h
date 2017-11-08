@@ -28,6 +28,8 @@ public:
 	
 	virtual void SetTransform(TRANSFORMATION_STATE state, const TMatrix4 & mat);
 
+	void SetMaterial(TMaterial* pMaterial);
+
 	IDirect3DDevice9Ex* GetDirect3DDevice() { return m_d3dDevice; }
 
 private:

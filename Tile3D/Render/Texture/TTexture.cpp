@@ -19,7 +19,7 @@ TTexture::~TTexture()
 	}
 }
 
-void TTexture::Render(int stage)
+void TTexture::Render()
 {
 	if (m_pDXTexture) {
 		TD3D9Device * pDevice = (TD3D9Device*)TEngine::GetInstance()->GetDevice();

@@ -55,9 +55,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   
 
 	TEngine::GetInstance()->Init(pAppWin, pDeviceWin);
-//	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2015小环\\2015小环.smd";
+	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2015小环\\2015小环.smd";
 //	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016狂暴海盗\\2016狂暴海盗.smd";
-	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016灵猴\\2016灵猴.smd";
+//	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016灵猴\\2016灵猴.smd";
 
 	TSkinModel * pSkinModel = TSkinModelMan::GetInstance()->LoadSkinModel(filename, 0);
 	if (pSkinModel == nullptr) {
