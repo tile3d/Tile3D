@@ -194,6 +194,10 @@
     <ClInclude Include="Net\TTCPClient.h" />
     <ClInclude Include="Net\TTCPServer.h" />
     <ClInclude Include="Render\Material\TMaterial.h" />
+    <ClInclude Include="Render\Shader\TPixelShader.h" />
+    <ClInclude Include="Render\Shader\TShaderMan.h" />
+    <ClInclude Include="Render\Shader\TVertexDecl.h" />
+    <ClInclude Include="Render\Shader\TVertexShader.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAxisSprintJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonAnimJoint.h" />
     <ClInclude Include="Render\SkinModel\TSkeletonBone.h" />
@@ -269,6 +273,10 @@
     <ClCompile Include="Net\TSocketImpWin.cpp" />
     <ClCompile Include="Net\TTCPClient.cpp" />
     <ClCompile Include="Render\Material\TMaterial.cpp" />
+    <ClCompile Include="Render\Shader\TPixelShader.cpp" />
+    <ClCompile Include="Render\Shader\TShaderMan.cpp" />
+    <ClCompile Include="Render\Shader\TVertexDecl.cpp" />
+    <ClCompile Include="Render\Shader\TVertexShader.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAxisSprintJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonAnimJoint.cpp" />
     <ClCompile Include="Render\SkinModel\TSkeletonBone.cpp" />

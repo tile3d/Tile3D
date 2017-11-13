@@ -52,6 +52,9 @@
     <Filter Include="Net">
       <UniqueIdentifier>{279dc7be-d7e8-439e-90cd-2938440d4f8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Shader">
+      <UniqueIdentifier>{5144f6b9-f857-4ff0-b23f-b969d85bdc11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -348,6 +351,18 @@
     <ClInclude Include="Render\Texture\TTextureMan.h">
       <Filter>Render\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Shader\TPixelShader.h">
+      <Filter>Render\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shader\TVertexShader.h">
+      <Filter>Render\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shader\TVertexDecl.h">
+      <Filter>Render\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shader\TShaderMan.h">
+      <Filter>Render\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -562,6 +577,18 @@
     </ClCompile>
     <ClCompile Include="Render\Texture\TTextureMan.cpp">
       <Filter>Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shader\TPixelShader.cpp">
+      <Filter>Render\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shader\TVertexShader.cpp">
+      <Filter>Render\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shader\TVertexDecl.cpp">
+      <Filter>Render\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shader\TShaderMan.cpp">
+      <Filter>Render\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
