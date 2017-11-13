@@ -18,7 +18,7 @@ struct VS_INPUT
 	float3 weight       : BLENDWEIGHT0;
 	float4 blendindices : BLENDINDICES0;
 	float3 normal       : NORMAL0;
-	float4 binormal     : TANGENT0;
+	float4 tangent      : TANGENT0;
 	float2 uv           : TEXCOORD0;
 };
 
@@ -69,15 +69,16 @@ VS_OUTPUT vs_main(VS_INPUT input)
 	blendNormal.xyz = normalize(blendNormal.xyz);
 	blendNormal.w = 1;
 
-	blendBinormal.xyz =
-		mul(input.binormal.xyz, (float3x3)matBlend0[blendindices.x]) * blendweight.x +
-		mul(input.binormal.xyz, (float3x3)matBlend0[blendindices.y]) * blendweight.y +
-		mul(input.binormal.xyz, (float3x3)matBlend0[blendindices.z]) * blendweight.z +
-		mul(input.binormal.xyz, (float3x3)matBlend0[blendindices.w]) * blendweight.w;
+	blendTangent.xyz =
+		mul(input.tangent.xyz, (float3x3)matBlend0[blendindices.x]) * blendweight.x +
+		mul(input.tangent.xyz, (float3x3)matBlend0[blendindices.y]) * blendweight.y +
+		mul(input.tangent.xyz, (float3x3)matBlend0[blendindices.z]) * blendweight.z +
+		mul(input.tangent.xyz, (float3x3)matBlend0[blendindices.w]) * blendweight.w;
 
-	blendBinormal.xyz = normalize(blendBinormal.xyz);
+	blendTangent.xyz = normalize(blendTangent.xyz);
+	blendTangent.w = 1;
 
-	blendTangent.xyz = cross(blendBinormal.xyz, blendNormal.xyz) * input.binormal.w;
+	blendBinormal.xyz = cross(blendNormal.xyz, blendTangent.xyz) * input.tangent.w;
 
 	blendPos.xyz += blendNormal.xyz * g_fExtend;
 
@@ -100,7 +101,7 @@ VS_OUTPUT vs_main(VS_INPUT input)
 	output.LightDir.z = dot(blendNormal.xyz, LightDirection);
 
 	output.tangent.xyz = blendTangent.xyz;
-	output.tangent.w = input.binormal.w;
+	output.tangent.w = input.tangent.w;
 
 	output.binormal.xyz = blendBinormal.xyz;
 
