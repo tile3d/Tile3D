@@ -20,6 +20,9 @@ public:
 	bool Disappear();
 
 	TString& GetFileName() { return m_fileName; }
+	void SetShaderID(int shaderID) {
+		m_shaderID = shaderID;
+	}
 
 private:
 	static TVertexShader* m_pCurShader;

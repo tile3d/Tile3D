@@ -6,6 +6,9 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+TPixelShader* TPixelShader::m_pCurShader = nullptr;
+
+
 TPixelShader::TPixelShader()
 {
 	m_pD3DXShaderBuf = nullptr;
@@ -38,7 +41,7 @@ bool TPixelShader::Load(const char* fileName)
 	ID3DXBuffer*		pPixelShaderErr = nullptr;
 	ID3DXConstantTable* pPixelShaderConstantTable = nullptr;
 
-	hr = D3DXCompileShaderFromFile(fileName, nullptr, nullptr, "ps_main", "vs_3_0", flags, &m_pD3DXShaderBuf, &pPixelShaderErr, &pPixelShaderConstantTable);
+	hr = D3DXCompileShaderFromFile(fileName, nullptr, nullptr, "ps_main", "ps_2_0", flags, &m_pD3DXShaderBuf, &pPixelShaderErr, &pPixelShaderConstantTable);
 	if (FAILED(hr)) {
 		if (pPixelShaderErr != nullptr) {
 			TLog::Log(LOG_ERR, "Shader", "TVertexShader::Load,  fail to compile the shader file:%s, error:%s", fileName, pPixelShaderErr->GetBufferPointer());
@@ -59,8 +62,6 @@ bool TPixelShader::Load(const char* fileName)
 	m_pD3DXShaderBuf->Release();
 	m_pD3DXShaderBuf = nullptr;
 
-
-	m_shaderID = TFileDir::GetInstance()->GetIDFromFileName(fileName);
 	return true;
 }
 

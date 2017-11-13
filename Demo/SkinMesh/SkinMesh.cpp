@@ -1,7 +1,6 @@
 // SkinMesh.cpp : Defines the entry point for the application.
 //
 
-#include "stdafx.h"
 #include "SkinMesh.h"
 #include <Render/TApplication.h>
 #include <Render/Windows/TApplicationWin.h>
@@ -9,6 +8,9 @@
 #include <Render/TEngine.h>
 #include <Render/SkinModel/TSkinModelMan.h>
 #include <Render/SkinModel/TSkinModel.h>
+#include <Render/Shader/TShaderMan.h>
+#include <Render/Shader/TVertexShader.h>
+#include <Render/Shader/TPixelShader.h>
 #include <Core/TMemory.h>
 
 #define MAX_LOADSTRING 100
@@ -65,6 +67,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		return -1;
 	}
 	
+	D3DVERTEXELEMENT9 skinMeshDecl[] =
+	{
+		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
+		{ 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
+		{ 0, 28, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 40, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		D3DDECL_END()
+	};
+
+	TVertexShader * pVertexShader = TShaderMan::GetInstance()->LoadVertexShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_vs.hlsl", skinMeshDecl);
+	TPixelShader * pPixelShader = TShaderMan::GetInstance()->LoadPixelShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_ps.hlsl");
+
 //	TSkinModelMan::GetInstance()->ReleaseSkinModel(pSkinModel);
 	TEngine::GetInstance()->AddSkinModel(pSkinModel);
 

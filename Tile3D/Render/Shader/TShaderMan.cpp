@@ -16,7 +16,11 @@ TVertexShader* TShaderMan::LoadVertexShader(const char* fileName, D3DVERTEXELEME
 		delete pVertexShader;
 		return nullptr;
 	}
+	pVertexShader->SetShaderID(shaderID);
+
+	m_lock.Lock();
 	m_vertexShaders.Put(shaderID, pVertexShader);
+	m_lock.Unlock();
 	return pVertexShader;
 }
 
@@ -34,8 +38,11 @@ TPixelShader* TShaderMan::LoadPixelShader(const char* fileName)
 		delete pPixelShader;
 		return nullptr;
 	}
+	pPixelShader->SetShaderID(shaderID);
 
+	m_lock.Lock();
 	m_pixelShaders.Put(shaderID, pPixelShader);
+	m_lock.Unlock();
 	return pPixelShader;
 }
 
@@ -44,7 +51,9 @@ bool TShaderMan::ReleaseVertexShader(int shaderID)
 	TVertexShader * pVertexShader = FindVertexShaderByID(shaderID);
 	if (pVertexShader != nullptr) {
 		pVertexShader->Release();
+		m_lock.Lock();
 		m_vertexShaders.Remove(shaderID);
+		m_lock.Unlock();
 	}
 	return true;
 }
@@ -54,7 +63,9 @@ bool TShaderMan::ReleasePixelShader(int shaderID)
 	TPixelShader * pPixelShader = FindPixelShaderByID(shaderID);
 	if (pPixelShader != nullptr) {
 		pPixelShader->Release();
+		m_lock.Lock();
 		m_pixelShaders.Remove(shaderID);
+		m_lock.Unlock();
 	}
 	return true;
 }

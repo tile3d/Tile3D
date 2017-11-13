@@ -6,6 +6,8 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
+TVertexShader* TVertexShader::m_pCurShader = nullptr;
+
 TVertexShader::TVertexShader()
 {
 	m_pD3DXShaderBuf = nullptr;
@@ -39,7 +41,7 @@ bool TVertexShader::Load(const char* fileName, D3DVERTEXELEMENT9* pDecl)
 	ID3DXBuffer*		pVertexShaderErr = nullptr;
 	ID3DXConstantTable* pVertexShaderConstantTable = nullptr;
 
-	hr = D3DXCompileShaderFromFile(fileName, nullptr, nullptr, "vs_main", "vs_3_0", flags, &m_pD3DXShaderBuf, &pVertexShaderErr, &pVertexShaderConstantTable);
+	hr = D3DXCompileShaderFromFile(fileName, nullptr, nullptr, "vs_main", "vs_2_0", flags, &m_pD3DXShaderBuf, &pVertexShaderErr, &pVertexShaderConstantTable);
 	if (FAILED(hr)) {
 		if (pVertexShaderErr != nullptr) {
 			TLog::Log(LOG_ERR, "Shader", "TVertexShader::Load,  fail to compile the shader file:%s, error:%s", fileName, pVertexShaderErr->GetBufferPointer());
@@ -67,7 +69,6 @@ bool TVertexShader::Load(const char* fileName, D3DVERTEXELEMENT9* pDecl)
 		return false;	
 	}
 
-	m_shaderID = TFileDir::GetInstance()->GetIDFromFileName(fileName);
 	return true;
 }
 

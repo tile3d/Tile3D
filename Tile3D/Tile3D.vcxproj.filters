@@ -55,6 +55,15 @@
     <Filter Include="Render\Shader">
       <UniqueIdentifier>{5144f6b9-f857-4ff0-b23f-b969d85bdc11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a8eef04e-1919-435e-a1c7-8a6596f4e26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\HLSL">
+      <UniqueIdentifier>{9988a8fc-eec2-4459-a873-c6dcfa622741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\HLSL\SkinModel">
+      <UniqueIdentifier>{593ec0a7-0f11-40ac-b3cf-bd8bfbb24536}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -590,5 +599,13 @@
     <ClCompile Include="Render\Shader\TShaderMan.cpp">
       <Filter>Render\Shader</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Shaders\HLSL\SkinModel\skinmodel_ps.hlsl">
+      <Filter>Shaders\HLSL\SkinModel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\HLSL\SkinModel\skinmodel_vs.hlsl">
+      <Filter>Shaders\HLSL\SkinModel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

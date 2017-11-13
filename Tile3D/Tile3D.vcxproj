@@ -310,6 +310,14 @@
     <ClCompile Include="Sys\IOS\TSysFileIOS.cpp" />
     <ClCompile Include="Sys\Win\TSysFileWin.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Shaders\HLSL\SkinModel\skinmodel_ps.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Shaders\HLSL\SkinModel\skinmodel_vs.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

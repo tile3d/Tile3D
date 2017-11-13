@@ -19,6 +19,9 @@ public:
 
 	TString& GetFileName() { return m_fileName; }
 
+	void SetShaderID(int shaderID) {
+		m_shaderID = shaderID;
+	}
 private:
 	static TPixelShader* m_pCurShader;
 	TString m_fileName;
