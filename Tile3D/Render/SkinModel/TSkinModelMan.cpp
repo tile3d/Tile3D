@@ -3,6 +3,55 @@
 #include <Common/TLog.h>
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
+#include <Render/Shader/TShaderMan.h>
+
+
+TSkinModelMan::TSkinModelMan()
+{
+	pSkinMeshVertexShader = nullptr;
+	pSkinMeshPixelShader = nullptr;
+}
+
+
+TSkinModelMan::~TSkinModelMan()
+{
+	if (pSkinMeshVertexShader) {
+		pSkinMeshVertexShader->Release();
+		delete pSkinMeshVertexShader;
+		pSkinMeshVertexShader = nullptr;
+	}
+
+	if (pSkinMeshPixelShader) {
+		pSkinMeshPixelShader->Release();
+		delete pSkinMeshPixelShader;
+		pSkinMeshPixelShader = nullptr;
+	}
+}
+
+
+bool TSkinModelMan::LoadSkinMeshShader()
+{
+	D3DVERTEXELEMENT9 skinMeshDecl[] =
+	{
+		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
+		{ 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
+		{ 0, 28, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 40, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+		{ 0, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+		D3DDECL_END()
+	};
+
+	pSkinMeshVertexShader = TShaderMan::GetInstance()->LoadVertexShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_vs.hlsl", skinMeshDecl);
+	if (pSkinMeshVertexShader == nullptr) return false;
+
+
+	pSkinMeshPixelShader = TShaderMan::GetInstance()->LoadPixelShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_ps.hlsl");
+	if (pSkinMeshPixelShader == nullptr) return false;
+
+	return true;
+}
+
 
 TSkinModel* TSkinModelMan::LoadSkinModel(const char * SkinModelFile, int skinFlag)
 {

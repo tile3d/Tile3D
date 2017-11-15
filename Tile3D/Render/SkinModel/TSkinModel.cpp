@@ -2,6 +2,7 @@
 #include "TSkeleton.h"
 #include "TSkin.h"
 #include "TSkinModelAction.h"
+#include "TSkinModelMan.h"
 #include <Common/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>
@@ -243,8 +244,14 @@ THanger * TSkinModel::LoadHanger(TFile * pFile)
 
 void TSkinModel::Render()
 {
+	TVertexShader* pVertexShader = TSkinModelMan::GetInstance()->GetSkinMeshVertexShader();
+	TPixelShader* pPixelShader = TSkinModelMan::GetInstance()->GetSkinMeshPixelShader();
+
+	pVertexShader->Appear();
 	for (int i = 0; i < m_skins.Size(); ++i) {
 		TSkin* pSkin = m_skins[i];
 		pSkin->Render();
 	}
+	pVertexShader->Disappear();
 }
+

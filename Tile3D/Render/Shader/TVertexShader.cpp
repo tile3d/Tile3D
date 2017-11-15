@@ -80,12 +80,17 @@ bool TVertexShader::Appear()
 		return false;
 	}
 
+	if (m_pCurShader == this) {
+		return true;
+	}
+
 	TD3D9Device * pDevice = (TD3D9Device*)TEngine::GetInstance()->GetDevice();
 	if (!pDevice->GetDirect3DDevice()->SetVertexShader(m_pD3DShader)) {
 		TLog::Log(LOG_ERR, "Shader", "TVertexShader::Appear,  fail to set the shader file:%s");
 		return false;
 	}
 
+	m_pCurShader = this;
 	return true;
 }
 

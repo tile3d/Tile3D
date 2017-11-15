@@ -11,7 +11,7 @@ void TD3D9Stream::Render()
 
 	pD3DDevice->SetStreamSource(0, m_pVertexBuffer, 0, m_vertSize);
 	pD3DDevice->SetIndices(m_pIndexBuffer);
-	pD3DDevice->SetFVF(m_FVFFlags);
+//	pD3DDevice->SetFVF(m_FVFFlags);
 	pD3DDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_vertNum, 0, m_indexNum/3);
 }
 

@@ -79,19 +79,7 @@ bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum,  i
 			TLog::Log(LOG_ERR, "SkinModel", "TSkinMesh::Load,  Failed to load the skinmesh vertexs, filename=%s.", m_skinMeshName);
 			return false;
 		}	
-	}
 
-	//create the index buffer
-	if (m_indexNums > 0) {
-		m_indices = new unsigned short[m_indexNums];
-
-		if (!pFile->Read(m_indices, sizeof(unsigned short)*m_indexNums, &count) || count != sizeof(unsigned short)*m_indexNums) {
-			TLog::Log(LOG_ERR, "SkinModel", "TSkinMesh::Load,  Failed to load the skinmesh indexs, filename=%s.", m_skinMeshName);
-			return false;
-		}
-	}
-
-	if (m_tangentVerts != nullptr) {
 		for (int i = 0; i < m_vertNums; i++) {
 			memcpy(&m_tangentVerts[i], &m_verts[i], sizeof(TSkinMeshVertex));
 
@@ -107,6 +95,15 @@ bool TSkinMesh::Load(TFile * pFile, TSkin* pSkin, int skinIndex, int skinNum,  i
 		}
 	}
 
+	//create the index buffer
+	if (m_indexNums > 0) {
+		m_indices = new unsigned short[m_indexNums];
+
+		if (!pFile->Read(m_indices, sizeof(unsigned short)*m_indexNums, &count) || count != sizeof(unsigned short)*m_indexNums) {
+			TLog::Log(LOG_ERR, "SkinModel", "TSkinMesh::Load,  Failed to load the skinmesh indexs, filename=%s.", m_skinMeshName);
+			return false;
+		}
+	}
 
 	TDevice * pDevice = TEngine::GetInstance()->GetDevice();
 	m_pStream = pDevice->CreateStream();
