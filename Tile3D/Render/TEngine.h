@@ -31,7 +31,7 @@ public:
 		return &engine;
 	}
 
-	void Init(TApplication * pApplication, TDevice * pDevice);
+	bool Init(TApplication * pApplication, TDevice * pDevice);
 	void Run();
 	void Pause();
 	void Continue();
@@ -45,9 +45,6 @@ public:
 	TCamera * GetCamera() { return m_pCamera; }
 	TInput * GetInput() { return m_pInput; }
 
-	void AddSkinModel(TSkinModel * pModel) {
-		m_skinModels.Add(pModel);
-	}
 private:
 	TEngine() {}
 	TEngine(TEngine & rhs) {}
@@ -57,7 +54,6 @@ private:
 	TDevice * m_pDevice;
 	TCamera * m_pCamera;
 	TInput * m_pInput;
-	TArray<TSkinModel*> m_skinModels;
 	TENGINE_STATUS m_status;
 };
 

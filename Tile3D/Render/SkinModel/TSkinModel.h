@@ -4,6 +4,7 @@
 #include <Container/TString.h>
 #include <Container/TArray.h>
 #include <Container/THashMap.h>
+#include <Math/TMatrix4.h>
 
 #pragma pack(push, 1)
 struct TSkinModelHeader
@@ -78,6 +79,13 @@ public:
 	void Render();
 
 	int GetSkinModelID() { return m_modelID; }
+
+	int GetBlendMatrixSize() { return m_blendMats.Size(); }
+	const TMatrix4* GetBlendMatrixs() { return m_blendMats.GetData(); }
+	const TMatrix4& GetBlendMatrix(int index) { return m_blendMats[index]; }
+	void SetBlendMatrix(int i, const TMatrix4 & mat) { m_blendMats[i] = mat; }
+	bool UpdateBlendMatrixs();
+
 private:
 	int	m_modelID;			//Model ID
 	int m_version;			//File version
@@ -94,6 +102,8 @@ private:
 	TArray<TSkin*> m_skins;
 	TArray<TSkinModelAction*> m_actions;
 	THashMap<TString, TString> m_props;
+
+	TArray<TMatrix4> m_blendMats;
 };
 
 

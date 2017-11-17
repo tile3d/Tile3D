@@ -103,6 +103,10 @@ public:
 	//Check if the array is equal with another array
 	bool Equal(const TArray<T> & arr);
 
+	void Set(int count) {
+		Reserve(count);
+		m_count = count;
+	}
 
 	//Reserve the array list to count size
 	void Reserve(int count);

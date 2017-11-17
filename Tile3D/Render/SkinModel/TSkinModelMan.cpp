@@ -4,6 +4,11 @@
 #include <File/TFileImage.h>
 #include <File/TFileDir.h>
 #include <Render/Shader/TShaderMan.h>
+#include <Render/TEngine.h>
+#include <Render/TCamera.h>
+#include <Render/Windows/TD3D9Device.h>
+#include <d3d9.h>
+#include <d3dx9.h>
 
 
 TSkinModelMan::TSkinModelMan()
@@ -128,4 +133,58 @@ TSkinModel * TSkinModelMan::CreateSkinModel(TFile * pFile, int skinFlag)
 	m_skinModels.Put(pSkinModel->GetSkinModelID(), pSkinModel);
 	m_lock.Unlock();
 	return pSkinModel;
+}
+
+void TSkinModelMan::Render()
+{
+	m_lock.Lock();
+
+	pSkinMeshVertexShader->Appear();
+	pSkinMeshPixelShader->Appear();
+
+	//set the project and view matrix
+	TCamera* pCamera = TEngine::GetInstance()->GetCamera();
+	TMatrix4 matProject = pCamera->GetProjectionMatrix();
+	TMatrix4 matView = pCamera->GetViewMatrix();
+	matView.Inverse();
+
+	TDevice * pDevice = TEngine::GetInstance()->GetDevice();
+
+	pDevice->SetVertexShaderConstantF(0, matProject.GetPointer(), 4);
+	pDevice->SetVertexShaderConstantF(4, matView.GetPointer(), 4);
+	
+	//Set the dir light register
+	TVector3 dirLight(1.0, 1.0, 1.0);
+	dirLight.Normalize();
+	dirLight = dirLight*pCamera->GetViewMatrix();
+	float dirLight2[4] = { dirLight.m_x, dirLight.m_y, dirLight.m_z, 0 };
+	pDevice->SetVertexShaderConstantF(8, dirLight2, 1);
+
+	float   g_fExtend[4] = { 0, 0, 0, 0 };
+	pDevice->SetVertexShaderConstantF(9, g_fExtend, 1);
+
+	THashNode<int, TSkinModel*>* pNode = m_skinModels.GetHead();
+	while (pNode != nullptr) {
+		TSkinModel* pSkinModel = pNode->m_value;
+		pSkinModel->Render();
+		pNode = m_skinModels.GetNext(pNode);
+	}
+
+	pSkinMeshVertexShader->Disappear();
+	pSkinMeshPixelShader->Disappear();
+	
+	m_lock.Unlock();
+}
+
+void TSkinModelMan::ReleaseSkinModel()
+{
+	m_lock.Lock();
+	THashNode<int, TSkinModel*>* pNode = m_skinModels.GetHead();
+	while (pNode != nullptr) {
+		TSkinModel* pSkinModel = pNode->m_value;
+		pSkinModel->Release();
+		pNode = m_skinModels.GetNext(pNode);
+	}
+	m_skinModels.Clear();
+	m_lock.Unlock();
 }

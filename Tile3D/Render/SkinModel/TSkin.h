@@ -28,7 +28,9 @@ struct TSkinHeader
 
 class TFile;
 class TSkinMesh;
+class TSkinModel;
 class TMaterial;
+class TSkeleton;
 class TTexture;
 class TSkin : public TObject
 {
@@ -49,16 +51,25 @@ public:
 	TSkin * Clone();
 
 	int GetSkinID() const { return m_skinID; }
+	int GetSkinBoneNum();
+	int GetBoneIndex(int i) {return m_boneIndex[i];}
 
-	void Render();
+	bool BindSkeleton(TSkeleton* pSkeleton);
+
+	void ApplyBlendMatrix(TSkinModel* pSkinModel);
+	void Render(TSkinModel* pModel);
+
 private:
 	int m_version;
 	int m_skinID;
 
 	float m_minWeight;
+	int m_skeBoneNum;
 	int m_skinBoneNum;
+
 	TString m_skinFileName;
 	TArray<TString> m_boneNames;
+	TArray<int> m_boneIndex;
 
 	TArray<TTexture*> m_textures;
 	TArray<TSkinMesh*> m_skinMeshs;

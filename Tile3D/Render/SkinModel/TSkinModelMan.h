@@ -30,6 +30,8 @@ public:
 	TVertexShader* GetSkinMeshVertexShader() { return pSkinMeshVertexShader; }
 	TPixelShader* GetSkinMeshPixelShader() { return pSkinMeshPixelShader;}
 
+	void Render();
+	void ReleaseSkinModel();
 private:
 	TSkinModel* FindSkinModelByFile(const char * skinFile);
 	TSkinModel* FindSkinModelByID(int skinModelID);

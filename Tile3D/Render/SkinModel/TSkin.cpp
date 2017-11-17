@@ -1,5 +1,3 @@
-#include "TSkin.h"
-#include "TSkinMesh.h"
 #include <Common/TLog.h>
 #include <File/TFile.h>
 #include <File/TFileImage.h>
@@ -9,7 +7,11 @@
 #include <Render/Texture/TTexture.h>
 #include <Render/TEngine.h>
 #include <Render/TDevice.h>
-
+#include <Render/TCamera.h>
+#include "TSkin.h"
+#include "TSkinMesh.h"
+#include "TSkeleton.h"
+#include "TSkinModel.h"
 
 TSkin::TSkin()
 {
@@ -17,11 +19,16 @@ TSkin::TSkin()
 	m_skinID = 0;
 
 	m_minWeight = 0;
+	m_skeBoneNum = 0;
 	m_skinBoneNum = 0;
 }
 
 TSkin::~TSkin()
 {
+	for (int i = 0; m_textures.Size(); i++) {
+		delete m_textures[i];
+	}
+
 	for (int i = 0; i < m_skinMeshs.Size(); i++) {
 		delete m_skinMeshs[i];
 	}
@@ -65,7 +72,9 @@ bool TSkin::Load(TFile* pFile)
 	m_skinFileName = pFile->GetRelativeFileName();
 	m_skinID = TFileDir::GetInstance()->GetIDFromFileName(m_skinFileName);
 	m_minWeight = header.m_minWeight;
+	m_skeBoneNum = header.m_skeBoneNum;
 	m_skinBoneNum = header.m_skinBoneNum;
+
 
 	//load the bone names
 	if (header.m_version >= 9 && header.m_skinBoneNum > 0) {
@@ -148,8 +157,52 @@ TSkin* TSkin::Clone()
 	return this;
 }
 
-void TSkin::Render()
+int TSkin::GetSkinBoneNum()
 {
+	if (m_version >= 9) {
+		return m_boneNames.Size();
+	}
+	else {
+		return m_skeBoneNum;
+	}
+}
+
+bool TSkin::BindSkeleton(TSkeleton* pSkeleton)
+{
+	if (GetSkinBoneNum() > pSkeleton->GetBoneNum()) {
+		return false;
+	}
+
+	if (m_version < 9) {
+		m_boneIndex.Set(m_skeBoneNum + 1);
+		for (int i = 0; i < m_skeBoneNum; i++) {
+			m_boneIndex[i] = i;
+		}
+		m_boneIndex[m_skeBoneNum] = pSkeleton->GetBoneNum();
+	}
+	else {
+		int boneNum = m_boneNames.Size();
+		m_boneIndex.Set(boneNum + 1);
+
+		for (int i = 0; i < boneNum; i++) {
+			int index = -1;
+			TSkeletonBone* pBone = pSkeleton->GetBoneByName(m_boneNames[i], index);
+			if (pBone == nullptr) {
+				TLog::Log(LOG_ERR, "SkinModel", "TSkin::BindSkeleton, fail to bind the bone index, name=%s, index=%d", m_boneNames[i], i);
+				return false;
+			}
+			m_boneIndex[i] = index;
+		}
+		m_boneIndex[boneNum] = pSkeleton->GetBoneNum();
+	}
+	return true;
+}
+
+
+void TSkin::Render(TSkinModel* pSkinModel)
+{
+	ApplyBlendMatrix(pSkinModel);
+
 	for (int i = 0; i < m_skinMeshs.Size(); ++i) {
 		TMaterial* pMaterial = m_materials[0];
 		pMaterial->Render();
@@ -161,4 +214,21 @@ void TSkin::Render()
 		pSkinMesh->Render();
 	}
 }
+
+void TSkin::ApplyBlendMatrix(TSkinModel* pSkinModel)
+{
+	TCamera * pCamera = TEngine::GetInstance()->GetCamera();
+	TMatrix4 matView = pCamera->GetViewMatrix();
+	const TMatrix4* blendMatrixs = pSkinModel->GetBlendMatrixs();
+	
+	TDevice *pDevice = TEngine::GetInstance()->GetDevice();
+
+	int numBone = GetSkinBoneNum();
+	for (int i = 0; i < numBone; i++) {
+		int blendIndex = GetBoneIndex(i);
+		TMatrix4 matBoneView = matView * blendMatrixs[blendIndex];
+		pDevice->SetVertexShaderConstantF(10+i, matBoneView.GetPointer(), 3);
+	}
+}
+
 

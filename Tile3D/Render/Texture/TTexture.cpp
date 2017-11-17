@@ -11,11 +11,17 @@
 #include <Render/TDevice.h>
 #include <Render/Windows/TD3D9Device.h>
 
+TTexture::TTexture(int textureID) {
+	m_textureID = textureID;
+	m_ddsTexture = false;
+	m_alphaTexture = false;
+	m_pDXTexture = nullptr;
+}
 
 TTexture::~TTexture()
 {
 	if (m_pDXTexture) {
-
+		m_pDXTexture->Release();
 	}
 }
 

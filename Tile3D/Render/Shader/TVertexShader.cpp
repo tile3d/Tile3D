@@ -90,6 +90,10 @@ bool TVertexShader::Appear()
 		return false;
 	}
 
+	if (m_pDecl != nullptr) {
+		m_pDecl->Appear();
+	}
+
 	m_pCurShader = this;
 	return true;
 }

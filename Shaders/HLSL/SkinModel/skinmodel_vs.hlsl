@@ -2,14 +2,12 @@
 //hlsl shader for skinmodel
 //
 
-float3 g_vLightDir     : LightDirInView;
-float4x4 matProjection : register(c2);
-float3 g_vecEyePos     : EyePos;
-float4 g_vPtAtten      : PointAttenRange;
-float3 g_vPtLightPos   : PointPosInView;
-float4x4 matViewInv    : ViewInverse;
-float   g_fExtend : PosExtendToNormal;
-float4x3 matBlend0[70]   : register(c10);
+float4x4 matProjection : register(c0);
+float4x4 matViewInv    : register(c4);
+float3 g_vLightDir     : register(c8);
+//float3 g_vecEyePos     : register(c9);
+float   g_fExtend	   : register(c9);;
+float4x3 matBlend0[70] : register(c10);
 
 
 struct VS_INPUT
@@ -18,9 +16,10 @@ struct VS_INPUT
 	float3 weight       : BLENDWEIGHT0;
 	float4 blendindices : BLENDINDICES0;
 	float3 normal       : NORMAL0;
-	float4 tangent      : TANGENT0;
 	float2 uv           : TEXCOORD0;
+	float4 tangent      : TANGENT0;
 };
+
 
 struct VS_OUTPUT
 {
@@ -28,13 +27,10 @@ struct VS_OUTPUT
 	float2 uvBase           : TEXCOORD0;
 	float3 ViewDir          : TEXCOORD1;
 	float3 LightDir         : TEXCOORD2;
-	float4 PtLightDir       : TEXCOORD3;
-	float4 tangent			: TEXCOORD4;
-	float3 binormal			: TEXCOORD5;
-	float4 fogParam			: TEXCOORD6;
-	float2 highlightUV		: TEXCOORD7;
+	float4 tangent			: TEXCOORD3;
+	float3 binormal			: TEXCOORD4;
+	float2 highlightUV		: TEXCOORD5;
 };
-
 
 
 VS_OUTPUT vs_main(VS_INPUT input)
@@ -88,10 +84,6 @@ VS_OUTPUT vs_main(VS_INPUT input)
 	float3 LightDirection = -g_vLightDir.xyz;
 	float3 EyeDirection = normalize(-blendPos.xyz);
 
-#ifdef POINT_LIGHT_ENABLE
-	float3 vDeltaPtLight = g_vPtLightPos - blendPos.xyz;
-#endif // POINT_LIGHT_ENABLE
-
 	output.ViewDir.x = dot(blendTangent.xyz, EyeDirection);
 	output.ViewDir.y = dot(blendBinormal.xyz, EyeDirection);
 	output.ViewDir.z = dot(blendNormal.xyz, EyeDirection);
@@ -105,17 +97,7 @@ VS_OUTPUT vs_main(VS_INPUT input)
 
 	output.binormal.xyz = blendBinormal.xyz;
 
-#ifdef POINT_LIGHT_ENABLE
-	output.PtLightDir.x = dot(blendTangent.xyz, vDeltaPtLight);
-	output.PtLightDir.y = dot(blendBinormal.xyz, vDeltaPtLight);
-	output.PtLightDir.z = dot(blendNormal.xyz, vDeltaPtLight);
-
-	float d = length(vDeltaPtLight);
-	float e = (d / g_vPtAtten.z) * g_vPtAtten.y;
-	output.PtLightDir.w = g_vPtAtten.x / exp(e * e);
-#else
 	output.PtLightDir = float4(0, 1, 0, 0);
-#endif // POINT_LIGHT_ENABLE
 
 	// uv
 	output.uvBase = input.uv;

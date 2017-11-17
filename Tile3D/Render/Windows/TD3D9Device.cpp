@@ -135,3 +135,8 @@ void TD3D9Device::SetMaterial(TMaterial* pMaterial)
 		TLog::Log(LOG_ERR, "Texture", "TTexture::Render,  failed to set the texture");
 	}
 }
+
+void TD3D9Device::SetVertexShaderConstantF(int index, const float* pData, int count)
+{
+	m_d3dDevice->SetVertexShaderConstantF(index, pData, count);
+}

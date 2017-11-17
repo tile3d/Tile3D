@@ -51,6 +51,9 @@ public:
 	TSkeletonJoint* GetJoint(int index) { return m_joints[index]; }
 	TSkeletonHook* GetHook(int index) { return m_hooks[index]; }
 
+	int GetBoneNum() { return m_bones.Size(); }
+	TSkeletonBone* GetBoneByName(TString & name, int & index);
+
 	void SetSkinModel(TSkinModel * pSkinModel) {
 		m_pSkinModel = pSkinModel;
 	}

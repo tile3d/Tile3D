@@ -54,9 +54,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	if (!pDeviceWin->Init()) {
 		return -2;
 	}
-  
 
-	TEngine::GetInstance()->Init(pAppWin, pDeviceWin);
+
+	if (!TEngine::GetInstance()->Init(pAppWin, pDeviceWin)) {
+		return -3;
+	}
+
 	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2015Ð¡»·\\2015Ð¡»·.smd";
 //	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016¿ñ±©º£µÁ\\2016¿ñ±©º£µÁ.smd";
 //	const char* filename = "D:\\engine\\Tile3D\\TestMisc\\TestMisc\\SkinModel\\2016Áéºï\\2016Áéºï.smd";
@@ -66,23 +69,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		printf("failed to load the skin model");
 		return -1;
 	}
-	
-	D3DVERTEXELEMENT9 skinMeshDecl[] =
-	{
-		{ 0, 0,  D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
-		{ 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
-		{ 0, 28, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-		{ 0, 40, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 48, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
-		D3DDECL_END()
-	};
-
-	TVertexShader * pVertexShader = TShaderMan::GetInstance()->LoadVertexShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_vs.hlsl", skinMeshDecl);
-	TPixelShader * pPixelShader = TShaderMan::GetInstance()->LoadPixelShader("D:\\engine\\Tile3D\\Shaders\\HLSL\\SkinModel\\skinmodel_ps.hlsl");
-
-//	TSkinModelMan::GetInstance()->ReleaseSkinModel(pSkinModel);
-	TEngine::GetInstance()->AddSkinModel(pSkinModel);
 
 	MSG msg;
 	msg.message = WM_NULL;

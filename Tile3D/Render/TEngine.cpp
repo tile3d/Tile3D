@@ -3,8 +3,27 @@
 #include <Render/SkinModel/TSkinModelMan.h>
 #include "TCamera.h"
 #include "TInput.h"
+#include <Common/TLog.h>
+#include <File/TFileDir.h>
 
-void TEngine::Init(TApplication * pApplication, TDevice * pDevice) {
+bool TEngine::Init(TApplication * pApplication, TDevice * pDevice) {
+	//Init the log 
+	if (!TLog::Init("game.log", LOG_DEBUG, false)) {
+		printf("init log file failed\n");
+		return false;
+	}
+
+
+	if (!TFileDir::GetInstance()->Init("D:\\engine\\Tile3D\\Demo\\SkinMesh", "", "", "")) {
+		TLog::Log(LOG_ERR, "Engine", " TEngine::Init,  failed to init the working dir");
+		return false;
+	}
+
+
+	if (!TSkinModelMan::GetInstance()->LoadSkinMeshShader()) {
+		TLog::Log(LOG_ERR, "Engine", " TEngine::Init,  failed to load the skin mesh shaders");
+		return false;
+	}
 
 	m_pApplication = pApplication;
 	m_pDevice = pDevice;
@@ -18,6 +37,7 @@ void TEngine::Init(TApplication * pApplication, TDevice * pDevice) {
 	m_pInput = new TInput();
 
 	m_status = TENGINE_STATUS_RUNNING;
+	return true;
 }
 
 
@@ -35,11 +55,8 @@ void TEngine::Render()
 	m_pDevice->BeginRender();
 
 	m_pCamera->Update();
-	//Render all the skin models
-	for (int i = 0; i < m_skinModels.Size(); ++i) {
-		TSkinModel * pSkinModel = m_skinModels[i];
-		pSkinModel->Render();
-	}
+
+	TSkinModelMan::GetInstance()->Render();
 
 	m_pDevice->EndRender();
 	m_pDevice->Present();
@@ -85,9 +102,6 @@ void TEngine::Release()
 		delete m_pInput;
 	}
 
-	for (int i = 0; i < m_skinModels.Size(); ++i) {
-		TSkinModel * pSkinModel = m_skinModels[i];
-		TSkinModelMan::GetInstance()->ReleaseSkinModel(pSkinModel);
-	}
+	TSkinModelMan::GetInstance()->ReleaseSkinModel();
 }
 

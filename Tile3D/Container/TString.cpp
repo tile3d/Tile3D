@@ -768,8 +768,7 @@ int TString::CompareNoCase(const char* szStr) const
 	if (m_pStr == szStr)
 		return 0;
 
-	//TBD: change to Sys function
-	return _stricmp(m_pStr, szStr);
+	return TSysFile::StrCmpNoCase(m_pStr, szStr);
 }
 
 bool TString::operator == (const char* szStr) const

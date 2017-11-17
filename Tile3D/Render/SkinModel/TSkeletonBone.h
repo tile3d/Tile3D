@@ -41,6 +41,8 @@ public:
 	bool Load(TFile * pFile);
 	bool Save(TFile * pFile);
 
+	TString& GetBoneName() { return m_boneName; }
+
 	void SetRelativeTM(const TMatrix4 & mat);
 	void ResetRelativeTM() { SetRelativeTM(m_originRelMat);  }
 

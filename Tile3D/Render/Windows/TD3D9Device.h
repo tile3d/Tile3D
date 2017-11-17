@@ -32,6 +32,8 @@ public:
 
 	IDirect3DDevice9Ex* GetDirect3DDevice() { return m_d3dDevice; }
 
+
+	virtual void SetVertexShaderConstantF(int index, const float* pData, int count);
 private:
 	IDirect3D9Ex*           m_d3dObject;
 	IDirect3DDevice9Ex*	  m_d3dDevice;

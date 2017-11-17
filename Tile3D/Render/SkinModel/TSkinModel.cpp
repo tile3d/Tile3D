@@ -1,12 +1,13 @@
+#include <Common/TLog.h>
+#include <File/TFile.h>
+#include <File/TFileImage.h>
+#include <File/TFileDir.h>
 #include "TSkinModel.h"
 #include "TSkeleton.h"
 #include "TSkin.h"
 #include "TSkinModelAction.h"
 #include "TSkinModelMan.h"
-#include <Common/TLog.h>
-#include <File/TFile.h>
-#include <File/TFileImage.h>
-#include <File/TFileDir.h>
+#include "TSkeletonBone.h"
 
 TSkinModel::TSkinModel()
 {
@@ -244,14 +245,19 @@ THanger * TSkinModel::LoadHanger(TFile * pFile)
 
 void TSkinModel::Render()
 {
-	TVertexShader* pVertexShader = TSkinModelMan::GetInstance()->GetSkinMeshVertexShader();
-	TPixelShader* pPixelShader = TSkinModelMan::GetInstance()->GetSkinMeshPixelShader();
-
-	pVertexShader->Appear();
 	for (int i = 0; i < m_skins.Size(); ++i) {
 		TSkin* pSkin = m_skins[i];
-		pSkin->Render();
+		pSkin->Render(this);
 	}
-	pVertexShader->Disappear();
+}
+
+bool TSkinModel::UpdateBlendMatrixs()
+{
+	int boneNum = m_pSkeleton->GetBoneNum();
+	for (int i = 0; i < boneNum; i++) {
+		TSkeletonBone* pBone = m_pSkeleton->GetBone(i);
+		m_blendMats[i] = pBone->GetBoneInitTM();
+	}
+	return true;
 }
 

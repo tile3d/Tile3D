@@ -6,13 +6,7 @@ struct IDirect3DTexture9;
 class TTexture
 {
 public:
-	TTexture(int textureID) {
-		m_textureID = textureID;
-		m_ddsTexture = false;
-		m_alphaTexture = false;
-		m_pDXTexture = nullptr;
-	}
-
+	TTexture(int textureID);
 	~TTexture();
 
 	bool Load(TString & textureName);

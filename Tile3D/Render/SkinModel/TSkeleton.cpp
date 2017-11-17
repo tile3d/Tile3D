@@ -196,3 +196,16 @@ bool TSkeleton::FindRefBone()
 
 	return false;
 }
+
+TSkeletonBone* TSkeleton::GetBoneByName(TString & name, int & index)
+{
+	for (int i = 0; i < m_bones.Size(); i++) {
+		TSkeletonBone* pBone = m_bones[i];
+		if (pBone->GetBoneName().CompareNoCase(name) == 0) {
+			index = i;
+			return pBone;
+		}
+	}
+	return nullptr;
+}
+

@@ -27,4 +27,6 @@ public:
 
 	void SetMaterial(TMaterial* pMaterial) {}
 
+	virtual void SetVertexShaderConstantF(int index, const float* pData, int count) {}
+
 };

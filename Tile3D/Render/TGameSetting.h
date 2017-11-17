@@ -5,6 +5,7 @@
 //1) display setting(width/height/dpi/)
 //2) rendering setting()
 //3) shortcut setting
+//4) misc(loglevel, workdir)
 //
 class TGameSetting
 {
@@ -21,5 +22,8 @@ private:
 	int m_width;
 	int m_height;
 	bool m_fullscreen;
+
+	int m_logLevel;
+	char* m_workDir;
 };
 

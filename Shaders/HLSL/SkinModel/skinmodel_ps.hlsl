@@ -3,27 +3,10 @@
 //
 
 
-float4 g_colDiffuse : Diffuse = { 1.0f, 1.0f,1.0f,1.0f };
-float4 g_colAmbient : Ambient0 = { 0.0f, 0.0f, 0.0f, 0.0f };
 float4 g_colPtDiffuse : PointDiffuse;
 float g_fDiffusePower : DirPower;
 float4 g_colDiffuseFactor : DiffuseFactor = float4(1, 1, 1, 1);
 float4 g_colEmissiveFactor : EmissiveFactor = float4(0, 0, 0, 0);
-
-
-struct VS_OUTPUT
-{
-	float4 pos	            : POSITION0;
-	float2 uvBase           : TEXCOORD0;
-	float3 ViewDir          : TEXCOORD1;
-	float3 LightDir         : TEXCOORD2;
-	float4 PtLightDir       : TEXCOORD3;
-	float4 tangent			: TEXCOORD4;
-	float3 binormal			: TEXCOORD5;
-	float4 fogParam			: TEXCOORD6;
-	float2 highlightUV		: TEXCOORD7;
-};
-
 
 sampler2D g_DiffuseSampler : DiffuseMap
 <
@@ -34,6 +17,19 @@ sampler2D g_DiffuseSampler : DiffuseMap
 	string AddressU = "WRAP";
 	string AddressV = "WRAP";
 >;
+
+struct VS_OUTPUT
+{
+	float4 pos	            : POSITION0;
+	float2 uvBase           : TEXCOORD0;
+	float3 ViewDir          : TEXCOORD1;
+	float3 LightDir         : TEXCOORD2;
+	float4 tangent			: TEXCOORD3;
+	float3 binormal			: TEXCOORD4;
+	float2 highlightUV		: TEXCOORD5;
+};
+
+
 
 float4 ps_main(VS_OUTPUT Input) : COLOR0
 {
@@ -46,13 +42,6 @@ float4 ps_main(VS_OUTPUT Input) : COLOR0
 	fNDotL = saturate(fNDotL);
 
 	float3 colDiffusePoint = 0.0f;
-
-#ifdef POINT_LIGHT_ENABLE
-	float3 PtLightDir = normalize(Input.PtLightDir.rgb);
-	float  fPtNDotL = dot(Normal, PtLightDir);
-	fPtNDotL = saturate(fPtNDotL);
-	colDiffusePoint = g_colPtDiffuse.rgb * fPtNDotL * Input.PtLightDir.w;
-#endif
 
 	float3 colDiffuse = (g_fDiffusePower * g_colDiffuse.rgb * fNDotL + colDiffusePoint);
 	float3 colAmbient = (g_colAmbient.rgb);
