@@ -224,6 +224,7 @@ TSkeleton* TSkinModel::LoadSkeleton(const char * skeletonFile)
 
 	m_pSkeleton = pSkeleton;
 	m_pSkeleton->SetSkinModel(this);
+	m_blendMats.Set(m_pSkeleton->GetBoneNum() + 1);
 	return pSkeleton;
 }
 
