@@ -64,6 +64,12 @@
     <Filter Include="Shaders\HLSL\SkinModel">
       <UniqueIdentifier>{593ec0a7-0f11-40ac-b3cf-bd8bfbb24536}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Stat">
+      <UniqueIdentifier>{210cb084-6d1e-4e68-9ab9-c2a8a5c63326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stat\Windows">
+      <UniqueIdentifier>{64845889-eebc-4525-82de-70ccae1d127d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -372,6 +378,36 @@
     <ClInclude Include="Render\Shader\TShaderMan.h">
       <Filter>Render\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Stat\THardwareInfo.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TNetInfo.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TRenderInfo.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TSystemInfo.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\Windows\THardwareInfoImpWin.h">
+      <Filter>Stat\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\THardwareInfoImp.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TSystemInfoImp.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\Windows\TSystemInfoImpWin.h">
+      <Filter>Stat\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TNetInfoImp.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\Windows\TNetInfoImpWin.h">
+      <Filter>Stat\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -598,6 +634,24 @@
     </ClCompile>
     <ClCompile Include="Render\Shader\TShaderMan.cpp">
       <Filter>Render\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\THardwareInfo.cpp">
+      <Filter>Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\Windows\THardwareInfoImpWin.cpp">
+      <Filter>Stat\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\TSystemInfo.cpp">
+      <Filter>Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\Windows\TSystemInfoImpWin.cpp">
+      <Filter>Stat\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\Windows\TNetInfoImpWin.cpp">
+      <Filter>Stat\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\TNetInfo.cpp">
+      <Filter>Stat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

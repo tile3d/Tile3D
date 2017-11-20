@@ -24,7 +24,7 @@
     <ClCompile Include="TestMemory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestSkinMeshLoad.cpp">
+    <ClCompile Include="TestInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
