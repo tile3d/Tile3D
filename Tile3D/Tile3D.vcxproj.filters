@@ -408,6 +408,9 @@
     <ClInclude Include="Stat\Windows\TNetInfoImpWin.h">
       <Filter>Stat\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="File\TWScriptFile.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -652,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="Stat\TNetInfo.cpp">
       <Filter>Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TWScriptFile.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -172,6 +172,7 @@
     <ClInclude Include="File\TPackage.h" />
     <ClInclude Include="File\TPackageMan.h" />
     <ClInclude Include="File\TScriptFile.h" />
+    <ClInclude Include="File\TWScriptFile.h" />
     <ClInclude Include="Math\TAABBBox.h" />
     <ClInclude Include="Math\TColor.h" />
     <ClInclude Include="Math\TMathUtil.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="File\TPackage.cpp" />
     <ClCompile Include="File\TPackageMan.cpp" />
     <ClCompile Include="File\TScriptFile.cpp" />
+    <ClCompile Include="File\TWScriptFile.cpp" />
     <ClCompile Include="Math\TAABBBox.cpp" />
     <ClCompile Include="Math\TMathUtil.cpp" />
     <ClCompile Include="Math\TMatrix3.cpp" />
