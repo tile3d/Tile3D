@@ -2,7 +2,8 @@
 //hlsl shader for skinmodel
 //
 
-
+float4 g_colDiffuse: Diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+float4 g_colAmbient : Ambient0 = {0.0f, 0.0f, 0.0f, 0.0f};
 float4 g_colPtDiffuse : PointDiffuse;
 float g_fDiffusePower : DirPower;
 float4 g_colDiffuseFactor : DiffuseFactor = float4(1, 1, 1, 1);

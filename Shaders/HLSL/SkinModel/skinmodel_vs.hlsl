@@ -97,7 +97,7 @@ VS_OUTPUT vs_main(VS_INPUT input)
 
 	output.binormal.xyz = blendBinormal.xyz;
 
-	output.PtLightDir = float4(0, 1, 0, 0);
+//	output.PtLightDir = float4(0, 1, 0, 0);
 
 	// uv
 	output.uvBase = input.uv;

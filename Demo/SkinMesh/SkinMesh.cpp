@@ -86,6 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			TEngine::GetInstance()->Run();
 		}
 	}
+
     return (int) msg.wParam;
 }
 

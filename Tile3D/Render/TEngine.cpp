@@ -7,6 +7,11 @@
 #include <File/TFileDir.h>
 
 bool TEngine::Init(TApplication * pApplication, TDevice * pDevice) {
+
+	m_pApplication = pApplication;
+	m_pDevice = pDevice;
+
+
 	//Init the log 
 	if (!TLog::Init("game.log", LOG_DEBUG, false)) {
 		printf("init log file failed\n");
@@ -25,8 +30,6 @@ bool TEngine::Init(TApplication * pApplication, TDevice * pDevice) {
 		return false;
 	}
 
-	m_pApplication = pApplication;
-	m_pDevice = pDevice;
 
 	//create the game carmera
 	TVector3 position(0, 0, -5);
