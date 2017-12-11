@@ -3,6 +3,10 @@
 #include "TAssert.h"
 #include <string.h>
 
+//
+//TBD
+//1) consider if need to implement the ref count method
+//
 class TOctets
 {
 public:
@@ -45,7 +49,10 @@ public:
 	}
 
 	~TOctets() {
-		delete[] m_data;
+		if (m_data != nullptr) {
+			delete[] m_data;
+			m_data = nullptr;
+		}
 		m_count = 0;
 		m_capacity = 0;
 	}
@@ -79,9 +86,11 @@ public:
 	}
 
 	void Push(const void * buf, unsigned int buf_size) {
-		Reserve(m_count + buf_size);
-		memcpy(m_data + m_count, buf, buf_size);
-		m_count += buf_size;
+		if (buf_size > 0) {
+			Reserve(m_count + buf_size);
+			memcpy(m_data + m_count, buf, buf_size);
+			m_count += buf_size;
+		}
 	}
 
 	void Erase(unsigned char* begin, unsigned char* end) {

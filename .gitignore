@@ -89,3 +89,4 @@ Debug/SkinMesh.exe
 *.pch
 ipch/SKINMESH-8e60aec8/SKINMESH-5008d62e.ipch
 Demo/SkinMesh/Debug/RCa17440
+*.ipch
