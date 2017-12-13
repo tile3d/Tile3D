@@ -40,7 +40,7 @@ public:
 private:
 	int m_sessionID;
 	TSocket * m_pSocket;
-	TQueue<TOctets> m_queue;
+	TQueue<TOctets> m_sendData;
 	TMutexLock m_lock;
 };
 

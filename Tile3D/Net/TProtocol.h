@@ -15,10 +15,11 @@ public:
 	int GetPriorPolicy() const { return m_priorPolicy; }
 
 	void Encode(TOctetsStream& os) const;
-	void Decode(const TOctetsStream& os);
+	static void Decode(const TOctetsStream& os);
 
 	virtual void Marshal(TOctetsStream & os) const = 0;
 	virtual void Unmarshal(TOctetsStream & os) const = 0;
+	virtual void Process() = 0;
 
 private:
 	int m_type;

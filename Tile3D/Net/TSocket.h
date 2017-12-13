@@ -48,6 +48,7 @@ public:
 	bool GetSockOpt(int option_name, int level, void * option_value, int* option_len);
 	bool SetSockOpt(int option_name, int level, void * option_value, int option_len);
 
+	void SetNonBlock();
 private:
 	bool m_bServer;
 	bool m_bListenSocket;
