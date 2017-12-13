@@ -90,3 +90,6 @@ Debug/SkinMesh.exe
 ipch/SKINMESH-8e60aec8/SKINMESH-5008d62e.ipch
 Demo/SkinMesh/Debug/RCa17440
 *.ipch
+*.ipch
+*.ipch
+.vs/Tile3D/v15/ipch/AutoPCH/TILE3D-12b8b06d/TMEMDUMPWIN-fff48f30/TMEMDUMPWIN.ipch

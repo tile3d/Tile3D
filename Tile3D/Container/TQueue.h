@@ -10,7 +10,9 @@
 //
 template<typename T> class TQueue
 {
-public:		
+public:
+	TQueue() {}
+
 	bool Enqueue(const T & value) {
 		return m_list.AddTail(value);
 	}

@@ -14,32 +14,26 @@ public:
 	int GetSizePolicy() const { return m_sizePolicy; }
 	int GetPriorPolicy() const { return m_priorPolicy; }
 
+	void Encode(TOctetsStream& os) const;
+	void Decode(const TOctetsStream& os);
+
+	virtual void Marshal(TOctetsStream & os) const = 0;
+	virtual void Unmarshal(TOctetsStream & os) const = 0;
+
+private:
+	int m_type;
+	int m_sizePolicy;
+	int m_priorPolicy;
+
+public:
 	static TProtocol* GetProtocol(int type) {
 		TProtocol** proto = m_protocols.Find(type);
 		if (proto == nullptr) return nullptr;
 		return *proto;
 	}
 
-
-	void Encode(TOctetsStream& os) const
-	{
-		os.CompactUInt32(m_type);
-		Marshal(os);
-	}
-
-	void Decode(const TOctetsStream& os);
-
-	virtual void Marshal(TOctetsStream & os) const;
-	virtual void Unmarshal(TOctetsStream & os) const;
-
-
 private:
 	static THashMap<int, TProtocol*> m_protocols;
-	
-	int m_type;
-	int m_sizePolicy;
-	int m_priorPolicy;
-
 };
 
 

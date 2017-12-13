@@ -34,6 +34,8 @@ public:
 	TOctetsStream(const TOctets & o) : m_octets(o), m_pos(0), m_transpos(0) {
 	}
 
+	operator TOctets& () { return m_octets; }
+	operator const TOctets& () const { return m_octets; }
 
 	TOctetsStream& operator= (const TOctetsStream & rhs) {
 		if (this != &rhs) {
@@ -170,11 +172,13 @@ public:
 	TOctetsStream& operator << (const TOctets & x) {
 		CompactUInt32(x.Size());
 		m_octets.Push(x.Begin(), x.Size());
+		return *this;
 	}
 
 	TOctetsStream& operator << (const TString & x) {
 		CompactUInt32(x.GetLength());
 		m_octets.Push(x.ToString(), x.GetLength());
+		return *this;
 	}
 
 	template<typename T>TOctetsStream& operator << (const TArray<T> & x) {

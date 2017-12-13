@@ -1,6 +1,10 @@
 #pragma once
 
 #include <Common/TTypes.h>
+#include <Common/TOctets.h>
+#include <Container/TQueue.h>
+#include <Core/Lock/TAtomicInt.h>
+#include <Core/Lock/TMutexLock.h>
 #include "TSocket.h"
 
 class TSocket;
@@ -20,19 +24,23 @@ public:
 		}
 	}
 
-	int64 NextSessionID() {
-		static int session_id = 0;
-		return ++session_id;
+	int NextSessionID() {
+		static TAtomicInt session_id = 0;
+		return session_id.Increment();
 	}
 
-	int64 GetSessionID() {
+	int GetSessionID() {
 		return m_sessionID;
 	}
 
 	bool SendProtocol(const TProtocol* proto);
 
+	void SendReady();
+
 private:
-	int64 m_sessionID;
+	int m_sessionID;
 	TSocket * m_pSocket;
+	TQueue<TOctets> m_queue;
+	TMutexLock m_lock;
 };
 

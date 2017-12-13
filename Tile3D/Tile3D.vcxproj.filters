@@ -411,6 +411,9 @@
     <ClInclude Include="File\TWScriptFile.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Lock\TScopeLock.h">
+      <Filter>Core\Lock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">

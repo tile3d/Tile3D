@@ -26,6 +26,7 @@ public:
 		m_pSession->SendProtocol(proto);
 	}
 
+	void Close();
 
 private:
 	TString m_serverIP;
