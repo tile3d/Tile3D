@@ -414,6 +414,15 @@
     <ClInclude Include="Core\Lock\TScopeLock.h">
       <Filter>Core\Lock</Filter>
     </ClInclude>
+    <ClInclude Include="Net\TPollMan.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TPollImp.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TPollIO.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -661,6 +670,15 @@
     </ClCompile>
     <ClCompile Include="File\TWScriptFile.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TPollMan.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TPollImp.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TPollIO.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

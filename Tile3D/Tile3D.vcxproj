@@ -188,6 +188,9 @@
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
     <ClInclude Include="Net\TNet.h" />
+    <ClInclude Include="Net\TPollImp.h" />
+    <ClInclude Include="Net\TPollIO.h" />
+    <ClInclude Include="Net\TPollMan.h" />
     <ClInclude Include="Net\TProtocol.h" />
     <ClInclude Include="Net\TSession.h" />
     <ClInclude Include="Net\TSocket.h" />
@@ -280,6 +283,9 @@
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
     <ClCompile Include="Net\TNet.cpp" />
+    <ClCompile Include="Net\TPollImp.cpp" />
+    <ClCompile Include="Net\TPollIO.cpp" />
+    <ClCompile Include="Net\TPollMan.cpp" />
     <ClCompile Include="Net\TProtocol.cpp" />
     <ClCompile Include="Net\TSession.cpp" />
     <ClCompile Include="Net\TSocket.cpp" />
