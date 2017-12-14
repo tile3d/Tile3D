@@ -93,3 +93,5 @@ Demo/SkinMesh/Debug/RCa17440
 *.ipch
 *.ipch
 .vs/Tile3D/v15/ipch/AutoPCH/TILE3D-12b8b06d/TMEMDUMPWIN-fff48f30/TMEMDUMPWIN.ipch
+.vs/Tile3D/v15/ipch/AutoPCH/TILE3D-12b8b06d/TMEMDUMPWIN-fff48f30/TMEMDUMPWIN.ipch
+*.ipch

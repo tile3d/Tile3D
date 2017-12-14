@@ -423,6 +423,12 @@
     <ClInclude Include="Net\TPollIO.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="Net\TSessionMan.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\TDeque.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">

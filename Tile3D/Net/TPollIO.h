@@ -22,7 +22,42 @@ public:
 	void PermitRecv();
 	void ForbidRecv();
 
+	virtual void PollIn() = 0;
+	virtual void PollOut() { }
+	virtual void PollClose() { }
+
 private:
 	int m_event;
+};
+
+class TActiveIO : public TPollIO
+{
+public:
+
+};
+
+class TPassiveIO : public TPollIO
+{
+public:
+
+};
+
+class TSession;
+class TNetIO : public TPollIO
+{
+public:
+
+
+private:
+	TSession * m_pSession;
+};
+
+
+class TStreamIO : public TNetIO
+{
+public:
+	virtual void PollIn();
+	virtual void PollOut();
+	virtual void PollClose();
 };
 

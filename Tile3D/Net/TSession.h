@@ -3,12 +3,14 @@
 #include <Common/TTypes.h>
 #include <Common/TOctets.h>
 #include <Container/TQueue.h>
+#include <Container/TDeque.h>
 #include <Core/Lock/TAtomicInt.h>
 #include <Core/Lock/TMutexLock.h>
 #include "TSocket.h"
 
 class TSocket;
 class TProtocol;
+class TSessionMan;
 class TSession
 {
 public:
@@ -33,14 +35,15 @@ public:
 		return m_sessionID;
 	}
 
-	bool SendProtocol(const TProtocol* proto);
+	bool Send(const TProtocol* proto, bool urgent);
 
 	void SendReady();
 
 private:
 	int m_sessionID;
 	TSocket * m_pSocket;
-	TQueue<TOctets> m_sendData;
+	TDeque<TOctets> m_output;
+	TSessionMan* m_pSessionMan;
 	TMutexLock m_lock;
 };
 

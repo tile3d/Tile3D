@@ -140,6 +140,7 @@
     <ClInclude Include="Common\TTypes.h" />
     <ClInclude Include="Container\TAlgo.h" />
     <ClInclude Include="Container\TArray.h" />
+    <ClInclude Include="Container\TDeque.h" />
     <ClInclude Include="Container\THashMap.h" />
     <ClInclude Include="Container\THashSet.h" />
     <ClInclude Include="Container\THashTable.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Net\TPollMan.h" />
     <ClInclude Include="Net\TProtocol.h" />
     <ClInclude Include="Net\TSession.h" />
+    <ClInclude Include="Net\TSessionMan.h" />
     <ClInclude Include="Net\TSocket.h" />
     <ClInclude Include="Net\TSocketAddr.h" />
     <ClInclude Include="Net\TSocketImp.h" />
