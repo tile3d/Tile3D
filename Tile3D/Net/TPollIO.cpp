@@ -37,3 +37,33 @@ void TPollIO::ForbidRecv()
 
 	m_event &= ~EVENT_POLLIN;
 }
+
+
+void TActiveIO::PollIn()
+{
+
+}
+
+void TPassiveIO::PollIn()
+{
+
+}
+
+void TStreamIO::PollIn()
+{
+
+}
+
+void TStreamIO::PollOut()
+{
+
+}
+
+
+void TStreamIO::PollClose()
+{
+
+}
+
+
+

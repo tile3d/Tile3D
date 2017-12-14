@@ -189,6 +189,8 @@
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
     <ClInclude Include="Net\TNet.h" />
+    <ClInclude Include="Net\TNetClient.h" />
+    <ClInclude Include="Net\TNetServer.h" />
     <ClInclude Include="Net\TPollImp.h" />
     <ClInclude Include="Net\TPollIO.h" />
     <ClInclude Include="Net\TPollMan.h" />

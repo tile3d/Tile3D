@@ -1,6 +1,7 @@
 #include "TSession.h"
 #include "TSocket.h"
 #include "TProtocol.h"
+#include "TPollIO.h"
 
 bool TSession::Send(const TProtocol* proto, bool urgent)
 {
@@ -22,5 +23,11 @@ bool TSession::Send(const TProtocol* proto, bool urgent)
 
 void TSession::SendReady()
 {
+	if (m_status & (SESSION_STATUS_SENDING | SESSION_STATUS_CLOSING)) {
+		return;
+	}
 
+	if (m_pPollIO != nullptr) {
+		m_pPollIO->PermitSend();
+	}
 }

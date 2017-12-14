@@ -10,10 +10,21 @@ enum EVENT_TYPE
 	EVENT_POLLHUP = 0x10
 };
 
+enum SOCK_TYPE
+{
+	SOCK_TYPE_NONE = 0,
+	SOCK_TYPE_TCP = 1,
+	SOCK_TYPE_UDP = 2,
+};
+
 class TPollIO
 {
 public:
-	TPollIO() { m_event = 0; }
+	TPollIO() { 
+		m_event = 0; 
+		m_fd = 0;
+	}
+
 	virtual ~TPollIO() {}
 
 	void PermitSend();
@@ -28,18 +39,26 @@ public:
 
 private:
 	int m_event;
+	int m_fd;
 };
 
 class TActiveIO : public TPollIO
 {
 public:
+	TActiveIO(int socktype) {
+		m_socktype = socktype;
+	}
 
+	virtual void PollIn();
+
+private:
+	int m_socktype;
 };
 
 class TPassiveIO : public TPollIO
 {
 public:
-
+	virtual void PollIn();
 };
 
 class TSession;

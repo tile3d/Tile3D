@@ -429,6 +429,12 @@
     <ClInclude Include="Container\TDeque.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Net\TNetClient.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\TNetServer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">

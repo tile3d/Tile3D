@@ -11,12 +11,23 @@
 class TSocket;
 class TProtocol;
 class TSessionMan;
+class TPollIO;
 class TSession
 {
+public:
+	enum
+	{
+		SESSION_STATUS_NONE = 0x0,
+		SESSION_STATUS_NORMAL = 0x01,
+		SESSION_STATUS_CLOSING = 0x02,
+		SESSION_STATUS_SENDING = 0x04
+	};
+
 public:
 	TSession(TSocket* pSocket) {
 		m_pSocket = pSocket;
 		m_sessionID = NextSessionID();
+		m_status = SESSION_STATE_NORMAL;
 	}
 
 	~TSession() {
@@ -41,7 +52,9 @@ public:
 
 private:
 	int m_sessionID;
+	int m_status;
 	TSocket * m_pSocket;
+	TPollIO * m_pPollIO;
 	TDeque<TOctets> m_output;
 	TSessionMan* m_pSessionMan;
 	TMutexLock m_lock;
