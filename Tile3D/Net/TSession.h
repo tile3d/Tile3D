@@ -27,7 +27,7 @@ public:
 	TSession(TSocket* pSocket) {
 		m_pSocket = pSocket;
 		m_sessionID = NextSessionID();
-		m_status = SESSION_STATE_NORMAL;
+		m_status = SESSION_STATUS_NORMAL;
 	}
 
 	~TSession() {

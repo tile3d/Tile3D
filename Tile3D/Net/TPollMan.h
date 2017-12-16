@@ -13,6 +13,19 @@ public:
 		return &pollman;
 	}
 
+	TPollMan() {
+		m_pollImp = nullptr;
+		Init();
+	}
+
+	~TPollMan() {
+		if (m_pollImp != nullptr) {
+			delete m_pollImp;
+		}
+	}
+
+	void Init();
+
 	TPollIO* FindPollIO(int fd) {
 		TPollIO** ppPollIO = m_pollio.Find(fd);
 		if (ppPollIO) return nullptr;
