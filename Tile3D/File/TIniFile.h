@@ -4,7 +4,7 @@
 #include <Container\TArray.h>
 
 class TFile;
-class TIniFile
+class TConfFile
 {
 public:		//	Types
 
@@ -23,8 +23,8 @@ public:		//	Types
 
 public:		//	Constructions and Destructions
 
-	TIniFile();
-	virtual ~TIniFile();
+	TConfFile();
+	virtual ~TConfFile();
 
 public:		//	Operaitons
 	//	Open ini file

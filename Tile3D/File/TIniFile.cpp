@@ -5,21 +5,21 @@
 #include "TFile.h"
 #include "TFileImage.h"
 
-TIniFile::TIniFile()
+TConfFile::TConfFile()
 {
 	m_bOpened = false;
 	m_pCurSect = NULL;
 }
 
-TIniFile::~TIniFile()
+TConfFile::~TConfFile()
 {
 	if (m_bOpened)
-		TIniFile::Close();
+		TConfFile::Close();
 }
 
 // Close file
 // TBD: need check if have memory leak
-void TIniFile::Close()
+void TConfFile::Close()
 {
 	//	Release all sections and keys
 	for (int i = 0; i < m_sects.Size(); i++)
@@ -41,7 +41,7 @@ Return true for success, otherwise return false.
 
 szFile: ini file's name, can be both absolute path and relative path.
 */
-bool TIniFile::Open(const char* szFile)
+bool TConfFile::Open(const char* szFile)
 {
 	TFileImage fi;
 	if (!fi.Open("", szFile, TFile::TFILE_OPENEXIST | TFile::TFILE_BINARY | TFile::TFILE_TEMPMEMORY))
@@ -68,7 +68,7 @@ Return true for success, otherwise return false.
 
 pFile: AFile object which has been opened using binary mode.
 */
-bool TIniFile::Open(TFile* pFile)
+bool TConfFile::Open(TFile* pFile)
 {
 	TAssert(pFile);
 
@@ -120,7 +120,7 @@ Return true for success, otherwise return false.
 pBuf: file buffer.
 pEnd: file buffer ending position
 */
-bool TIniFile::ParseFile(unsigned char* pBuf, unsigned char* pEnd)
+bool TConfFile::ParseFile(unsigned char* pBuf, unsigned char* pEnd)
 {
 	unsigned char* pLine = pBuf;
 	int iLineLen;
@@ -144,7 +144,7 @@ Return line's length in unsigned chars
 pLine: line buffer.
 pEnd: file buffer ending position
 */
-int TIniFile::GetLineLength(unsigned char* pLine, unsigned char* pEnd)
+int TConfFile::GetLineLength(unsigned char* pLine, unsigned char* pEnd)
 {
 	unsigned char* pCur = pLine;
 	int iLen = 0;
@@ -168,7 +168,7 @@ Return section's address for success, otherwise return NULL
 bComment: true, comment section
 strName: section's name
 */
-TIniFile::TIniFileSection* TIniFile::AddSection(bool comment, const TString& name)
+TConfFile::TIniFileSection* TConfFile::AddSection(bool comment, const TString& name)
 {
 	TIniFileSection* pSection = new TIniFileSection;
 	if (!pSection)
@@ -188,7 +188,7 @@ Return key's address for success, otherwise return NULL.
 
 strKey: key's name
 */
-TIniFile::TIniFileKey* TIniFile::CreateKey(const TString& key)
+TConfFile::TIniFileKey* TConfFile::CreateKey(const TString& key)
 {
 	TIniFileKey* pKey = new TIniFileKey;
 	if (!pKey)
@@ -203,7 +203,7 @@ TIniFile::TIniFileKey* TIniFile::CreateKey(const TString& key)
 pLine: line buffer.
 pEnd: line buffer ending position
 */
-void TIniFile::ParseLine(unsigned char* pLine, unsigned char* pEnd)
+void TConfFile::ParseLine(unsigned char* pLine, unsigned char* pEnd)
 {
 	unsigned char* pCur = pLine;
 
@@ -285,7 +285,7 @@ Return true for success, otherwise return false.
 pLine: line buffer.
 pEnd: line buffer ending position
 */
-bool TIniFile::ParseValue(TIniFileKey* pKey, unsigned char* pBuf, unsigned char* pEnd)
+bool TConfFile::ParseValue(TIniFileKey* pKey, unsigned char* pBuf, unsigned char* pEnd)
 {
 	unsigned char * pCur = pBuf;
 
@@ -309,7 +309,7 @@ szSect: section name
 szKey: key name
 iDefault: default value will be used if specified value was failed to be found
 */
-int TIniFile::GetValueAsInt(const char* szSect, const char* szKey, int iDefault)
+int TConfFile::GetValueAsInt(const char* szSect, const char* szKey, int iDefault)
 {
 	if (!m_bOpened)
 		return iDefault;
@@ -329,7 +329,7 @@ szSect: section name
 szKey: key name
 iDefault: default value will be used if specified value was failed to be found
 */
-TString TIniFile::GetValueAsString(const char* szSect, const char* szKey,
+TString TConfFile::GetValueAsString(const char* szSect, const char* szKey,
 	const char* szDefault/* NULL */)
 {
 	if (!m_bOpened)
@@ -350,7 +350,7 @@ szSect: section name
 szKey: key name
 iDefault: default value will be used if specified value was failed to be found
 */
-float TIniFile::GetValueAsFloat(const char* szSect, const char* szKey, float fDefault)
+float TConfFile::GetValueAsFloat(const char* szSect, const char* szKey, float fDefault)
 {
 	if (!m_bOpened)
 		return fDefault;
@@ -371,7 +371,7 @@ szKey: key name
 iNumInt: number of integer
 pBuf: array buffer
 */
-bool TIniFile::GetValueAsIntArray(const char* szSect, const char* szKey, int iNumInt, int* pBuf)
+bool TConfFile::GetValueAsIntArray(const char* szSect, const char* szKey, int iNumInt, int* pBuf)
 {
 	if (!m_bOpened)
 		return false;
@@ -403,7 +403,7 @@ bool TIniFile::GetValueAsIntArray(const char* szSect, const char* szKey, int iNu
 	return true;
 }
 
-bool TIniFile::GetValueAsFloatArray(const char* szSect, const char* szKey, int iNumFloat, float* pBuf)
+bool TConfFile::GetValueAsFloatArray(const char* szSect, const char* szKey, int iNumFloat, float* pBuf)
 {
 	if (!m_bOpened)
 		return false;
@@ -444,7 +444,7 @@ szSect: section name
 szKey: key name
 iValue: value will be written.
 */
-bool TIniFile::WriteIntValue(const char* szSect, const char* szKey, int iValue)
+bool TConfFile::WriteIntValue(const char* szSect, const char* szKey, int iValue)
 {
 	TIniFileKey* pKey = GetKey(szSect, szKey);
 	if (!pKey)
@@ -463,7 +463,7 @@ szSect: section name
 szKey: key name
 szValue: value will be written.
 */
-bool TIniFile::WriteStringValue(const char* szSect, const char* szKey, const char* szValue)
+bool TConfFile::WriteStringValue(const char* szSect, const char* szKey, const char* szValue)
 {
 	TIniFileKey* pKey = GetKey(szSect, szKey);
 	if (!pKey)
@@ -482,7 +482,7 @@ szSect: section name
 szKey: key name
 fValue: value will be written.
 */
-bool TIniFile::WriteFloatValue(const char* szSect, const char* szKey, float fValue)
+bool TConfFile::WriteFloatValue(const char* szSect, const char* szKey, float fValue)
 {
 	TIniFileKey* pKey = GetKey(szSect, szKey);
 	if (!pKey)
@@ -499,7 +499,7 @@ Return string's address for success, otherwise return NULL.
 szSect: section name
 szKey: key name
 */
-TString* TIniFile::SearchValue(const char* szSect, const char* szKey)
+TString* TConfFile::SearchValue(const char* szSect, const char* szKey)
 {
 	TAssert(szSect && szSect[0]);
 	TAssert(szKey && szKey[0]);
@@ -532,7 +532,7 @@ Return section's address for success, otherwise return NULL.
 
 szSect: section's name
 */
-TIniFile::TIniFileSection* TIniFile::SearchSection(const char* szSect)
+TConfFile::TIniFileSection* TConfFile::SearchSection(const char* szSect)
 {
 	for (int i = 0; i < m_sects.Size(); i++)
 	{
@@ -552,7 +552,7 @@ Return key's address for success, otherwise return NULL.
 pSection: section in key expected to exist.
 szKey: key's name
 */
-TIniFile::TIniFileKey* TIniFile::SearchKey(TIniFileSection* pSection, const char* szKey)
+TConfFile::TIniFileKey* TConfFile::SearchKey(TIniFileSection* pSection, const char* szKey)
 {
 	for (int i = 0; i < pSection->m_keys.Size(); i++)
 	{
@@ -571,7 +571,7 @@ Return key's address for success, otherwise return false.
 szSect: section name
 szKey: key name
 */
-TIniFile::TIniFileKey* TIniFile::GetKey(const char* szSect, const char* szKey)
+TConfFile::TIniFileKey* TConfFile::GetKey(const char* szSect, const char* szKey)
 {
 	TAssert(szSect && szSect[0]);
 	TAssert(szKey && szKey[0]);
@@ -595,7 +595,7 @@ TIniFile::TIniFileKey* TIniFile::GetKey(const char* szSect, const char* szKey)
 }
 
 //	Save modified data
-bool TIniFile::Save(const char* szFile)
+bool TConfFile::Save(const char* szFile)
 {
 	FILE* fp = fopen(szFile, "w+");
 	if (!fp)
@@ -635,7 +635,7 @@ bool TIniFile::Save(const char* szFile)
 	return true;
 }
 
-bool TIniFile::Save(TFile* pFile)
+bool TConfFile::Save(TFile* pFile)
 {
 	int i, j;
 	TString strValue;

@@ -1,6 +1,6 @@
 #pragma once
 
-/*
+
 #if PLATFORM_WIN
 	#include "Win/TSysFileWin.h"
 #elif PLATFORM_IOS
@@ -8,9 +8,9 @@
 #elif PLATFORM_ANDROID
 	#include "Android/TSysFileAndroid.h"
 #endif
-*/
 
 
+/*
 #include <stdio.h>
 
 class TSysFile
@@ -22,5 +22,7 @@ public:
 	static int StrCmpNoCase(const char * str1, const char * str2);
 	static char * StrToLower(char * str);
 	static char * StrToUpper(char * str);
+	static int Access(const char* filename, int mode);
 };
 
+*/

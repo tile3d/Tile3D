@@ -11,4 +11,5 @@ public:
 	static int StrCmpNoCase(const char * str1, const char * str2);
 	static char * StrToLower(char * str);
 	static char * StrToUpper(char * str);
+	static int Access(const char* filename, int mode);
 };

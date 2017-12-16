@@ -53,7 +53,10 @@ char * TSysFile::StrToUpper(char * str)
 	return str;
 }
 
-
+int TSysFile::Access(const char* filename, int mode)
+{
+	return access(filename, mode);
+}
 
 
 

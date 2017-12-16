@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Common\TAssert.h" />
+    <ClInclude Include="Common\TConf.h" />
     <ClInclude Include="Common\TCounter.h" />
     <ClInclude Include="Common\TLog.h" />
     <ClInclude Include="Common\TOctets.h" />
@@ -201,8 +202,6 @@
     <ClInclude Include="Net\TSocketAddr.h" />
     <ClInclude Include="Net\TSocketImp.h" />
     <ClInclude Include="Net\TSocketImpWin.h" />
-    <ClInclude Include="Net\TTCPClient.h" />
-    <ClInclude Include="Net\TTCPServer.h" />
     <ClInclude Include="Render\Material\TMaterial.h" />
     <ClInclude Include="Render\Shader\TPixelShader.h" />
     <ClInclude Include="Render\Shader\TShaderMan.h" />
@@ -254,6 +253,7 @@
     <ClInclude Include="Sys\Win\TSysFileWin.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Common\TConf.cpp" />
     <ClCompile Include="Common\TLog.cpp" />
     <ClCompile Include="Common\TOctets.cpp" />
     <ClCompile Include="Common\TOctetsStream.cpp" />
@@ -287,6 +287,7 @@
     <ClCompile Include="Math\TVector3.cpp" />
     <ClCompile Include="Math\TVector4.cpp" />
     <ClCompile Include="Net\TNet.cpp" />
+    <ClCompile Include="Net\TNetClient.cpp" />
     <ClCompile Include="Net\TPollImp.cpp" />
     <ClCompile Include="Net\TPollIO.cpp" />
     <ClCompile Include="Net\TPollMan.cpp" />
@@ -295,7 +296,6 @@
     <ClCompile Include="Net\TSocket.cpp" />
     <ClCompile Include="Net\TSocketAddr.cpp" />
     <ClCompile Include="Net\TSocketImpWin.cpp" />
-    <ClCompile Include="Net\TTCPClient.cpp" />
     <ClCompile Include="Render\Material\TMaterial.cpp" />
     <ClCompile Include="Render\Shader\TPixelShader.cpp" />
     <ClCompile Include="Render\Shader\TShaderMan.cpp" />

@@ -354,12 +354,6 @@
     <ClInclude Include="Net\TNet.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="Net\TTCPClient.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="Net\TTCPServer.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Texture\TTexture.h">
       <Filter>Render\Texture</Filter>
     </ClInclude>
@@ -434,6 +428,9 @@
     </ClInclude>
     <ClInclude Include="Net\TNetServer.h">
       <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TConf.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -641,9 +638,6 @@
     <ClCompile Include="Net\TNet.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="Net\TTCPClient.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="Render\Texture\TTexture.cpp">
       <Filter>Render\Texture</Filter>
     </ClCompile>
@@ -691,6 +685,12 @@
     </ClCompile>
     <ClCompile Include="Net\TPollIO.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\TNetClient.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TConf.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

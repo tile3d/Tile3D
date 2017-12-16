@@ -40,8 +40,10 @@ char * TSysFile::StrToUpper(char * str)
 	return _strupr(str);
 }
 
-
-
+int TSysFile::Access(const char* filename, int mode)
+{
+	return _access(filename, mode);
+}
 
 
 
