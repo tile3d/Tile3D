@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Container/THashMap.h>
+#include <Core/Lock/TMutexLock.h>
+#include <Core/Lock/TScopeLock.h>
 
 class TPollIO;
 class TPollImp;
@@ -26,16 +28,28 @@ public:
 
 	void Init();
 
+	void Poll(int timeout);
+
 	TPollIO* FindPollIO(int fd) {
+		TScopeLock sl(m_iolock);
 		TPollIO** ppPollIO = m_pollio.Find(fd);
 		if (ppPollIO) return nullptr;
 		return *ppPollIO;
 	}
 
+	void AddPollIO(int fd, TPollIO* pPollIO) {
+		TScopeLock sl(m_iolock);
+		m_pollio.Put(fd, pPollIO);
+	}
 
+	void RemovePollIO(int fd, TPollIO* pPollIO) {
+		TScopeLock sl(m_iolock);
+		m_pollio.Remove(fd);
+	}
 
 private:
 	THashMap<int, TPollIO*> m_pollio;
 	TPollImp * m_pollImp;
+	TMutexLock m_iolock;
 };
 

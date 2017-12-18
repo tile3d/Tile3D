@@ -8,17 +8,17 @@ class TConfFile
 {
 public:		//	Types
 
-	struct TIniFileKey
+	struct TConfPair
 	{
 		TString		m_key;		//	Key name
 		TString		m_value;	//	Value string
 	};
 
-	struct TIniFileSection
+	struct TConfSection
 	{
 		bool				m_comment;	//	true, Comment section
 		TString				m_name;	//	Section name
-		TArray<TIniFileKey*>	m_keys;		//	Keys
+		TArray<TConfPair*>	m_keys;		//	Keys
 	};
 
 public:		//	Constructions and Destructions
@@ -56,8 +56,8 @@ public:		//	Operaitons
 //	Attributes
 protected:	
 	bool		m_bOpened;		//	Open flag
-	TIniFileSection*	m_pCurSect;		//	Current section
-	TArray<TIniFileSection*>	m_sects;	//	Sections
+	TConfSection*	m_pCurSect;		//	Current section
+	TArray<TConfSection*>	m_sects;	//	Sections
 
 protected:	//	Operations
 	//	Parse file
@@ -67,19 +67,19 @@ protected:	//	Operations
 	//	Parse a line
 	void ParseLine(unsigned char* pLine, unsigned char* pEnd);
 	//	Parse key value
-	bool ParseValue(TIniFileKey* pKey, unsigned char* pBuf, unsigned char* pEnd);
+	bool ParseValue(TConfPair* pKey, unsigned char* pBuf, unsigned char* pEnd);
 
 	//	Add a section
-	TIniFileSection* AddSection(bool bComment, const TString& strName);
+	TConfSection* AddSection(bool bComment, const TString& strName);
 	//	Create a key
-	TIniFileKey* CreateKey(const TString& strKey);
+	TConfPair* CreateKey(const TString& strKey);
 
 	//	Search specified value
 	TString* SearchValue(const char* szSect, const char* szKey);
 	//	Search specified section
-	TIniFileSection* SearchSection(const char* szSect);
+	TConfSection* SearchSection(const char* szSect);
 	//	Search key in specified section
-	TIniFileKey* SearchKey(TIniFileSection* pSection, const char* szKey);
+	TConfPair* SearchKey(TConfSection* pSection, const char* szKey);
 	//	Get specified key, create if not exist
-	TIniFileKey* GetKey(const char* szSect, const char* szKey);
+	TConfPair* GetKey(const char* szSect, const char* szKey);
 };

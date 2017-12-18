@@ -32,7 +32,8 @@ bool TSocket::Init()
 	m_pSocketImp = new TSocketImpLinux(this);
 #endif
 
-	return m_pSocketImp->Create(m_socketType);
+	m_socketfd = m_pSocketImp->Create(m_socketType);
+	return m_socketfd;
 }
 
 
@@ -69,3 +70,7 @@ bool TSocket::GetSockOpt(int option_name, int level, void * option_value, int* o
 	return m_pSocketImp->GetSockOpt(option_name, level, option_value, option_len);
 }
 
+void TSocket::SetNonBlock()
+{
+	return m_pSocketImp->SetNonBlock();
+}

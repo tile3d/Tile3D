@@ -5,6 +5,7 @@
 #include "TSession.h"
 
 class TSession;
+class TSocket;
 class TSessionMan
 {
 public:
@@ -56,6 +57,8 @@ public:
 	virtual void OnAddSession(int sid) = 0;
 	virtual void OnDelSession(int sid) = 0;
 	virtual void OnAbortSession(int sid) {}
+
+	virtual void OnConnect(TSocket * pSocket, bool success) {}
 
 private:
 	THashMap<int, TSession*> m_session;

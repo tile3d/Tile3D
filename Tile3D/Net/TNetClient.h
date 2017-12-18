@@ -7,8 +7,12 @@
 
 //
 //1) keepalive implementation
+//2) replace TConfFile to TConf
+//3) implement reconnect
 //
 class TProtocol;
+class TConfFile;
+class TSocket;
 class TNetClient : public TSessionMan
 {
 public:
@@ -19,26 +23,43 @@ public:
 		STATE_CONNECTED,
 		STATE_CLOSING,
 		STATE_CLOSE,
+		STATE_CONNECTERR
 	};
-
 
 	TNetClient(TString & name) {
 		m_sid = 0;
 		m_ping = 0;
 		m_status = 0;
+		m_connectTimes = 0;
 		m_name = name;
-
-		Init();
+		m_pSocket = nullptr;
+		m_pConf = nullptr;
 	}
 
-	bool Init();
-
-	bool SendData(const TProtocol *protocol) {
-		return Send(m_sid, protocol, false);
+	~TNetClient() {
+		//tbd
+		if (m_pConf) {
+			delete m_pConf;
+		}
 	}
 
-	bool UrgentSend(const TProtocol *protocol) {
-		return Send(m_sid, protocol, true);
+	bool Init(const char* conf_file);	
+	void ShutDown() {
+		m_status = STATE_CLOSING;
+	}
+
+	bool SendProtocol(const TProtocol *protocol) {
+		if (m_sid > 0 && m_status == STATE_CONNECTED) {
+			return Send(m_sid, protocol, false);
+		}
+		return false;
+	}
+
+	bool UrgentSendProtocol(const TProtocol *protocol) {
+		if (m_sid > 0 && m_status == STATE_CONNECTED) {
+			return Send(m_sid, protocol, true);
+		}
+		return false;
 	}
 
 	virtual void OnAddSession(int sid) {
@@ -53,14 +74,17 @@ public:
 		m_status = STATE_CLOSE;
 	}
 
-	void Close() {
-		m_status = STATE_CLOSING;
-	}
+	virtual void OnConnect(TSocket * pSocket, bool success);
+	void OnClose();
+	void ReConnect();
 
 private:
 	int m_sid;
 	int m_ping;
 	int m_status;
+	int m_connectTimes;
 	TString m_name;
+	TSocket* m_pSocket;
+	TConfFile * m_pConf;
 };
 

@@ -170,7 +170,7 @@
     <ClInclude Include="File\TFileImage.h" />
     <ClInclude Include="File\TFileMem.h" />
     <ClInclude Include="File\TFileDir.h" />
-    <ClInclude Include="File\TIniFile.h" />
+    <ClInclude Include="File\TConfFile.h" />
     <ClInclude Include="File\TPackageFile.h" />
     <ClInclude Include="File\TPackage.h" />
     <ClInclude Include="File\TPackageMan.h" />
@@ -270,7 +270,7 @@
     <ClCompile Include="File\TFileImage.cpp" />
     <ClCompile Include="File\TFileMem.cpp" />
     <ClCompile Include="File\TFileDir.cpp" />
-    <ClCompile Include="File\TIniFile.cpp" />
+    <ClCompile Include="File\TConfFile.cpp" />
     <ClCompile Include="File\TPackageFile.cpp" />
     <ClCompile Include="File\TPackage.cpp" />
     <ClCompile Include="File\TPackageMan.cpp" />

@@ -162,9 +162,6 @@
     <ClInclude Include="File\TFileMem.h">
       <Filter>File</Filter>
     </ClInclude>
-    <ClInclude Include="File\TIniFile.h">
-      <Filter>File</Filter>
-    </ClInclude>
     <ClInclude Include="File\TPackageFile.h">
       <Filter>File</Filter>
     </ClInclude>
@@ -432,6 +429,9 @@
     <ClInclude Include="Common\TConf.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="File\TConfFile.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -492,9 +492,6 @@
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="File\TFileMem.cpp">
-      <Filter>File</Filter>
-    </ClCompile>
-    <ClCompile Include="File\TIniFile.cpp">
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="File\TPackageFile.cpp">
@@ -691,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="Common\TConf.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="File\TConfFile.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

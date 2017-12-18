@@ -1,6 +1,5 @@
 #pragma once
 
-
 enum EVENT_TYPE
 {
 	EVENT_POLLIN = 0x01,
@@ -10,19 +9,15 @@ enum EVENT_TYPE
 	EVENT_POLLHUP = 0x10
 };
 
-enum SOCK_TYPE
-{
-	SOCK_TYPE_NONE = 0,
-	SOCK_TYPE_TCP = 1,
-	SOCK_TYPE_UDP = 2,
-};
-
+class TSocket;
+class TSessionMan;
 class TPollIO
 {
 public:
-	TPollIO() { 
+	TPollIO(int fd, TSessionMan* sessionman) { 
 		m_event = 0; 
-		m_fd = 0;
+		m_fd = fd;
+		m_pSessionMan = sessionman;
 	}
 
 	virtual ~TPollIO() {}
@@ -35,37 +30,51 @@ public:
 
 	virtual void PollIn() = 0;
 	virtual void PollOut() { }
+	virtual void PollError() { }
 	virtual void PollClose() { }
 
-private:
+protected:
 	int m_event;
 	int m_fd;
+	TSessionMan * m_pSessionMan;
 };
 
 class TActiveIO : public TPollIO
 {
 public:
-	TActiveIO(int socktype) {
-		m_socktype = socktype;
-	}
+	TActiveIO(TSocket * pSocket, TSessionMan * sessionman);
+	virtual ~TActiveIO();
 
 	virtual void PollIn();
-
+	virtual void PollOut();
+	virtual void PollError();
 private:
+	TSocket * m_pSocket;
 	int m_socktype;
 };
 
 class TPassiveIO : public TPollIO
 {
 public:
+	TPassiveIO(TSocket * pSocket, int fd);
+
 	virtual void PollIn();
+
+private:
+	int m_socktype;
+
 };
 
 class TSession;
 class TNetIO : public TPollIO
 {
 public:
+	TNetIO(int fd, TSessionMan* sessionman) : TPollIO(fd, sessionman) {
 
+	}
+	virtual ~TNetIO() {
+
+	}
 
 private:
 	TSession * m_pSession;
@@ -75,8 +84,13 @@ private:
 class TStreamIO : public TNetIO
 {
 public:
+	TStreamIO(TSession * pSession, TSocket* pSocket, TSessionMan* sessionman);
+	~TStreamIO();
+
 	virtual void PollIn();
 	virtual void PollOut();
 	virtual void PollClose();
+
+
 };
 

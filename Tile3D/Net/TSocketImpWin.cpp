@@ -12,22 +12,22 @@ TSocketImpWin::~TSocketImpWin()
 
 }
 
-bool TSocketImpWin::Create(TSocket::TSOCKET_TYPE type)
+int TSocketImpWin::Create(int type)
 {
-	if (type == TSocket::TSOCKET_TYPE_TCP) {
+	if (type == TSOCKET_TYPE_TCP) {
 		m_socket = socket(AF_INET, SOCK_STREAM, 0);
 	}
-	else if (type == TSocket::TSOCKET_TYPE_UDP) {
+	else if (type == TSOCKET_TYPE_UDP) {
 		m_socket = socket(AF_INET, SOCK_DGRAM, 0);
 	}
 	else {
-		return false;
+		return 0;
 	}
 
 	if (m_socket == INVALID_SOCKET) {
-		return false;
+		return 0;
 	}
-	return true;
+	return m_socket;
 }
 
 bool TSocketImpWin::Bind(int port)
@@ -115,4 +115,11 @@ bool TSocketImpWin::SetSockOpt(int option_name, int level, void * option_value, 
 	}
 	return true;
 }
+
+void TSocketImpWin::SetNonBlock()
+{
+	unsigned long n = 1;
+	ioctlsocket(m_socket, FIONBIO, &n);
+}
+
 

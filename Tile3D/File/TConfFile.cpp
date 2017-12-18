@@ -1,7 +1,7 @@
 #include <Common/TLog.h>
 #include <Common/TAssert.h>
 
-#include "TIniFile.h"
+#include "TConfFile.h"
 #include "TFile.h"
 #include "TFileImage.h"
 
@@ -24,7 +24,7 @@ void TConfFile::Close()
 	//	Release all sections and keys
 	for (int i = 0; i < m_sects.Size(); i++)
 	{
-		TIniFileSection* pSect = m_sects[i];
+		TConfSection* pSect = m_sects[i];
 
 		for (int j = 0; j < pSect->m_keys.Size(); j++) {
 			delete pSect->m_keys[j];
@@ -35,11 +35,11 @@ void TConfFile::Close()
 	m_bOpened = false;
 }
 
-/*	Open ini file
+/*	Open conf file
 
 Return true for success, otherwise return false.
 
-szFile: ini file's name, can be both absolute path and relative path.
+szFile: conf file's name, can be both absolute path and relative path.
 */
 bool TConfFile::Open(const char* szFile)
 {
@@ -62,7 +62,7 @@ bool TConfFile::Open(const char* szFile)
 	return true;
 }
 
-/*	Open ini file
+/*	Open conf file
 
 Return true for success, otherwise return false.
 
@@ -168,9 +168,9 @@ Return section's address for success, otherwise return NULL
 bComment: true, comment section
 strName: section's name
 */
-TConfFile::TIniFileSection* TConfFile::AddSection(bool comment, const TString& name)
+TConfFile::TConfSection* TConfFile::AddSection(bool comment, const TString& name)
 {
-	TIniFileSection* pSection = new TIniFileSection;
+	TConfSection* pSection = new TConfSection;
 	if (!pSection)
 		return NULL;
 
@@ -188,9 +188,9 @@ Return key's address for success, otherwise return NULL.
 
 strKey: key's name
 */
-TConfFile::TIniFileKey* TConfFile::CreateKey(const TString& key)
+TConfFile::TConfPair* TConfFile::CreateKey(const TString& key)
 {
-	TIniFileKey* pKey = new TIniFileKey;
+	TConfPair* pKey = new TConfPair;
 	if (!pKey)
 		return NULL;
 
@@ -267,7 +267,7 @@ void TConfFile::ParseLine(unsigned char* pLine, unsigned char* pEnd)
 	TString name((const char*)pBegin, pCur - pBegin);
 	name.TrimRight();
 
-	TIniFileKey* pKey = CreateKey(name);
+	TConfPair* pKey = CreateKey(name);
 	TAssert(pKey);
 
 	pKey->m_key = name;
@@ -285,7 +285,7 @@ Return true for success, otherwise return false.
 pLine: line buffer.
 pEnd: line buffer ending position
 */
-bool TConfFile::ParseValue(TIniFileKey* pKey, unsigned char* pBuf, unsigned char* pEnd)
+bool TConfFile::ParseValue(TConfPair* pKey, unsigned char* pBuf, unsigned char* pEnd)
 {
 	unsigned char * pCur = pBuf;
 
@@ -446,7 +446,7 @@ iValue: value will be written.
 */
 bool TConfFile::WriteIntValue(const char* szSect, const char* szKey, int iValue)
 {
-	TIniFileKey* pKey = GetKey(szSect, szKey);
+	TConfPair* pKey = GetKey(szSect, szKey);
 	if (!pKey)
 		return false;
 
@@ -465,7 +465,7 @@ szValue: value will be written.
 */
 bool TConfFile::WriteStringValue(const char* szSect, const char* szKey, const char* szValue)
 {
-	TIniFileKey* pKey = GetKey(szSect, szKey);
+	TConfPair* pKey = GetKey(szSect, szKey);
 	if (!pKey)
 		return false;
 
@@ -484,7 +484,7 @@ fValue: value will be written.
 */
 bool TConfFile::WriteFloatValue(const char* szSect, const char* szKey, float fValue)
 {
-	TIniFileKey* pKey = GetKey(szSect, szKey);
+	TConfPair* pKey = GetKey(szSect, szKey);
 	if (!pKey)
 		return false;
 
@@ -508,14 +508,14 @@ TString* TConfFile::SearchValue(const char* szSect, const char* szKey)
 
 	for (i = 0; i < m_sects.Size(); i++)
 	{
-		TIniFileSection* pSect = m_sects[i];
+		TConfSection* pSect = m_sects[i];
 
 		if (pSect->m_comment || pSect->m_name.CompareNoCase(szSect))
 			continue;
 
 		for (j = 0; j < pSect->m_keys.Size(); j++)
 		{
-			TIniFileKey* pKey = pSect->m_keys[j];
+			TConfPair* pKey = pSect->m_keys[j];
 			if (pKey->m_key.CompareNoCase(szKey))
 				continue;
 
@@ -532,11 +532,11 @@ Return section's address for success, otherwise return NULL.
 
 szSect: section's name
 */
-TConfFile::TIniFileSection* TConfFile::SearchSection(const char* szSect)
+TConfFile::TConfSection* TConfFile::SearchSection(const char* szSect)
 {
 	for (int i = 0; i < m_sects.Size(); i++)
 	{
-		TIniFileSection* pSection = m_sects[i];
+		TConfSection* pSection = m_sects[i];
 
 		if (!pSection->m_comment && !pSection->m_name.CompareNoCase(szSect))
 			return pSection;
@@ -552,11 +552,11 @@ Return key's address for success, otherwise return NULL.
 pSection: section in key expected to exist.
 szKey: key's name
 */
-TConfFile::TIniFileKey* TConfFile::SearchKey(TIniFileSection* pSection, const char* szKey)
+TConfFile::TConfPair* TConfFile::SearchKey(TConfSection* pSection, const char* szKey)
 {
 	for (int i = 0; i < pSection->m_keys.Size(); i++)
 	{
-		TIniFileKey* pKey = pSection->m_keys[i];
+		TConfPair* pKey = pSection->m_keys[i];
 		if (!pKey->m_key.CompareNoCase(szKey))
 			return pKey;
 	}
@@ -571,19 +571,19 @@ Return key's address for success, otherwise return false.
 szSect: section name
 szKey: key name
 */
-TConfFile::TIniFileKey* TConfFile::GetKey(const char* szSect, const char* szKey)
+TConfFile::TConfPair* TConfFile::GetKey(const char* szSect, const char* szKey)
 {
 	TAssert(szSect && szSect[0]);
 	TAssert(szKey && szKey[0]);
 
-	TIniFileSection* pSection = SearchSection(szSect);
+	TConfSection* pSection = SearchSection(szSect);
 	if (!pSection)
 	{
 		//	Create a new section
 		pSection = AddSection(false, szSect);
 	}
 
-	TIniFileKey* pKey = SearchKey(pSection, szKey);
+	TConfPair* pKey = SearchKey(pSection, szKey);
 	if (!pKey)
 	{
 		//	Create a new key
@@ -608,7 +608,7 @@ bool TConfFile::Save(const char* szFile)
 	TString strValue;
 	for (i = 0; i < m_sects.Size(); i++)
 	{
-		TIniFileSection* pSect = m_sects[i];
+		TConfSection* pSect = m_sects[i];
 		if (pSect->m_comment)
 		{
 			fprintf(fp, "%s\n", pSect->m_name.ToString());
@@ -621,7 +621,7 @@ bool TConfFile::Save(const char* szFile)
 
 		for (j = 0; j < pSect->m_keys.Size(); j++)
 		{
-			TIniFileKey* pKey = pSect->m_keys[j];
+			TConfPair* pKey = pSect->m_keys[j];
 
 			//	Write key name and value
 			strValue = pKey->m_key + " = " + pKey->m_value;
@@ -641,7 +641,7 @@ bool TConfFile::Save(TFile* pFile)
 	TString strValue;
 	for (i = 0; i < m_sects.Size(); i++)
 	{
-		TIniFileSection* pSect = m_sects[i];
+		TConfSection* pSect = m_sects[i];
 		if (pSect->m_comment)
 		{
 			pFile->WriteLine(pSect->m_name);
@@ -654,7 +654,7 @@ bool TConfFile::Save(TFile* pFile)
 
 		for (j = 0; j < pSect->m_keys.Size(); j++)
 		{
-			TIniFileKey* pKey = pSect->m_keys[j];
+			TConfPair* pKey = pSect->m_keys[j];
 
 			//	Write key name and value
 			strValue = pKey->m_key + " = " + pKey->m_value;

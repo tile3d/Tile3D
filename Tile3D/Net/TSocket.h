@@ -2,23 +2,23 @@
 
 #include "TSocketAddr.h"
 
+enum TSOCKET_TYPE
+{
+	TSOCKET_TYPE_TCP,
+	TSOCKET_TYPE_UDP
+};
+
 class TSocketImp;
 class TSocket
 {
 public:
-	enum TSOCKET_TYPE
-	{
-		TSOCKET_TYPE_TCP,
-		TSOCKET_TYPE_UDP
-	};
-
 	TSocket(TSOCKET_TYPE type, bool isServer, bool isListen);
 	~TSocket();
 
-
 	bool IsServer() { return m_bServer; }
 	bool IsListenSocket() { return m_bListenSocket; }
-	TSOCKET_TYPE GetSocketType() const { return m_socketType; }
+	int GetSocketType() const { return m_socketType; }
+	int GetSocketfd() const { return m_socketfd; }
 
 	TSocketAddr& GetClientAddr() { return m_clientAddr; }
 	TSocketAddr& GetServerAddr() { return m_serverAddr; }
@@ -49,10 +49,12 @@ public:
 	bool SetSockOpt(int option_name, int level, void * option_value, int option_len);
 
 	void SetNonBlock();
+
 private:
 	bool m_bServer;
 	bool m_bListenSocket;
-	TSOCKET_TYPE m_socketType;
+	int  m_socketfd;
+	int m_socketType;
 
 	TSocketAddr m_clientAddr;
 	TSocketAddr m_serverAddr;	
