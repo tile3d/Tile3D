@@ -1,4 +1,5 @@
 #include "TSession.h"
+#include "TSessionMan.h"
 #include "TSocket.h"
 #include "TProtocol.h"
 #include "TPollIO.h"
@@ -31,3 +32,29 @@ void TSession::SendReady()
 		m_pPollIO->PermitSend();
 	}
 }
+
+void TSession::OnOpen() {
+	m_pSessionMan->OnAddSession(m_sid);
+}
+
+void TSession::OnClose() {
+	m_pSessionMan->OnAddSession(m_sid);
+}
+
+void TSession::OnAbort() {
+	m_pSessionMan->OnAbortSession(m_sid);
+}
+
+
+void TSession::OnRecv()
+{
+	m_isecbuf.Push(m_ibuffer.Begin(), m_ibuffer.Size());
+	m_ibuffer.Clear();
+	m_pPollIO->PermitRecv();
+}
+
+void TSession::OnSend()
+{
+
+}
+

@@ -14,5 +14,6 @@ public:
 	virtual bool GetSockOpt(int option_name, int level, void * option_value, int* option_len) { return false; }
 	virtual bool SetSockOpt(int option_name, int level, void * option_value, int option_len) { return false; }
 	virtual void SetNonBlock() {}
+	virtual int Recv(int fd, char * buf, int len, int flags) {}
 };
 

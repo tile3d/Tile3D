@@ -103,6 +103,7 @@ public:
 	}
 
 	unsigned int Size() const { return m_count; }
+	unsigned int Capacity() const { return m_capacity; }
 
 	unsigned char* Begin() { return m_data; }
 	unsigned char* End() { return m_data + m_count; }
@@ -110,6 +111,11 @@ public:
 	unsigned char* Begin() const { return m_data; }
 	unsigned char* End() const { return m_data + m_count; }
 
+	TOctets& Resize(unsigned int size) {
+		Reserve(size);
+		m_count = size;
+		return *this;
+	}
 
 	bool Empty() { return m_count == 0; }
 
