@@ -86,17 +86,27 @@ void TActiveIO::PollError()
 	delete this;
 }
 
+
+TPassiveIO::TPassiveIO(TSocket * pSocket, TSessionMan * sessionman) : TPollIO(pSocket->GetSocketfd(), pSocket, sessionman)
+{
+
+}
+
 void TPassiveIO::PollIn()
 {
 
 }
 
 
-TStreamIO::TStreamIO(TSession * pSession, TSocket* pSocket, TSessionMan* sessionman) : TNetIO(pSocket->GetSocketfd(), sessionman)
+TStreamIO::TStreamIO(TSession * pSession, TSocket* pSocket, TSessionMan* sessionman) : TNetIO(pSocket->GetSocketfd(), pSocket, sessionman)
 {
 
 }
 
+TStreamIO::~TStreamIO()
+{
+
+}
 
 void TStreamIO::PollIn()
 {

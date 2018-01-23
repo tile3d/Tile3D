@@ -12,7 +12,7 @@ class TSocketImp;
 class TSocket
 {
 public:
-	TSocket(TSOCKET_TYPE type, bool isServer, bool isListen);
+	TSocket(int type, bool isServer, bool isListen);
 	~TSocket();
 
 	bool IsServer() { return m_bServer; }

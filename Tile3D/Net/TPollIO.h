@@ -58,7 +58,7 @@ private:
 class TPassiveIO : public TPollIO
 {
 public:
-	TPassiveIO(TSocket * pSocket, int fd);
+	TPassiveIO(TSocket * pSocket, TSessionMan * sessionman);
 
 	virtual void PollIn();
 
@@ -71,7 +71,7 @@ class TSession;
 class TNetIO : public TPollIO
 {
 public:
-	TNetIO(int fd, TSessionMan* sessionman) : TPollIO(fd, sessionman) {
+	TNetIO(int fd, TSocket* pSocket, TSessionMan* sessionman) : TPollIO(fd, pSocket, sessionman) {
 
 	}
 	virtual ~TNetIO() {

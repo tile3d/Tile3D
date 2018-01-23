@@ -9,7 +9,7 @@
 
 
 
-TSocket::TSocket(TSOCKET_TYPE type, bool isServer, bool isListen) {
+TSocket::TSocket(int type, bool isServer, bool isListen) {
 	m_socketType = type;
 	m_bServer = isServer;
 	m_bListenSocket = isListen;

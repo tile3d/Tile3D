@@ -3,9 +3,9 @@
 #include <Container/THashMap.h>
 #include <Core/Lock/TMutexLock.h>
 #include <Core/Lock/TScopeLock.h>
+#include "TPollImp.h"
 
 class TPollIO;
-class TPollImp;
 class TPollMan
 {
 public:

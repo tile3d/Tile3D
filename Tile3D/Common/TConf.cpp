@@ -30,7 +30,10 @@ bool TConf::Load(const TString & filename)
 	TString line;
 	TString section;
 
-	char* line = nullptr;
+	//TBD
+//	char* line = nullptr;
+
+	return true;
 
 }
 
