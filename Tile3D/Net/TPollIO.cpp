@@ -43,8 +43,8 @@ void TPollIO::ForbidRecv()
 }
 
 
-TActiveIO::TActiveIO(TSocket * pSocket, TSessionMan * sessionman) : TPollIO(pSocket->GetSocketfd(), sessionman) {
-	m_pSocket = pSocket;
+TActiveIO::TActiveIO(TSocket * pSocket, TSessionMan * sessionman) : TPollIO(pSocket->GetSocketfd(), pSocket, sessionman) {
+	m_socktype = m_pSocket->GetSocketType();
 	m_event |= (EVENT_POLLIN | EVENT_POLLOUT | EVENT_POLLERR);
 }
 
@@ -81,8 +81,8 @@ void TActiveIO::PollError()
 	if (m_pSocket != nullptr) {
 		delete m_pSocket;
 	}
-	m_pSessionMan->OnConnect(m_pSocket, false);
 
+	m_pSessionMan->OnConnect(m_pSocket, false);
 	delete this;
 }
 
@@ -100,6 +100,21 @@ TStreamIO::TStreamIO(TSession * pSession, TSocket* pSocket, TSessionMan* session
 
 void TStreamIO::PollIn()
 {
+	TOctets & ibuf = m_pSession->GetInputBuffer();
+	int recv_bytes = m_pSocket->Recv(m_fd, (char*)ibuf.End(), ibuf.Capacity() - ibuf.Size(), 0);
+	if (recv_bytes > 0) {
+		ibuf.Resize(ibuf.Size() + recv_bytes);
+		m_pSession->OnRecv();
+		if (ibuf.Size() == ibuf.Capacity()) {
+			ForbidRecv();
+		}
+	}
+	else if (recv_bytes == 0) {
+
+	}
+	else if (recv_bytes == -1) {
+
+	}
 
 }
 

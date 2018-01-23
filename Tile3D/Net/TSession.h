@@ -26,7 +26,7 @@ public:
 public:
 	TSession(TSocket* pSocket) {
 		m_pSocket = pSocket;
-		m_sessionID = NextSessionID();
+		m_sid = NextSessionID();
 		m_status = SESSION_STATUS_NORMAL;
 	}
 
@@ -43,19 +43,41 @@ public:
 	}
 
 	int GetSessionID() {
-		return m_sessionID;
+		return m_sid;
+	}
+
+	TOctets& GetInputBuffer() {
+		return m_ibuffer;
+	}
+
+	TOctets& GetOutputBuffer() {
+		return m_obuffer;
 	}
 
 	bool Send(const TProtocol* proto, bool urgent);
-
 	void SendReady();
 
+	void OnOpen();
+	void OnClose();
+	void OnAbort();
+
+	void OnRecv();
+	void OnSend();
+
+
 private:
-	int m_sessionID;
+	int m_sid;
 	int m_status;
 	TSocket * m_pSocket;
 	TPollIO * m_pPollIO;
+	
+	TOctets m_ibuffer;
+	TOctets m_obuffer;
+	TOctets m_isecbuf;
+	TOctets m_osecbuf;
+
 	TDeque<TOctets> m_output;
+
 	TSessionMan* m_pSessionMan;
 	TMutexLock m_lock;
 };

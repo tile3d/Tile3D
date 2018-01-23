@@ -123,3 +123,7 @@ void TSocketImpWin::SetNonBlock()
 }
 
 
+int TSocketImpWin::Recv(int fd, char * buf, int len, int flags)
+{
+	return recv(fd, (char*)buf, len, flags);
+}

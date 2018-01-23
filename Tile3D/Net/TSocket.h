@@ -50,6 +50,8 @@ public:
 
 	void SetNonBlock();
 
+	int Recv(int fd, char * buf, int len, int flags);
+
 private:
 	bool m_bServer;
 	bool m_bListenSocket;

@@ -14,9 +14,10 @@ class TSessionMan;
 class TPollIO
 {
 public:
-	TPollIO(int fd, TSessionMan* sessionman) { 
+	TPollIO(int fd, TSocket* pSocket, TSessionMan* sessionman) {
 		m_event = 0; 
 		m_fd = fd;
+		m_pSocket = pSocket;
 		m_pSessionMan = sessionman;
 	}
 
@@ -36,6 +37,7 @@ public:
 protected:
 	int m_event;
 	int m_fd;
+	TSocket * m_pSocket;
 	TSessionMan * m_pSessionMan;
 };
 
@@ -48,8 +50,8 @@ public:
 	virtual void PollIn();
 	virtual void PollOut();
 	virtual void PollError();
+
 private:
-	TSocket * m_pSocket;
 	int m_socktype;
 };
 
@@ -76,7 +78,7 @@ public:
 
 	}
 
-private:
+protected:
 	TSession * m_pSession;
 };
 

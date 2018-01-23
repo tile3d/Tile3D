@@ -74,3 +74,8 @@ void TSocket::SetNonBlock()
 {
 	return m_pSocketImp->SetNonBlock();
 }
+
+int TSocket::Recv(int fd, char * buf, int len, int flags)
+{
+	return m_pSocketImp->Recv(fd, buf, len, flags);
+}

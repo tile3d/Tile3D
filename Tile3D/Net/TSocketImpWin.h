@@ -17,6 +17,7 @@ public:
 	virtual bool GetSockOpt(int option_name, int level, void * option_value, int* option_len);
 	virtual bool SetSockOpt(int option_name, int level, void * option_value, int option_len);
 	virtual void SetNonBlock();
+	virtual int Recv(int fd, char * buf, int len, int flags);
 
 private:
 	void SetSocketAddr(TSocket* m_pSocket, SOCKET socket, sockaddr_in client_addr);
