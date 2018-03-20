@@ -10,7 +10,17 @@
 //5) support iterator?
 //6) support swap?
 //7) support sort?
-//8) support erase a specific item
+//8) support remove a specific item
+//9) support remove all the item by the condition, for example
+//		ValArr.RemoveAll([](int32 Val) {
+//			return Val % 3 == 0;
+//		});
+//10) support append the array (operator+=)
+//11) support array equal to another array (operator==)
+//12) support array operator=
+//13) supoort heapify the array
+//14) implement the Empty which not clear the memory, or Clear function not clear the memory
+//
 template<typename T> class TArray
 {
 public:
@@ -95,8 +105,8 @@ public:
 	//Remove the element
 	void Remove(const T * pos);
 
-	//Remove the element at once, implement it by the exchange the last elment to this position, disorder the array, simlar to the STL remove generic alogorithm
-	void RemoveAtOnce(int index);
+	//Remove the element by swap at once, implement it by the exchange the last elment to this position, disorder the array, simlar to the STL remove generic alogorithm
+	void RemoveAtSwap(int index);
 
 	//Find the element within the array and return the index if exist, if not exist return ARRAY_INDEX_NONE
 	int Find(const T & element);
@@ -216,7 +226,7 @@ template<typename T> void TArray<T>::Remove(const T * pos)
 	Remove((int)(pos - m_data));
 }
 
-template<typename T> void TArray<T>::RemoveAtOnce(int index)
+template<typename T> void TArray<T>::RemoveAtSwap(int index)
 {
 	TAssert(index >= 0 && index < m_count);
 
