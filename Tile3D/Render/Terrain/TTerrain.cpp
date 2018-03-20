@@ -36,7 +36,7 @@ bool TTerrain::Init(const char* fileName, bool enableLightMap, const TVector3& v
 
 	if (idVer.m_version > TRN2FILE_VERSION)
 	{
-		TLog::Log(LOG_INFO, "A3DTerrain2::Load, Version %d expected but %d is given", TRN2FILE_VERSION, idVer.m_version);
+		TLog::Log(LOG_INFO, "TTerrain::Init, Version %d expected but %d is given", TRN2FILE_VERSION, idVer.m_version);
 		trnFile.Close();
 		return afalse;
 	}

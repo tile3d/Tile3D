@@ -229,6 +229,8 @@
     <ClInclude Include="Render\TCamera.h" />
     <ClInclude Include="Render\TDevice.h" />
     <ClInclude Include="Render\TEngine.h" />
+    <ClInclude Include="Render\Terrain\TTerrain.h" />
+    <ClInclude Include="Render\Terrain\TTerrainFile.h" />
     <ClInclude Include="Render\Texture\TTexture.h" />
     <ClInclude Include="Render\Texture\TTextureMan.h" />
     <ClInclude Include="Render\TGameSetting.h" />
@@ -322,6 +324,8 @@
     <ClCompile Include="Render\TCamera.cpp" />
     <ClCompile Include="Render\TDevice.cpp" />
     <ClCompile Include="Render\TEngine.cpp" />
+    <ClCompile Include="Render\Terrain\TTerrain.cpp" />
+    <ClCompile Include="Render\Terrain\TTerrainFile.cpp" />
     <ClCompile Include="Render\Texture\TTexture.cpp" />
     <ClCompile Include="Render\Texture\TTextureMan.cpp" />
     <ClCompile Include="Render\TGameSetting.cpp" />

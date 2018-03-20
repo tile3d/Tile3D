@@ -70,6 +70,9 @@
     <Filter Include="Stat\Windows">
       <UniqueIdentifier>{64845889-eebc-4525-82de-70ccae1d127d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Terrain">
+      <UniqueIdentifier>{e1e10b32-086c-4d17-afc3-70d6fbfd68b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -432,6 +435,12 @@
     <ClInclude Include="File\TConfFile.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Terrain\TTerrain.h">
+      <Filter>Render\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Terrain\TTerrainFile.h">
+      <Filter>Render\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -691,6 +700,12 @@
     </ClCompile>
     <ClCompile Include="File\TConfFile.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Terrain\TTerrain.cpp">
+      <Filter>Render\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Terrain\TTerrainFile.cpp">
+      <Filter>Render\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
