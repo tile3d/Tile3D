@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Math/TVector3.h>
+
 class TTerrain
 {
 public:

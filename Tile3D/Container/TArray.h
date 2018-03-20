@@ -100,6 +100,11 @@ public:
 	//Find the element within the array and return the index if exist, if not exist return ARRAY_INDEX_NONE
 	int Find(const T & element);
 
+	//Check if the array contain the element
+	bool Contain(const T & element) {
+		return Find(element) != ARRAY_INDEX_NONE;
+	}
+
 	//Check if the array is equal with another array
 	bool Equal(const TArray<T> & arr);
 
