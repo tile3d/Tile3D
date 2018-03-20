@@ -10,6 +10,7 @@
 //5) support iterator?
 //6) support swap?
 //7) support sort?
+//8) support erase a specific item
 template<typename T> class TArray
 {
 public:
