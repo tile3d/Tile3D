@@ -28,7 +28,7 @@ private:
 };
 
 
-int main2()
+int TestMemory()
 {
 	TestCtor * p1 = new TestCtor;
 	delete p1;

@@ -9,7 +9,7 @@
 //1) AllocBuffer(adjust the alloc size to match the memory pool)
 //2) Consider the benefit of reference count (cons and pro)
 //3) multipile thread problem (refcount lock problem)
-//
+//4) move ctor
 class TString
 {
 public:

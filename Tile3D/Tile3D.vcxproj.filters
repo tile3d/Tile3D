@@ -73,6 +73,9 @@
     <Filter Include="Render\Terrain">
       <UniqueIdentifier>{e1e10b32-086c-4d17-afc3-70d6fbfd68b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{772796b7-02b7-472d-b7aa-cf1e6898b681}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\TVector3.h">
@@ -440,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="Render\Terrain\TTerrainFile.h">
       <Filter>Render\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\IsPointer.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

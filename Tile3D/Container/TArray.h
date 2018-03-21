@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/TAssert.h"
+#include <string.h>
 
 //
 //1) if the type is pointer, how to manager the memory [manually manager or invoke ClearPtr] [done]
@@ -19,7 +20,7 @@
 //11) support array equal to another array (operator==)
 //12) support array operator=
 //13) supoort heapify the array
-//14) implement the Empty which not clear the memory, or Clear function not clear the memory
+//14) implement the reset which not clear the memory [done]
 //
 template<typename T> class TArray
 {
@@ -127,10 +128,8 @@ public:
 	//Reserve the array list to count size
 	void Reserve(int count);
 
-	//Shrink the array list to count size
-	void Shrink(int count);
 
-	//Clear the Array
+	//Clear the Array, free the memory
 	void Clear() {
 		if (m_data != nullptr) {
 			delete[] m_data;
@@ -141,12 +140,26 @@ public:
 		m_capacity = 0;
 	}
 
+	//clear the array, if the array item is pointer, clear the memory which the item pointe to 
+	void ClearAll()
+	{
+		ClearPtr();
+		Clear();
+	}
+
+
 	//Clear the Array and Ptr Memory
 	void ClearPtr() {
+		if (IsEmpty()) return;
+
 		for (int i = 0; i < Size(); ++i) {
 			delete m_data[i];
 		}
-		Clear();
+	}
+
+	//Reset the array, not free the memory
+	void Reset() {
+		m_count = 0;
 	}
 
 //operation
@@ -261,13 +274,6 @@ template<typename T> void TArray<T>::Reserve(int count)
 	m_capacity = count;
 }
 
-template<typename T> void TArray<T>::Shrink(int count)
-{
-	if (m_count == 0 || count >= m_count) return;
-
-	m_data = new T[count];
-	m_capacity = count;
-}
 
 template<typename T> int TArray<T>::Find(const T & element)
 {

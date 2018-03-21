@@ -189,6 +189,7 @@
     <ClInclude Include="Math\TVector.h" />
     <ClInclude Include="Math\TVector3.h" />
     <ClInclude Include="Math\TVector4.h" />
+    <ClInclude Include="Misc\IsPointer.h" />
     <ClInclude Include="Net\TNet.h" />
     <ClInclude Include="Net\TNetClient.h" />
     <ClInclude Include="Net\TNetServer.h" />

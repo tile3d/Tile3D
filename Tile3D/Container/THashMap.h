@@ -3,6 +3,11 @@
 #include "THashTable.h"
 #include "TPair.h"
 
+//
+//1) support operator[]
+//2) support append another map
+//3) support iterator and range loop
+//
 template<typename KEY_TYPE, typename VALUE_TYPE> class THashMap
 {
 public:

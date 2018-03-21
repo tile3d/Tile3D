@@ -3,7 +3,7 @@
 #include <Stat/TNetInfo.h>
 #include <stdio.h>
 
-int main()
+void TestHarewareInfo()
 {
 	int memorySize = THardwareInfo::GetInstance()->GetMemorySize();
 	TString videoCardName = THardwareInfo::GetInstance()->GetVideoCardName();
@@ -22,5 +22,5 @@ int main()
 	printf("mac addr:%s\n", macAddr.ToString());
 	printf("ip addr:%s\n", ipAddr.ToString());
 
-	return 0;
+	return;
 }
