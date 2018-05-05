@@ -2,10 +2,10 @@
 
 #include "TTypes.h"
 
-class TTime
+class TTimeCounter
 {
 public:
-	TTime() {
+	TTimeCounter() {
 		Reset();
 	}
 

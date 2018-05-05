@@ -1,46 +1,47 @@
 #pragma once
 
 #include <atomic>
+#include <Common/TTypes.h>
 
-class TAtomicInt
+class TAtomicLong
 {
 public:
-	TAtomicInt(int value) : m_value(value){
+	TAtomicLong(int64 value) : m_value(value){
 	}
 
-	TAtomicInt() : m_value(0) {
+	TAtomicLong() : m_value(0) {
 
 	}
 
-	int Get() {
+	int64 Get() {
 		return m_value.load();
 	}
 
-	void Set(int value) {
+	void Set(int64 value) {
 		m_value.store(value);
 	}
 
-	int Increment() {
+	int64 Increment() {
 		return m_value++;
 	}
 
-	int Decrement() {
+	int64 Decrement() {
 		return m_value--;
 	}
 
-	int Add(int value) {
+	int64 Add(int value) {
 		return m_value.fetch_add(value);
 	}
 
-	int Sub(int value) {
+	int64 Sub(int value) {
 		return m_value.fetch_sub(value);
 	}
 
-	bool CompareAndExchange(int & expect, int value) {
+	bool CompareAndExchange(int64 & expect, int64 value) {
 		return m_value.compare_exchange_weak(expect, value);
 	}
 
-	int Exchange(int value) {
+	int64 Exchange(int64 value) {
 		return m_value.exchange(value);
 	}
 
@@ -48,7 +49,7 @@ public:
 		m_value.is_lock_free();
 	}
 private:
-	std::atomic<int> m_value;
+	std::atomic<int64> m_value;
 };
 
 

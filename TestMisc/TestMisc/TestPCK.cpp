@@ -2,7 +2,7 @@
 #include <File/TPackage.h>
 #include "File/TFileDir.h"
 #include <Common/TLog.h>
-#include <Common/TTime.h>
+#include <Common/TTimeCounter.h>
 #include <Core/TMemory.h>
 #include <stdio.h>
 
@@ -27,7 +27,7 @@ int TestPackage()
 	char *pck_list[] = { "building.pck", "configs.pck", "facedata.pck", "gfx.pck", "grasses.pck", "models.pck",
 		"interfaces.pck", "litmodels.pck", "sfx.pck", "shaders.pck", "surfaces.pck", "textures.pck" };
 
-	TTime tt;
+	TTimeCounter tt;
 	tt.Start();
 	int64 totalSize = 0;
 	for (int i = 0; i < sizeof(pck_list) / sizeof(char*); ++i) {

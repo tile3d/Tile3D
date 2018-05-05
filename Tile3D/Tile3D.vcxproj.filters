@@ -330,9 +330,6 @@
     <ClInclude Include="Common\TOctetsStream.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\TTime.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Common\TTypes.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -446,6 +443,18 @@
     </ClInclude>
     <ClInclude Include="Misc\IsPointer.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TTimer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Lock\TAtomicLong.h">
+      <Filter>Core\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TTimeCounter.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\TTimeUtil.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -629,9 +638,6 @@
     <ClCompile Include="Common\TOctetsStream.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Common\TTime.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Net\TProtocol.cpp">
       <Filter>Net</Filter>
     </ClCompile>
@@ -712,6 +718,15 @@
     </ClCompile>
     <ClCompile Include="Render\Terrain\TTerrainFile.cpp">
       <Filter>Render\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TTimer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TTimeCounter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\TTimeUtil.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

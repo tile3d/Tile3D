@@ -137,7 +137,8 @@
     <ClInclude Include="Common\TLog.h" />
     <ClInclude Include="Common\TOctets.h" />
     <ClInclude Include="Common\TOctetsStream.h" />
-    <ClInclude Include="Common\TTime.h" />
+    <ClInclude Include="Common\TTimeCounter.h" />
+    <ClInclude Include="Common\TTimeUtil.h" />
     <ClInclude Include="Common\TTypes.h" />
     <ClInclude Include="Container\TAlgo.h" />
     <ClInclude Include="Container\TArray.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Container\TTreeMap.h" />
     <ClInclude Include="Container\TTreeSet.h" />
     <ClInclude Include="Core\Lock\TAtomicInt.h" />
+    <ClInclude Include="Core\Lock\TAtomicLong.h" />
     <ClInclude Include="Core\Lock\TMutexLock.h" />
     <ClInclude Include="Core\Lock\TReentrantLock.h" />
     <ClInclude Include="Core\Lock\TScopeLock.h" />
@@ -166,6 +168,7 @@
     <ClInclude Include="Core\TClassID.h" />
     <ClInclude Include="Core\TMemory.h" />
     <ClInclude Include="Core\TObject.h" />
+    <ClInclude Include="Core\TTimer.h" />
     <ClInclude Include="File\TFile.h" />
     <ClInclude Include="File\TFileImage.h" />
     <ClInclude Include="File\TFileMem.h" />
@@ -260,7 +263,8 @@
     <ClCompile Include="Common\TLog.cpp" />
     <ClCompile Include="Common\TOctets.cpp" />
     <ClCompile Include="Common\TOctetsStream.cpp" />
-    <ClCompile Include="Common\TTime.cpp" />
+    <ClCompile Include="Common\TTimeCounter.cpp" />
+    <ClCompile Include="Common\TTimeUtil.cpp" />
     <ClCompile Include="Container\TString.cpp" />
     <ClCompile Include="Core\Memory\TMemDumpWin.cpp" />
     <ClCompile Include="Core\Memory\TMemLarge.cpp" />
@@ -269,6 +273,7 @@
     <ClCompile Include="Core\Memory\TMemSmall.cpp" />
     <ClCompile Include="Core\TMemory.cpp" />
     <ClCompile Include="Core\TObject.cpp" />
+    <ClCompile Include="Core\TTimer.cpp" />
     <ClCompile Include="File\TFile.cpp" />
     <ClCompile Include="File\TFileImage.cpp" />
     <ClCompile Include="File\TFileMem.cpp" />

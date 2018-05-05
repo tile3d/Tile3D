@@ -33,7 +33,7 @@ bool TSocket::Init()
 #endif
 
 	m_socketfd = m_pSocketImp->Create(m_socketType);
-	return m_socketfd;
+	return m_socketfd != 0;
 }
 
 
