@@ -12,8 +12,9 @@
 //2) if the caller call the AddTimer, then the caller deleted, how to handle this case (how to delete the timer)?
 
 //TBD
-// 1) optimize the data structure to sort the timernode by the timer interval to reduce the loop times (MultiMap?)
-// 2) send message to the caller instead of invoke the callback
+// 1) optimize the data structure to sort the timernode by the timer interval to reduce the loop times (array list)
+// 2) send message to the caller instead of invoke the callback (user end)
+// 3) better lock mechanism
 //
 
 
@@ -98,7 +99,7 @@ public:
 	void ChangeInterval(int timerID, int new_interval);
 
 	int GetNextID() { return m_currentID.Increment(); }
-	int GetCurTick() { return m_tick.Get(); }
+	int64 GetCurTick() { return m_tick.Get(); }
 
 	TTimerNode * GetTimerByID(int timerID) {
 		TTimerNode ** ppNode = m_nodes.Find(timerID);
@@ -135,7 +136,7 @@ private:
 
 	TMutexLock m_lock;
 	TAtomicInt m_currentID;
-	TAtomicInt m_tick;
+	TAtomicLong m_tick;
 
 	bool m_shutdownFlag;
 };
