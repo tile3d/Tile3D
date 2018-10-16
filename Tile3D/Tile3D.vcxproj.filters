@@ -456,6 +456,18 @@
     <ClInclude Include="Common\TTimeUtil.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="Stat\TMinidumpInfo.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TMinidumpInfoImp.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\TMinidump.h">
+      <Filter>Stat</Filter>
+    </ClInclude>
+    <ClInclude Include="Stat\Windows\TMinidumpInfoImpWin.h">
+      <Filter>Stat\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\TVector3.cpp">
@@ -727,6 +739,12 @@
     </ClCompile>
     <ClCompile Include="Common\TTimeUtil.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\TMinidumpInfo.cpp">
+      <Filter>Stat</Filter>
+    </ClCompile>
+    <ClCompile Include="Stat\Windows\TMinidumpInfoImpWin.cpp">
+      <Filter>Stat\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
